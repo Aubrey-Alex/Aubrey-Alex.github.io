@@ -45,6 +45,3 @@ nav:
     - Home: 
         - index.md
     - python: python/python.md
-    - Blog: 
-        - First Blog: blog/posts/first_blog.md
-        - Second Blog: blog/posts/second_blog.md
