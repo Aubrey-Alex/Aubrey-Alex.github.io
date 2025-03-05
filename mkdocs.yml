@@ -1,4 +1,50 @@
-site_name: My site
-site_url: https://mydomain.org/mysite
+# 基础配置
+site_name: Aubrey-Alex
+site_description: an example blog set up following the tutorial
+site_url: https://aubrey-alex.github.io/
+repo_url: https://github.com/Aubrey-Alex/Aubrey-Alex.github.io/
+repo_name: Aubrey-Alex
+site_description: This is my personal website which concludes my study notes.
+site_author: Aubrey-Alex
+copyright: Copyright © 2025 Aubrey-Alex
+google_analytics: ['UA-36723568-3', 'mkdocs.org']
+remote_branch: gh-pages
+remote_name: origin
+# 扩展css
+extra_css:  
+  - css/extra.css  # 根据你的文件路径调整
+# 主题设置
 theme:
-  name: material
+    name: material
+    palette:
+        scheme: slate
+        primary: black # 主色调
+        accent: indigo # 强调色
+    font:
+        text: 'Roboto'
+        code: 'Roboto Mono'
+    features:
+        - navigation.background # 开启导航栏背景色
+        - navigation.tabs # 开启标签页导航
+        - navigation.instant # 开启即时预览
+        - navigation.sections # 开启目录页导航
+    icon: 
+        repo: fontawesome/brands/github-alt # 图标设置
+        logo: material/book  # 导航栏图标
+# 社交链接设置
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Aubrey-Alex
+# 插件设置
+plugins:
+    - search
+    - blog
+# 文档布局
+nav:
+    - Home: 
+        - index.md
+    - python: python/python.md
+    - Blog: 
+        - First Blog: blog/posts/first_blog.md
+        - Second Blog: blog/posts/second_blog.md
