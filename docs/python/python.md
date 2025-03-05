@@ -1,9 +1,3 @@
----
-date:
-  created: 2025-03-05
-  author: Aubrey-Alex
----
-
 ## 一、工具的使用
 
 ## PyCharm
