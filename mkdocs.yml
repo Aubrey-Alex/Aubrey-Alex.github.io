@@ -8,9 +8,6 @@ site_author: Aubrey-Alex
 copyright: Copyright © 2025 Aubrey-Alex
 remote_branch: gh-pages
 remote_name: origin
-# 扩展css
-extra_css:  
-  - css/extra.css  # 根据你的文件路径调整
 # 主题设置
 theme:
     name: material
@@ -128,8 +125,6 @@ extra_javascript:
 nav:
     - Home: 
         - index.md
-    - python: python/python.md
-    - database: database/MySQL.md
     - markdown: markdown/markdown.md
     - Computer Science: 
         - Computer Science/index.md
