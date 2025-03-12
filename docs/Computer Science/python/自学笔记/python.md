@@ -1,8 +1,8 @@
+# Python
+
 ## 一、工具的使用
 
-## PyCharm
-
-### 常用快捷键
+### Pycharm常用快捷键
 
 - ctrl + alt + s : 开软件设置
 - ctrl + d : 复制当前行代码
