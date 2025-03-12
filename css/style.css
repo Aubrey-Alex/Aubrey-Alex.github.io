@@ -1,0 +1,67 @@
+/* 全局样式 */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* WebGL流体模拟画布 */
+#fluid-canvas {
+    position: fixed;
+    /* 固定背景，避免滚动 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* 将画布置于最底层 */
+}
+
+/* 页面内容 */
+.content {
+    position: relative;
+    z-index: 1;
+    /* 保证内容在流体背景之上 */
+    padding: 40px;
+    max-width: 900px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.85);
+    /* 半透明背景，增强可读性 */
+    border-radius: 15px;
+    /* 圆角 */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    /* 添加轻微阴影，提升立体感 */
+}
+
+/* 标题样式 */
+h1,
+h2,
+h3 {
+    color: #333;
+    text-align: center;
+}
+
+/* 链接样式 */
+a {
+    color: #0078FF;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .content {
+        width: 90%;
+        padding: 20px;
+        margin: 30px auto;
+    }
+}
