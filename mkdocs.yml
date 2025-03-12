@@ -115,7 +115,7 @@ markdown_extensions:
 plugins:
     - search
     - blog
-    - statistics # conda下面安装了，pip install mkdocs-statistics-plugin
+    - statistics # pip install mkdocs-statistics-plugin
 
 extra_javascript:
     - javascripts/mathjax.js
