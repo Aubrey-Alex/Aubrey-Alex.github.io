@@ -115,7 +115,7 @@ extra_javascript:
 nav:
     - Home: 
         - index.md
-    - markdown: markdown/markdown.md
+    - Markdown: markdown/markdown.md
     - Computer Science: 
         - Computer Science/index.md
         - 数据库: 
@@ -132,8 +132,7 @@ nav:
             - Computer Science/C++/index.md
             - 课程笔记: 
                 - Computer Science/C++/课程笔记/index.md
-                - C++: 
-                    - objects: Computer Science/C++/课程笔记/Using Objects.md
+                - objects: Computer Science/C++/课程笔记/Using Objects.md
             - 自学笔记:
                 - Computer Science/C++/自学笔记/index.md
                 - C++: Computer Science/C++/自学笔记/C++.md
