@@ -10,63 +10,63 @@ remote_branch: gh-pages
 remote_name: origin
 # 主题设置
 theme:
-    name: material
-    # custom_dir: overrides
-    palette:
-        # 亮色调
-        - media: "(prefers-color-scheme: light)"
-          scheme: default
-          primary: white
-          accent: indigo
-          toggle:
-            icon: material/brightness-7 
-            name: Switch to dark mode
-        # 暗色调
-        - media: "(prefers-color-scheme: dark)"
-          scheme: slate
-          primary: black # 主色调
-          accent: indigo # 强调色
-          toggle:
-            icon: material/brightness-4
-            name: Switch to light mode
-    font:
-        text: Roboto
-        code: Roboto Mono
-    features:
-        - navigation.instant # 开启即时预览
-        - navigation.instant.prefetch # 开启预加载
-        - navigation.instant.progress # 开启进度条
-        - navigation.tabs # 开启标签页导航
-        - navigation.tabs.sticky # 开启标签页固定
-        - navigation.path # 开启路径导航
-        - navigation.footer # 开启页脚导航
-        - toc.follow # 跟随滚动
-        - navigation.top # 顶部导航栏
-        - search.suggest # 开启搜索建议
-        - search.highlight # 开启搜索关键词高亮
-        - search.share # 开启搜索结果分享
-        - content.code.copy # 开启代码复制按钮
-        - content.code.select # 开启代码选中按钮
-        - content.tabs.link # 开启链接选项卡
-        - content.footnote.tooltips # 开启脚注提示
-        - navigation.indexes # 开启索引页导航
-        
-    icon: 
-        repo: fontawesome/brands/github-alt # 图标设置
-        annotation: material/star-four-points-circle
-        admonition:
-          note: octicons/tag-16
-          abstract: octicons/checklist-16
-          info: octicons/info-16
-          tip: octicons/squirrel-16
-          success: octicons/check-16
-          question: octicons/question-16
-          warning: octicons/alert-16
-          failure: octicons/x-circle-16
-          danger: octicons/zap-16
-          bug: octicons/bug-16
-          example: octicons/beaker-16
-          quote: octicons/quote-16
+  name: material
+  custom_dir: overrides
+  palette:
+    # 亮色调
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # 暗色调
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black # 主色调
+      accent: indigo # 强调色
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant # 开启即时预览
+    - navigation.instant.prefetch # 开启预加载
+    - navigation.instant.progress # 开启进度条
+    - navigation.tabs # 开启标签页导航
+    - navigation.tabs.sticky # 开启标签页固定
+    - navigation.path # 开启路径导航
+    - navigation.footer # 开启页脚导航
+    - toc.follow # 跟随滚动
+    - navigation.top # 顶部导航栏
+    - search.suggest # 开启搜索建议
+    - search.highlight # 开启搜索关键词高亮
+    - search.share # 开启搜索结果分享
+    - content.code.copy # 开启代码复制按钮
+    - content.code.select # 开启代码选中按钮
+    - content.tabs.link # 开启链接选项卡
+    - content.footnote.tooltips # 开启脚注提示
+    - navigation.indexes # 开启索引页导航
+
+  icon:
+    repo: fontawesome/brands/github-alt # 图标设置
+    annotation: material/star-four-points-circle
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/squirrel-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
 # 社交链接设置
 extra:
   social:
@@ -74,71 +74,68 @@ extra:
       link: https://github.com/Aubrey-Alex
 # markdown扩展设置
 markdown_extensions:
-    - footnotes
-    - tables
-    - admonition
-    - pymdownx.details
-    - pymdownx.superfences
-    - attr_list
-    - md_in_html
-    - pymdownx.highlight:
-        anchor_linenums: true
-        line_spans: __span
-        pygments_lang_class: true
-    - pymdownx.inlinehilite
-    - pymdownx.snippets
-    - def_list
-    - pymdownx.tasklist:
-        custom_checkbox: true
-    - pymdownx.tabbed:
-        alternate_style: true
-    - pymdownx.critic
-    - pymdownx.caret
-    - pymdownx.keys
-    - pymdownx.mark
-    - pymdownx.tilde
-    - pymdownx.emoji:
-        emoji_index: !!python/name:material.extensions.emoji.twemoji
-        emoji_generator: !!python/name:material.extensions.emoji.to_svg
-    - pymdownx.arithmatex:
-        generic: true
+  - footnotes
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
 # 插件设置
 plugins:
-    - search
-    - blog
+  - search
+  - blog
 
 extra_javascript:
-    - javascripts/mathjax.js
-    - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/mathjax.js
 
 # 文档布局
 nav:
-    - Home: 
-        - index.md
-    - Markdown: markdown/markdown.md
-    - Computer Science: 
-        - Computer Science/index.md
-        - 数据库: 
-            - Computer Science/数据库/index.md
-            - 课程笔记: 
-                - Computer Science/数据库/课程笔记/index.md
-                - Introduction: Computer Science/数据库/课程笔记/Introduction.md
-                - Relational Model: Computer Science/数据库/课程笔记/Relational Model.md
-                - SQL: Computer Science/数据库/课程笔记/SQL.md
-            - 自学笔记:
-                - Computer Science/数据库/自学笔记/index.md
-                - SQL: Computer Science/数据库/自学笔记/MySQL.md
-        - C++:
-            - Computer Science/C++/index.md
-            - 课程笔记: 
-                - Computer Science/C++/课程笔记/index.md
-                - objects: Computer Science/C++/课程笔记/Using Objects.md
-            - 自学笔记:
-                - Computer Science/C++/自学笔记/index.md
-                - C++: Computer Science/C++/自学笔记/C++.md
-        - Python:
-            - Computer Science/python/index.md
-            - 自学笔记:
-                - python: Computer Science/python/自学笔记/python.md
-
-            
+  - Home:
+      - index.md
+  - Markdown: markdown/markdown.md
+  - Computer Science:
+      - Computer Science/index.md
+      - 数据库:
+          - Computer Science/数据库/index.md
+          - 课程笔记:
+              - Computer Science/数据库/课程笔记/index.md
+              - Introduction: Computer Science/数据库/课程笔记/Introduction.md
+              - Relational Model: Computer Science/数据库/课程笔记/Relational Model.md
+              - SQL: Computer Science/数据库/课程笔记/SQL.md
+          - 自学笔记:
+              - Computer Science/数据库/自学笔记/index.md
+              - SQL: Computer Science/数据库/自学笔记/MySQL.md
+      - C++:
+          - Computer Science/C++/index.md
+          - 课程笔记:
+              - Computer Science/C++/课程笔记/index.md
+              - objects: Computer Science/C++/课程笔记/Using Objects.md
+          - 自学笔记:
+              - Computer Science/C++/自学笔记/index.md
+              - C++: Computer Science/C++/自学笔记/C++.md
+      - Python:
+          - Computer Science/python/index.md
+          - 自学笔记:
+              - python: Computer Science/python/自学笔记/python.md
