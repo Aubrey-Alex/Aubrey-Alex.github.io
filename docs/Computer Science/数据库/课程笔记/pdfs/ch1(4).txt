@@ -1,0 +1,331 @@
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 1.2 Database System Concepts - 7th Edition
+n Computer System: Data + Process
+n Many process related courses
+n Less data related courses
+n Data generation, transmission, storage, security, cleaning, sharing, access, …. n Different data types: unstructured, semistructured, structured
+n Different volumes
+n Different data access requirements: write intensive, read intensive, strict transaction, analysis,
+training, inference
+n This course deals with part of the above mentioned
+©Silberschatz, Korth and Sudarshan 1.3 Database System Concepts - 7th Edition
+Part One: Relational Database System Concepts
+4 How does a relational database system work (data organization, query and
+update)?
+4 How to design a database (structure of data in the database system for a
+specific application)
+4 How to do some basic programming on the database you design
+©Silberschatz, Korth and Sudarshan 1.4 Database System Concepts - 7th Edition
+Data
+Data access functions
+n Data related problems for a course selection system
+l Where to store the data
+l How to organize the data
+l How to access the data
+l How to access data efficiently
+l How to ensure the safety of data
+l How to ensure the consistency of data
+l How to serve the increasing number of users (concurrent access)
+User Interface
+©Silberschatz, Korth and Sudarshan 1.5 Database System Concepts - 7th Edition
+Drawbacks of using file systems to store data
+l Data redundancy and inconsistency
+4 Multiple file formats, duplication of information in different files
+l Difficulty in accessing data
+4 Need to write a new program to carry out each new task
+l Integrity problems
+4 Integrity constraints (e.g., account balance > 0) become
+“buried” in program code rather than being stated explicitly
+4 Hard to add new constraints or change existing ones
+©Silberschatz, Korth and Sudarshan 1.6 Database System Concepts - 7th Edition
+Drawbacks of using file systems to store data (Cont.)
+l Atomicity of updates
+4 Failures may leave database in an inconsistent state with partial updates
+carried out
+4 Example: Transfer of funds from one account to another should either
+complete or not happen at all
+l Concurrent access by multiple users
+4 Concurrent access needed for performance
+4 Uncontrolled concurrent accesses can lead to inconsistencies
+– Example: Two people reading a balance (say 100) and updating it by
+withdrawing money (say 50 each) at the same time
+l Security problems
+4 Hard to provide user access to some, but not all, data
+Database systems offer solutions to all the above problems
+©Silberschatz, Korth and Sudarshan 1.7 Database System Concepts - 7th Edition
+Database Management System (DBMS)
+n DBMS contains information about a particular enterprise
+l Collection of interrelated data
+l Set of programs to access the data
+l An environment that is both convenient and efficient to use
+n Database Applications:
+l Banking: transactions
+l Airlines: reservations, schedules
+l Universities: registration, grades, online education
+l Sales: customers, products, purchases
+l Online retailers: order tracking, customized recommendations
+l Manufacturing: production, inventory, orders, supply chain
+l Human resources: employee records, salaries, tax deductions
+n Databases can be very large. n Databases touch all aspects of our lives
+©Silberschatz, Korth and Sudarshan 1.8 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 1.9 Database System Concepts - 7th Edition
+App_1
+App_2 App_n
+Commands; Data
+Interrelated Data
+Server
+Database
+Management
+System
+©Silberschatz, Korth and Sudarshan 1.10 Database System Concepts - 7th Edition
+Data – Different Levels
+n Physical level: describes how a record (e.g., customer) is stored. n Logical level: describes data stored in database, and the relationships
+among the data. type instructor = record
+ID : string;
+name : string;
+dept_name : string;
+salary : integer;
+end;
+n View level: application programs hide details of data types. Views can
+also hide information (such as an employee’s salary) for security
+purposes.
+©Silberschatz, Korth and Sudarshan 1.11 Database System Concepts - 7th Edition
+Data – Different Levels (Cont.)
+An architecture of data in a database system
+©Silberschatz, Korth and Sudarshan 1.12 Database System Concepts - 7th Edition
+Data Models
+n A collection of tools for describing
+l Data
+l Data relationships
+l Data semantics
+l Data constraints
+n Relational model, example: department( dept_name, building, budget )
+n Entity-Relationship data model (mainly for database design)
+n Object-based data models (Object-oriented and Object-relational)
+n Semistructured data model (XML)
+n Other older models:
+l Network model
+l Hierarchical model
+©Silberschatz, Korth and Sudarshan 1.13 Database System Concepts - 7th Edition
+Instances and Schemas
+n Similar to types and variables in programming languages – the logical structure of the database
+l Example: The database consists of information about a set of customers and
+accounts and the relationship between them
+l Analogous to type information of a variable in a program
+l Physical schema: database design at the physical level
+l Logical schema: database design at the logical level
+n Instance – the actual content of the database at a particular point of time
+l Analogous to the value of a variable
+n Physical Data Independence – the ability to modify the physical schema without
+changing the logical schema
+l Applications depend on the logical schema
+l In general, the interfaces between the various levels and components should
+be well defined so that changes in some parts do not seriously influence others.
+©Silberschatz, Korth and Sudarshan 1.14 Database System Concepts - 7th Edition
+Relational Model
+n Relational model (Chapter 2)
+n Relational algebra
+n Example of tabular data in the relational model
+Columns
+Rows
+©Silberschatz, Korth and Sudarshan 1.15 Database System Concepts - 7th Edition
+A Sample Relational Database
+& Sample Queries
+ID,building
+(Instructor.dept_name=“Physics” (
+ instructor.dept_name=department.dept_name(instructor x department)))
+ dept_name=“Physics”(instructor)
+©Silberschatz, Korth and Sudarshan 1.16 Database System Concepts - 7th Edition
+Data Definition Language (DDL)
+n Specification notation for defining the database schema
+Example: create table instructor (
+ID char(5), name varchar(20),
+dept_name varchar(20), salary numeric(8,2))
+n DDL compiler generates a set of table templates stored in a data dictionary
+n Data dictionary contains metadata (i.e., data about data)
+l Database schema
+l Integrity constraints
+4 Primary key (ID uniquely identifies instructors)
+4 Referential integrity (references constraint in SQL) – e.g. dept_name value in any instructor tuple must appear in
+department relation
+4 Value constraints
+l Authorization
+©Silberschatz, Korth and Sudarshan 1.17 Database System Concepts - 7th Edition
+Data Manipulation Language (DML)
+n Language for accessing and manipulating the data organized by the appropriate
+data model
+l DML also known as query language
+n Two classes of languages
+l Procedural – user specifies what data is required and how to get those data. Relational algebra is procedural
+l Declarative (nonprocedural) – user specifies what data is required without
+specifying how to get those data
+n SQL is the most widely used query language
+©Silberschatz, Korth and Sudarshan 1.18 Database System Concepts - 7th Edition
+SQL
+n SQL: widely used non-procedural language
+l Example: Find the name of the instructor with ID 22222
+select name
+from instructor
+where instructor.ID = ‘22222’ l Example: Find the ID and building of instructors in the Physics dept. select instructor.ID, department.building
+from instructor, department
+where instructor.dept_name = department.dept_name and
+department.dept_name = ‘Physics’ n Application programs generally access databases through one of
+l Language extensions to allow embedded SQL
+l Application program interface (e.g., ODBC/JDBC) which allow SQL
+queries to be sent to a database
+n Chapters 3, 4 and 5
+©Silberschatz, Korth and Sudarshan 1.19 Database System Concepts - 7th Edition
+Database Design
+The process of designing the general structure of the database:
+n Logical Design – Deciding on the database schema. Database design
+requires that we find a “good” collection of relation schemas. l Business decision – What relation schemas and attributes should we
+record in the database?
+l Computer Science decision – How to optimize the schema and how
+should the attributes be distributed among the various relation
+schemas?
+n Physical Design – Deciding on the physical layout of the database
+©Silberschatz, Korth and Sudarshan 1.20 Database System Concepts - 7th Edition
+Database Design?
+n Is there any problem with this design?
+©Silberschatz, Korth and Sudarshan 1.21 Database System Concepts - 7th Edition
+Design Approaches
+n Entity Relationship Model (Chapter 6)
+l Models an enterprise as a collection of entities and relationships
+4 Entity: a “thing” or “object” in the enterprise that is distinguishable from other objects
+– Described by a set of attributes
+4 Relationship: an association among several entities
+l Represented diagrammatically by an entity-relationship diagram:
+n Normalization Theory (Chapter 7)
+l Formalize what designs are bad, and test for them
+l Basic theory: functional dependency. Example: student_id ->student_name
+©Silberschatz, Korth and Sudarshan 1.22 Database System Concepts - 7th Edition
+The Entity-Relationship Model
+n Models an enterprise as a collection of entities and relationships
+l Entity: a “thing” or “object” in the enterprise that is distinguishable from other
+objects
+4 Described by a set of attributes
+l Relationship: an association among several entities
+n Represented diagrammatically by an entity-relationship diagram:
+Does a instructor have a dept_name?
+©Silberschatz, Korth and Sudarshan 1.23 Database System Concepts - 7th Edition
+Part Two: Relational Database System Design
+• How the data is physically stored and managed?
+• How a query is processed?
+• How a transaction is processed?
+• You are required to design the storage management and
+query process modules plus the simple user interface
+©Silberschatz, Korth and Sudarshan 1.24 Database System Concepts - 7th Edition
+Database System Internals
+©Silberschatz, Korth and Sudarshan 1.25 Database System Concepts - 7th Edition
+Storage Management
+(Chapter 12,13,14)
+n Storage manager is a program module that provides the interface between the
+low-level data stored in the database and the query processor of DBMS. n The storage manager is responsible to the following tasks:
+l Interaction with the file manager
+l Efficient storing, retrieving and updating of data
+n Issues:
+l Storage access (file, buffer); File organization; Indexing and hashing
+l Transaction;
+l Failure recovery
+n The storage manager components include:
+l Authorization and integrity manager
+l Transaction manager
+l File manager
+l Buffer manager
+©Silberschatz, Korth and Sudarshan 1.26 Database System Concepts - 7th Edition
+Storage Management (Cont.)
+n File organization example:
+n Index example:
+©Silberschatz, Korth and Sudarshan 1.27 Database System Concepts - 7th Edition
+Query Processing
+(Charpter 15,16)
+n The query processor components include:
+l DDL interpreter -- interprets DDL statements and records the definitions in the data
+dictionary. l DML compiler -- translates DML statements in a query language into an evaluation
+plan consisting of low-level instructions that the query evaluation engine understands. 4 The DML compiler performs query optimization; that is, it picks the lowest cost
+evaluation plan from among the various alternatives. l Query evaluation engine -- executes low-level instructions generated by the DML
+compiler.
+©Silberschatz, Korth and Sudarshan 1.28 Database System Concepts - 7th Edition
+Query Processing(Cont.)
+1. Parsing and translation
+2. Optimization
+3. Evaluation
+©Silberschatz, Korth and Sudarshan 1.29 Database System Concepts - 7th Edition
+Query Processing (Cont.)
+n Alternative ways of evaluating a given query
+l Equivalent expressions
+l Different algorithms for each operation
+©Silberschatz, Korth and Sudarshan 1.30 Database System Concepts - 7th Edition
+Query Processing (Cont.)
+n Different algorithms for each operation. Cost difference between a good and a
+bad way of evaluating a query can be enormous
+l Sequence search: Num of Blocks * tT + tS
+l Index based search: (hi + 1) * (tT + tS)
+n Need to estimate the cost of operations
+l Depends critically on statistical information about relations which the database
+must maintain
+l Need to estimate size of intermediate results to compute cost of complex
+expressions. Example, estimate number of records to find course information
+from takes for a specific student: ntakes
+/ V(student_id,takes) , where takes is
+the relation that stores information of students and the courses they take.
+©Silberschatz, Korth and Sudarshan 1.31 Database System Concepts - 7th Edition
+Transaction Management
+Chapter 17,18,19
+n What is a transaction: A transaction is a collection of operations that
+performs a single logical function in a database application
+n What if the system fails?
+n What if more than one user is concurrently updating the same data?
+n Transaction-management component ensures that the database
+remains in a consistent (correct) state despite system failures (e.g., power failures and operating system crashes) and transaction failures. n Concurrency-control manager controls the interaction among the
+concurrent transactions, to ensure the consistency of the database.
+©Silberschatz, Korth and Sudarshan 1.32 Database System Concepts - 7th Edition
+Transaction Management:
+Lock Based Concurrent Control
+©Silberschatz, Korth and Sudarshan 1.33 Database System Concepts - 7th Edition
+Transaction Management:
+Log Based Recovery
+©Silberschatz, Korth and Sudarshan 1.34 Database System Concepts - 7th Edition
+Database Users and Administrators
+Database
+©Silberschatz, Korth and Sudarshan 1.35 Database System Concepts - 7th Edition
+History of Database Systems
+n 1950s and early 1960s:
+l Data processing using magnetic tapes for storage
+4 Tapes provided only sequential access
+l Punched cards for input
+n Late 1960s and 1970s:
+l Hard disks allowed direct access to data
+l Network and hierarchical data models in widespread use
+l Ted Codd defines the relational data model
+4 Would win the ACM Turing Award for this work
+4 IBM Research begins System R prototype
+4 UC Berkeley begins Ingres prototype
+4 Oracle releases first commercial relational database
+l High-performance (for the era) transaction processing (OLTP)
+©Silberschatz, Korth and Sudarshan 1.36 Database System Concepts - 7th Edition
+History (cont.)
+n 1980s:
+l Research relational prototypes evolve into commercial systems
+4 SQL becomes industrial standard
+l Parallel and distributed database systems
+l Object-oriented database systems
+n 1990s:
+l Large decision support and data-mining applications (OLAP)
+l Large multi-terabyte data warehouses
+l Emergence of Web commerce
+n 2000s:
+l NoSQL: MongoDB, Redis, HBase
+l Cloud DB: Google Spanner, Amazon Aurora, Aliyun PolarDB
+n Now: AI based database or AI supporting database; Blockchain
+database
+n It’s not later products replace the earlier ones. Different products can
+satisfy different application requirements
+©Silberschatz, Korth and Sudarshan 1.37 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 1.38 Database System Concepts - 7th Edition
+Figure 1.02
+©Silberschatz, Korth and Sudarshan 1.39 Database System Concepts - 7th Edition
+Figure 1.04
+©Silberschatz, Korth and Sudarshan 1.40 Database System Concepts - 7th Edition
+Figure 1.06

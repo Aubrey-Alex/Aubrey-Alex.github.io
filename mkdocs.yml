@@ -16,8 +16,8 @@ theme:
     # 亮色调
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: white
-      accent: indigo
+      primary: white    # 主色调设为白色
+      accent: indigo    # 强调色保持不变
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -102,28 +102,47 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 # 插件设置
 plugins:
   - search
-  - blog
+  - statistics:
+      enabled: true
+  - blog:
+      archive_date_format: "YYYY-MM" # 日期格式
+
+use_directory_urls: false
 
 extra_javascript:
   - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/mermaid/dist/mermaid.min.js
+
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css
 
 # 文档布局
 nav:
   - Home:
       - index.md
-  - Markdown: markdown/markdown.md
+  - Markdown: Markdown/markdown.md
   - Computer Science:
       - Computer Science/index.md
       - 数据库:
           - Computer Science/数据库/index.md
           - 课程笔记:
               - Computer Science/数据库/课程笔记/index.md
-              - Introduction: Computer Science/数据库/课程笔记/Introduction.md
-              - Relational Model: Computer Science/数据库/课程笔记/Relational Model.md
-              - SQL: Computer Science/数据库/课程笔记/SQL.md
+              - Introduction: Computer Science/数据库/课程笔记/1 Introduction.md
+              - Relational Model: Computer Science/数据库/课程笔记/2 Relational Model.md
+              - SQL: Computer Science/数据库/课程笔记/3 SQL.md
+              - Intermediate SQL: Computer Science/数据库/课程笔记/4 Intermediate SQL.md
+              - Advanced SQL: Computer Science/数据库/课程笔记/5 Advanced SQL.md
+              - ER Model: Computer Science/数据库/课程笔记/6 ER Model.md
+              - Relational Database Design: Computer Science/数据库/课程笔记/7 Relational Database Design.md
           - 自学笔记:
               - Computer Science/数据库/自学笔记/index.md
               - SQL: Computer Science/数据库/自学笔记/MySQL.md
@@ -131,11 +150,37 @@ nav:
           - Computer Science/C++/index.md
           - 课程笔记:
               - Computer Science/C++/课程笔记/index.md
-              - objects: Computer Science/C++/课程笔记/Using Objects.md
+              - Introduction: Computer Science/C++/课程笔记/0 Introduction.md
+              - Using Objects: Computer Science/C++/课程笔记/1 Using Objects.md
+              - Grouping Objects: Computer Science/C++/课程笔记/2 Grouping Objects.md
+              - Defining Class: Computer Science/C++/课程笔记/3 Defining Class.md
+              - Inside Object: Computer Science/C++/课程笔记/4 Inside Object.md
+              - Inside Object II: Computer Science/C++/课程笔记/5 Inside Object II.md
+              - Inside Class: Computer Science/C++/课程笔记/6 Inside Class.md
+              - Composition: Computer Science/C++/课程笔记/7 Composition.md
           - 自学笔记:
               - Computer Science/C++/自学笔记/index.md
               - C++: Computer Science/C++/自学笔记/C++.md
       - Python:
-          - Computer Science/python/index.md
+          - Computer Science/Python/index.md
           - 自学笔记:
-              - python: Computer Science/python/自学笔记/python.md
+              - python: Computer Science/Python/自学笔记/python.md
+  - AI:
+      - AI/index.md
+      - 机器学习:
+          - AI/机器学习/index.md
+          - 李宏毅:
+              - AI/机器学习/ML.md
+  - Foreign Course:
+      - Foreign Course/index.md
+  - Paper Reading:
+      - Paper Reading/index.md
+  - Web:
+      - HTML:
+          - Web/HTML/index.md
+      - CSS:
+          - Web/CSS/index.md
+      - JavaScript:
+          - Web/JavaScript/index.md
+  - Blog:
+      - blog/index.md

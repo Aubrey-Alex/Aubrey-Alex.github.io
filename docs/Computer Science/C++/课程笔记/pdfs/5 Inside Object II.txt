@@ -1,0 +1,451 @@
+OOP W5: Inside Object II
+Inside Object II
+Reference
+Const
+Operator new and delete
+2002-2025 Weng Kai
+Reference
+OOP W5: Inside Object II
+2002-2025 Weng Kai 2
+Declaring references
+Reference is a new way to manipulate objects in C++
+char c; // a character
+char *p = &c; // a pointer to a character
+char &r = c; // a reference to a character
+& indicates the variable at its right is a reference
+Local or global variables
+type& refname = name;
+For ordinary variables, the initial value is required
+In parameter lists and member variables
+type& refname
+Binding defined by caller or constructor
+OOP W5: Inside Object II
+2002-2025 Weng Kai 3
+References
+Declares a new name for an existing object
+int X=47;
+int &Y=X; // Y is a reference to X
+// X and Y now refer to the same variable
+cout<<"Y="<<y; //printsY=47
+Y = 18;
+cout<<"X="<<x; //printsX=18
+OOP W5: Inside Object II
+2002-2025 Weng Kai 4
+Rules of references
+References must be initialized with a variable at definition
+Initialization establishes a binding
+In declaration
+int x = 3;
+int &y = x;
+const int &z = x;
+As a function argument
+void f ( int& x );
+f(y); // initialized when function is called
+OOP W5: Inside Object II
+2002-2025 Weng Kai 5
+Rules of references(cn'td)
+Bindings donʼt change at run time, unlike pointers
+Assignment changes the object referred-to
+int &y = x;
+y = 12; // Changes value of x
+The target of a reference must have a location!
+void func(int &);
+func (i * 3); // Warning or error!
+OOP W5: Inside Object II
+2002-2025 Weng Kai 6
+Pointers vs. References
+References
+can't be null
+are dependent on an existing variable, they are an alias for an variable
+can't change to a new "address" location
+Pointers
+can be set to null
+pointer is independent of existing objects
+can change to point to a different address
+OOP W5: Inside Object II
+2002-2025 Weng Kai 7
+Restrictions
+No references to references
+No pointers to references
+int &*p; // illegal
+Reference to pointer is ok
+void f(int *&p);
+No arrays of references
+OOP W5: Inside Object II
+2002-2025 Weng Kai 8
+Left Value vs Right Value
+Left-value can be simply regarded as value that can be used at the left of assignment:
+Variable, reference
+Result of operator * , [] , . and ->
+Right-value are values can be used at the right hand of the assignment:
+Literal
+Expression
+A reference parameter can take left-value only —> reference is the alias of a left-value
+The passing of an argument is initializing of the parameter
+OOP W5: Inside Object II
+2002-2025 Weng Kai 9
+左值、右值与右值引⽤
+在赋值表达式中，出现在等号左边的就是“左值”
+，⽽在等号右边的，则称为“右值”
+可以取地址的、有名字的就是左值，反之，不能取地址的、没有名字的就是右值
+在C++11中，右值是由两个概念构成的，⼀个是将亡值（xvalue，eXpiring
+Value），另⼀个则是纯右值（prvalue，Pure Rvalue）
+OOP W5: Inside Object II
+2002-2025 Weng Kai 10
+纯右值 vs 将亡值
+纯右值就是C++98标准中右值的概念，讲的是⽤于辨识临时变量和⼀些不跟对象关
+联的值。⽐如⾮引⽤返回的函数返回的临时变量值就是⼀个纯右值。⼀些运算表达
+式，⽐如 1 + 3 产⽣的临时变量值，也是纯右值。⽽不跟对象关联的字⾯量值，⽐
+如： 2 、
+'c'
+、 true ，也是纯右值。此外，类型转换函数的返回值、lambda表达
+式等，也都是右值
+将亡值则是C++11新增的跟右值引⽤相关的表达式，这样表达式通常是将要被移动
+的对象（移为他⽤），⽐如返回右值引⽤ T&& 的函数返回值、 std::move 的返回
+值，或者转换为 T&& 的类型转换函数的返回值
+OOP W5: Inside Object II
+2002-2025 Weng Kai 11
+右值引⽤
+右值引⽤就是对⼀个右值进⾏引⽤的类型。事实上，由于右值通常不具有名字，我
+们也只能通过引⽤的⽅式找到它的存在。通常情况下，我们只能是从右值表达式获
+得其引⽤。⽐如：
+T && a = ReturnRvalue();
+这个表达式中，假设 ReturnRvalue 返回⼀个右值，我们就声明了⼀个名为 a 的右
+值引⽤，其值等于 ReturnRvalue 函数返回的临时变量的值。
+右值引⽤和左值引⽤都是属于引⽤类型。⽆论是声明⼀个左值引⽤还是右值引⽤，
+都必须⽴即进⾏初始化。⽽其原因可以理解为是引⽤类型本身⾃⼰并不拥有所绑定
+对象的内存，只是该对象的⼀个别名。左值引⽤是具名变量值的别名，⽽右值引⽤
+则是不具名（匿名）变量的别名
+OOP W5: Inside Object II
+2002-2025 Weng Kai 12
+Right-value reference
+int x=20; // left-value
+int&& rx = x * 2;
+// the result of x*2 is a right-value, rx extends its lifttime
+int y = rx + 2; // In this way it can be reused:42
+rx = 100;
+// Once a right-value reference is initialized,
+// this variable becomes a left-value that can be assigned
+int&& rrx1 = x;
+// Illegal: right-value reference can not be initialed by a left-value
+const int&& rrx2 = x;
+// Illegal: right-value reference can not be initialed by a left-value
+OOP W5: Inside Object II
+2002-2025 Weng Kai 13
+T && a = ReturnRvalue();
+ReturnRvalue 函数返回的右值在表达式语句结束后，其⽣命也就终结了（通常我
+们也称其具有表达式⽣命期），⽽通过右值引⽤的声明，该右值⼜“重获新⽣”
+，其
+⽣命期将与右值引⽤类型变量 a 的⽣命期⼀样。只要 a 还“活着”
+，该右值临时量将
+会⼀直“存活”下去
+所以相⽐于以下语句的声明⽅式：
+T b = ReturnRvalue();
+右值引⽤变量声明就会少⼀次对象的析构及⼀次对象的构造。因为 a 是右值引⽤，
+直接绑定了 ReturnRvalue() 返回的临时量，⽽ b 只是由临时值构造⽽成的，⽽临
+时量在表达式结束后会析构因应就会多⼀次析构和构造的开销
+OOP W5: Inside Object II
+2002-2025 Weng Kai 14
+能够声明右值引⽤ a 的前提是 ReturnRvalue 返回的是⼀个右值。通常情况下，右
+值引⽤是不能够绑定到任何的左值的。⽐如下⾯的表达式就是⽆法通过编译的。
+int c;
+int && d = c;
+相对地，在C++98标准中就已经出现的左值引⽤是否可以绑定到右值（由右值进⾏
+初始化）呢？⽐如：
+T & e = ReturnRvalue();
+const T & f = ReturnRvalue();
+e 的初始化会导致编译时错误，⽽ f 则不会
+OOP W5: Inside Object II
+2002-2025 Weng Kai 15
+T & e = ReturnRvalue();
+const T & f = ReturnRvalue();
+在常量左值引⽤在C++98标准中开始就是个“万能”的引⽤类型
+可以接受⾮常量左值、常量左值、右值对其进⾏初始化
+⽽且在使⽤右值对其初始化的时候，常量左值引⽤还可以像右值引⽤⼀样将右值的
+⽣命期延⻓
+相⽐于右值引⽤所引⽤的右值，常量左值所引⽤的右值在它的“余⽣”中只能是只读
+的
+相对地，⾮常量左值只能接受⾮常量左值对其进⾏初始化
+OOP W5: Inside Object II
+2002-2025 Weng Kai 16
+Parameter as right-value
+// take left-value
+void fun(int& lref) {
+cout << "l-value" << endl;
+}
+// take right-value
+void fun(int&& rref) {
+cout << "r-value" << endl;
+}
+int main() {
+int x = 10;
+fun(x); // output: l-value reference
+fun(10); // output: r-value reference
+}
+OOP W5: Inside Object II
+2002-2025 Weng Kai 17
+std::move()
+C++11中，<utility>中提供了函数 std::move ，功能是将⼀个左值强制转化为右值引
+⽤，继⽽我们可以通过右值引⽤使⽤该值，⽤于移动语义
+被转化的左值，其⽣命期并没有随着左右值的转化⽽改变
+3-21.cpp
+在编写移动构造函数的时候，应该总是使⽤ std::move 转换拥有形如堆内存、⽂件
+句柄的等资源的成员为右值，这样⼀来，如果成员⽀持移动构造的话，就可以实现
+其移动语义，即使成员没有移动构造函数，也会调⽤拷⻉构造，因为不会引起⼤的
+问题
+OOP W5: Inside Object II
+2002-2025 Weng Kai 18
+移动语义⼀定是要改变临时变量的值
+Moveable c(move(a)); 这样的语句。这⾥的 a 本来是⼀个左值变量，通过
+std::move 将其转换为右值。这样⼀来， a.i 就被 c 的移动构造函数设置为指针空
+值。由于 a 的⽣命期实际要到所在的函数结束才结束，那么随后对表达式 *a.i 进
+⾏计算的时候，就会发⽣严重的运⾏时错误
+OOP W5: Inside Object II
+2002-2025 Weng Kai 19
+Const reference as parameter
+void fun(const int& clref) {
+cout << "l-value const reference\n";
+}
+Such a function can accept right-value when there is no function takes right-vaue
+OOP W5: Inside Object II
+2002-2025 Weng Kai 20
+Constant
+OOP W5: Inside Object II
+2002-2025 Weng Kai 21
+Const
+declares a variable to have a constant value
+const int x = 123;
+x = 27; // illegal!
+x++; // illegal!
+int y = x; // Ok, copy const to non-const
+y = x; // Ok, same thing
+const int z = y; // ok, const is safer
+OOP W5: Inside Object II
+2002-2025 Weng Kai 22
+Constants
+Constants are variables
+Observe scoping rules
+Declared with const type modifier
+A const in C++ defaults to internal linkage
+the compiler tries to avoid creating storage for a const -- holds the value in its
+symbol table.
+extern forces storage to be allocated.
+OOP W5: Inside Object II
+2002-2025 Weng Kai 23
+Compile time constants
+const int bufsize = 1024;
+value must be initialized
+unless you make an explicit extern declaration:
+extern const int bufsize;
+Compiler won't let you change it
+OOP W5: Inside Object II
+2002-2025 Weng Kai 24
+Run-time constants
+const value can be exploited
+const int class_size = 12;
+int finalGrade[class_size]; // ok
+int x;
+cin >> x;
+const int size = x;
+double classAverage[size]; // ok
+OOP W5: Inside Object II
+2002-2025 Weng Kai 25
+Aggregates
+Itʼs possible to use const for aggregates, but storage will be allocated. In these
+situations, const means “a piece of storage that cannot be changed.”
+However, the value cannot be used at compile time because the compiler is not
+required to know the contents of the storage at compile time.
+const int i[] = { 1, 2, 3, 4 };
+float f[i[3]]; // Illegal
+struct S { int i, j; };
+const S s[] = { { 1, 2 }, { 3, 4 } };
+double d[s[1].j]; // Illegal
+OOP W5: Inside Object II
+2002-2025 Weng Kai 26
+Pointers and const
+char * const q = "abc"; // q is const
+*q = 'c'; // OK
+q++; // ERROR
+const char *p = "ABCD"; // (*p) is a const char
+*p = 'b'; // ERROR! (*p) is the const
+OOP W5: Inside Object II
+2002-2025 Weng Kai 27
+Quiz IV
+What do these mean?
+string p1("Fred");
+const string* p = &p1;
+string const* p = &p1;
+string *const p = &p1;
+OOP W5: Inside Object II
+2002-2025 Weng Kai 28
+Pointers and constants
+int i; const int ci = 3;
+int *ip; ip = &i; ip = &ci; // ERROR
+const int *cip cip = &i; cip = &ci;
+Remember:
+*ip = 54; // always legal since ip points to int
+*cip = 54; // never legal since cip points to const int
+OOP W5: Inside Object II
+2002-2025 Weng Kai 29
+String Literals
+char* s = "Hello, world!";
+s is a pointer initialized to point to a string constant
+This is actually a const char *s but compiler accepts it without the const
+Don't try and change the character values (it is undefined behavior)
+If you want to change the string, put it in an array:
+char s[] = "Hello, world!";
+OOP W5: Inside Object II
+2002-2025 Weng Kai 30
+Conversions
+Can always treat a non-const value as const
+void f(const int* x);
+int a = 15;
+f(&a); // ok
+const int b = a;
+f(&b); // ok
+b = a + 1; // Error!
+You cannot treat a constant object as non-constant without an explicit cast
+( const_cast )
+OOP W5: Inside Object II
+2002-2025 Weng Kai 31
+Passing by const value?
+void f1(const int i) {
+i++; // Illegal -- compile-time error
+}
+OOP W5: Inside Object II
+2002-2025 Weng Kai 32
+Returning by const value?
+int f3() { return 1; }
+const int f4() { return 1; }
+int main() {
+const int j = f3(); // Works fine
+int k = f4(); // But this works fine too!
+}
+OOP W5: Inside Object II
+2002-2025 Weng Kai 33
+Passing and returning addresses
+Passing a whole object may cost you a lot. It is better to pass by a pointer. But itʼs
+possible for the programmer to take it and modify the original value.
+In fact, whenever youʼre passing an address into a function, you should make it a
+const if at all possible.
+Example: ConstPointer.cpp, ConstReturning.cpp
+OOP W5: Inside Object II
+2002-2025 Weng Kai 34
+const object
+OOP W5: Inside Object II
+2002-2025 Weng Kai 35
+Constant objects
+What if an object is const?
+const Currency the_raise(42, 38);
+What members can access the internals?
+How can the object be protected from change?
+Solution: declare member functions const
+Programmer declares member functions to be safe
+OOP W5: Inside Object II
+2002-2025 Weng Kai 36
+Const member functions
+Cannot modify their objects
+int Date::set_day(int d){
+//...error check d here...
+day = d; // ok, non-const so can modify
+}
+int Date::get_day() const {
+day++; //ERROR modifies data member
+set_day(12); // ERROR calls non-const member
+return day; // ok
+}
+OOP W5: Inside Object II
+2002-2025 Weng Kai 37
+Const member function definition
+Repeat the const keyword in the definition as well as the declaration
+int get_day () const;
+int get_day() const { return day };
+Function members that do not modify data should be const member functions are
+safe for const objects declared const
+OOP W5: Inside Object II
+2002-2025 Weng Kai 38
+Const objects
+Const and non-const objects
+// non-const object
+Date when(1,1,2001); // not a const
+int day = when.get_day(); // OK
+when.set_day(13); // OK
+// const object
+const Date birthday(12,25,1994); // const
+int day = birthday.get_day(); // OK
+birthday.set_day(14); // ERROR
+OOP W5: Inside Object II
+2002-2025 Weng Kai 39
+Constant fields in class
+class A {
+const int i;
+};
+has to be initialized in initializer list of the constructor
+OOP W5: Inside Object II
+2002-2025 Weng Kai 40
+Compile-time constants in classes
+class HasArray {
+const int size;
+int array[size]; // ?
+};
+use "anonymous enum" hack
+class HasArray {
+enum { size = 100 };
+int array[size]; // OK!
+};
+Or make the const value static:
+class HasArray {
+static const int size = 100;
+int array[size];
+}
+OOP W5: Inside Object II
+2002-2025 Weng Kai 41
+Dynamically allocated memory
+new
+new int;
+new Stash;
+new int[10]
+delete
+delete p;
+delete[] p;
+new is the way to allocate memory as a program runs. Pointers become the only
+access to that memory
+delete enables you to return memory to the memory pool when you are finished with it.
+{} can be used to pass init values to object(s) new generted.
+OOP W5: Inside Object II
+2002-2025 Weng Kai 42
+Dynamic Arrays
+int * psome = new int [10];
+delete[] psome;
+The new operator returns the address of the first element of the block.
+The presence of the brackets tells the program that it should free the whole array, not
+just the element
+OOP W5: Inside Object II
+2002-2025 Weng Kai 43
+The new-delete mech.
+int *p=new int;
+int *a=new int[10];
+Student *q=new Student();
+Student *r=new Student[10];
+delete p;
+a++;
+delete[] a;
+delete q;
+delete r;
+delete[] r;
+OOP W5: Inside Object II
+2002-2025 Weng Kai 44
+Tips for new and delete
+Don't use delete to free memory that new didn't allocate.
+Don't use delete to free the same block of memory twice in succession.
+Use delete [] if new [] was used to allocate an array.
+Use delete (no brackets) if new was used to allocate a single entity.
+It's safe to apply delete to the null pointer (nothing happens).
+OOP W5: Inside Object II
+2002-2025 Weng Kai 45
+What we've learned today?
+Reference
+Const
+Operator new and delete
+OOP W5: Inside Object II
+2002-2025 Weng Kai 46
