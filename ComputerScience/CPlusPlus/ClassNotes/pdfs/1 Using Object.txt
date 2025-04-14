@@ -1,0 +1,121 @@
+OOP W1: Using Object
+Using Objects
+2002-2025 Weng Kai
+string
+string is a class in C++
+You must add this at the beginning of your code:
+#include <string>
+Define variable of string like other types:
+string str;
+Initialize it w/ string literal:
+string str = "Hello";
+string str("Hello");
+string str{"Hello"};
+OOP W1: Using Object
+2002-2025 Weng Kai 2
+Object
+A string variable is an object.
+Everything is an object.
+by Alan Kay
+A variable of any type in C++ is an object.
+OOP W1: Using Object
+2002-2025 Weng Kai 3
+Assignment for string
+char charr1[20];
+char charr2[20] = "jaguar";
+string str1;
+string str2 = "panther";
+carr1 = char2; // illegal
+str1 = str2; // legal
+OOP W1: Using Object
+2002-2025 Weng Kai 4
+Input and Output
+Read and write string with cin / cout :
+cin >> str;
+cout << str;
+Read a whole line:
+getline(cin, line_var)
+OOP W1: Using Object
+2002-2025 Weng Kai 5
+One character in a string
+A string can be used as an array:
+string s = "Hello";
+s[0]='J';
+OOP W1: Using Object
+2002-2025 Weng Kai 6
+Concatenation for string
+string str3;
+str3 = str1 + str2;
+str1 += str2;
+str1 += "lalala";
+OOP W1: Using Object
+2002-2025 Weng Kai 7
+length
+s.length();
+The dot . is an operator that retrieve a member of a struct in C
+It is still that operator in C++ that retrieve a member of an object in C
+OOP W1: Using Object
+2002-2025 Weng Kai 8
+Create a string
+string(const char *cp, int len);
+string(const string& s2, int pos);
+string(const string& s2, int pos, int len);
+OOP W1: Using Object
+2002-2025 Weng Kai 9
+Sub-string
+substr(int pos, int len);
+OOP W1: Using Object
+2002-2025 Weng Kai 10
+Alter string
+insert(size_t pos, const string& s);
+erase (size_t pos = 0, size_t len = npos);
+append (const string& str);
+replace (size_t pos, size_t len, const string& str);
+OOP W1: Using Object
+2002-2025 Weng Kai 11
+Search string
+size_t find (const string& str, size_t pos = 0) const;
+OOP W1: Using Object
+2002-2025 Weng Kai 12
+Pointers to Objects
+string s = "hello";
+string* ps = &s;
+OOP W1: Using Object
+2002-2025 Weng Kai 13
+Operators with Pointers
+& : get address
+ps = &s;
+* : get the object
+(*ps).length()
+-> : call the function
+ps->length()
+OOP W1: Using Object
+2002-2025 Weng Kai 14
+Two Ways to Access
+string s;
+s is the object itself
+string *ps;
+ps is a pointer to an object
+OOP W1: Using Object
+2002-2025 Weng Kai 15
+Object vs Pointer
+string s;
+At this line, object s is created and initialized
+string *ps;
+At this line, the object ps points to is not known yet
+OOP W1: Using Object
+2002-2025 Weng Kai 16
+Assignment
+string s1, s2;
+s1 = s2;
+string *ps1, *ps2;
+ps1 = ps2;
+OOP W1: Using Object
+2002-2025 Weng Kai 17
+What weʼve learned today?
+A brief history of C++
+Input and output in C++ with cin and cout (Ch1.2)
+The string class, the dot . operator (Ch3.2)
+Pointer to an object, the arrow -> operator
+OOP W1: Using Object
+2002-2025 Weng Kai 18

@@ -1,0 +1,424 @@
+OOP W8: Inheritance
+Inheritance
+2002-2025 Weng Kai
+Reusing the implementation
+Composition: construct new object with existing objects
+It is the relationship of “has-a”
+Each object has its own memory consists of other objects. -- by Alan Kay
+OOP W8: Inheritance
+2002-2025 Weng Kai 2
+Reusing the interface
+Inheritance is to take the existing class, clone it, and then make additions and
+modifications to the clone.
+OOP W8: Inheritance
+2002-2025 Weng Kai 3
+Inheritance
+Language implementation technique
+Also an important component of the OO design methodology
+Allows sharing of design for
+Member data
+Member functions
+Interfaces
+Key technology in C++
+OOP W8: Inheritance
+2002-2025 Weng Kai 4
+Inheritance
+The ability to define the behavior or implementation of one class as a superset of
+another class
+OOP W8: Inheritance
+2002-2025 Weng Kai 5
+DoME
+is an application that lets us store information about CDs and DVDs.We can
+enter information about CDs and DVDs
+search, for example, all CDs in the database by a certain artist, or all DVDs by a
+given director
+OOP W8: Inheritance
+2002-2025 Weng Kai 6
+CD
+the title of the album;
+the artist (name of the band or singer);
+the number of tracks on the CD;
+the total playing time;
+a ‘got itʼ flag that indicates whether I own a copy of this CD; and
+a comment (some arbitrary text).
+OOP W8: Inheritance
+2002-2025 Weng Kai 7
+DVD
+the title of the DVD;
+the name of the director;
+the playing time (we define this as the playing time of the main feature);
+a ‘got itʼ flag that indicates whether I own a copy of this DVD; and
+a comment (some arbitrary text)
+OOP W8: Inheritance
+2002-2025 Weng Kai 8
+The DoME example
+"Database of Multimedia Entertainment"
+stores details about CDs and DVDs
+CD: title, artist, # tracks, playing time, got-it, comment
+DVD: title, director, playing time, got-it, comment
+allows (later) to search for information or print lists
+OOP W8: Inheritance
+2002-2025 Weng Kai 9
+DoME classes
+OOP W8: Inheritance
+2002-2025 Weng Kai 10
+Class diagram
+OOP W8: Inheritance
+2002-2025 Weng Kai 11
+Object model
+OOP W8: Inheritance
+2002-2025 Weng Kai 12
+Class diagram
+OOP W8: Inheritance
+2002-2025 Weng Kai 13
+source code
+class Database {
+vector<CD> cds;
+vecrot<DVD> dvds;
+public:
+void addCD(CD &aCD);
+void addDVD(DVD &aDVD);
+void list() {
+for (auto x:cds) { cd.print();}
+for (auto x:dvds) { dvd.print();}
+}
+};
+OOP W8: Inheritance
+2002-2025 Weng Kai 14
+Critique of DoME
+code duplication
+CD and DVD classes very similar (large part are identical)
+makes maintenance difficult/more work
+introduces danger of bugs through incorrect maintenance
+code duplication also in Database class
+OOP W8: Inheritance
+2002-2025 Weng Kai 15
+Discuss
+The CD and DVD classes are very similar. In fact, the majority of the classesʼ source
+code is identical, with only a few differences
+In the Database class.We can see that everything in that class is done twice – once for
+CDs and once for DVDs
+What if weʼd add new types of media?
+OOP W8: Inheritance
+2002-2025 Weng Kai 16
+Solution -- Inheritance
+Inheritance allows us to define one class as an extension of another.
+OOP W8: Inheritance
+2002-2025 Weng Kai 17
+Class diagram
+OOP W8: Inheritance
+2002-2025 Weng Kai 18
+Using inheritance
+define one superclass : Item
+define subclasses for CD and DVD
+the superclass defines common attributes
+the subclasses inherit the superclass attributes the subclasses add own attributes
+OOP W8: Inheritance
+2002-2025 Weng Kai 19
+Inheritance hierarchies
+OOP W8: Inheritance
+2002-2025 Weng Kai 20
+Inheritance
+OOP W8: Inheritance
+2002-2025 Weng Kai 21
+Database v2.0
+...
+public void addItem(Item theItem) {
+items.add(theItem);
+}
+/**
+* Print a list of all currently stored items to the text terminal.
+*/
+public void list() {
+for(auto item : items) {
+item.print();
+}
+}
+OOP W8: Inheritance
+2002-2025 Weng Kai 22
+Adding other item types
+OOP W8: Inheritance
+2002-2025 Weng Kai 23
+Advantages of inheritance
+Avoiding code duplication
+Code reuse
+Easier maintenance
+Extendibility
+OOP W8: Inheritance
+2002-2025 Weng Kai 24
+Inheritance
+The ability to define the behavior or implementation of one class as a superset of another
+class
+OOP W8: Inheritance
+2002-2025 Weng Kai 25
+Inheritance
+Class relationship: Is-A
+OOP W8: Inheritance
+2002-2025 Weng Kai 26
+What does it inherited?
+(private) member variables
+public member functions
+private member functions
+protected members
+static members
+OOP W8: Inheritance
+2002-2025 Weng Kai 27
+Private Member Variables
+There is the object of the super class right there inside the object of the derived class
+with all the member variables in
+but the derived one does NOT have access to those variables
+have to use those via member functions of the super class
+If the derived one has a varible as the same name, it is an isolated new one
+OOP W8: Inheritance
+2002-2025 Weng Kai 28
+Derived-Class Objects and the Derived-to-Base Conversion
+A derived object contains multiple parts: a subobject containing the (nonstatic)
+members defined in the derived class itself, plus subobjects corresponding to each
+base class from which the derived class inherits
+class A...
+class B:public A...
+OOP W8: Inheritance
+2002-2025 Weng Kai 29
+Public Member Functions
+They are public member functions of the derived class
+They defined the interface of the class
+All objects of a peticular class can receive the same messages. -- by Alan Kay
+OOP W8: Inheritance
+2002-2025 Weng Kai 30
+Private Member Functions
+They are NOT accessible in the derived class
+OOP W8: Inheritance
+2002-2025 Weng Kai 31
+Protected Members
+They are fully accessible in the derived class
+OOP W8: Inheritance
+2002-2025 Weng Kai 32
+Static Members
+They are still class-wide members
+OOP W8: Inheritance
+2002-2025 Weng Kai 33
+Scopes and access in C++
+OOP W8: Inheritance
+2002-2025 Weng Kai 34
+Declare an Employee class
+class Employee {
+public:
+Employee( const std::string& name, const std::string& ssn );
+const std::string& get_name() const;
+void print(std::ostream& out) const;
+void print(std::ostream& out, const std::string& msg) const;
+protected:
+std::string m_name;
+std::string m_ssn;
+};
+OOP W8: Inheritance
+2002-2025 Weng Kai 35
+Constructor for Employee
+Employee::Employee( const string& name, const string& ssn )
+: m_name(name), m_ssn( ssn) {
+// initializer list sets up the values!
+}
+OOP W8: Inheritance
+2002-2025 Weng Kai 36
+Employee member functions
+inline const std::string& Employee::get_name() const {
+return m_name;
+}
+inline void Employee::print( std::ostream& out ) const {
+out << m_name << endl;
+out << m_ssn << endl;
+}
+inline void Employee::print(std::ostream& out, const std::string& msg) const {
+out << msg << endl;
+print(out);
+}
+OOP W8: Inheritance
+2002-2025 Weng Kai 37
+Now add Manager
+class Manager : public Employee {
+public:
+Manager(const std::string& name, const std::string& ssn, const std::string& title);
+const std::string title_name() const;
+const std::string& get_title() const;
+void print(std::ostream& out) const;
+private:
+std::string m_title;
+};
+OOP W8: Inheritance
+2002-2025 Weng Kai 38
+Inheritance and constructors
+Think of inherited traits as an embedded object
+Base class is mentioned by class name
+Manager::Manager( const string& name, const string& ssn, const string& title = "" )
+:Employee(name, ssn), m_title( title ) {
+}
+OOP W8: Inheritance
+2002-2025 Weng Kai 39
+More on constructors
+Base class is always constructed first
+If no explicit arguments are passed to base class
+Default constructor will be called
+Destructors are called in exactly the reverse order of the constructors.
+OOP W8: Inheritance
+2002-2025 Weng Kai 40
+继承构造函数
+类具有可派⽣性，派⽣类⾃动获得基类的成员变量和接⼝（虚函数和纯虚函数）
+基类的构造函数也没有被继承，因此：
+class A {
+public:
+A(int i) {}
+};
+class B : public A {
+public:
+B(int i): A(i), d(i) {}
+private:
+int d;
+};
+B的构造函数起到了传递参数给A的构造函数的作⽤：透传
+如果A具有不只⼀个构造函数，B往往需要设计对应的多个透传
+OOP W8: Inheritance
+2002-2025 Weng Kai 41
+using 声明
+派⽣类⽤ using 声明来使基类的成员函数成为⾃⼰的
+解决name hiding问题：⾮虚函数被 using 后成为派⽣类的函数
+解决构造函数重载问题
+OOP W8: Inheritance
+2002-2025 Weng Kai 42
+class Base {
+public:
+void f(double ) {
+cout << "double\n";
+}
+};
+class Derived : Base { //不是public继承
+public:
+using Base::f;
+void f(int ) {
+cout << "int\n";
+}
+};
+int main()
+{
+Derived d;
+d.f(4);
+d.f(4.5);
+}
+3-3.cpp
+OOP W8: Inheritance
+2002-2025 Weng Kai 43
+class A {
+public:
+A(int i) { cout << "int\n"; }
+A(double d, int i) {}
+A(float f, char *s) {}
+};
+class B : A {
+public:
+using A::A;
+};
+int main()
+{
+B b(2);
+}
+继承构造函数是隐式声明的，如果没有⽤到就不产⽣代码
+g++ 3-4.cpp --std=c++11
+OOP W8: Inheritance
+2002-2025 Weng Kai 44
+如果基类的函数具有默认参数值， using 的派⽣类⽆法得到默认参数值，就必须转
+为多个重载的函数
+class A {
+public:
+A(int a=3, double b=2.4) {}
+};
+实际上可以被看作是：
+A(int, double);
+A(int);
+A();
+那么，被 using 之后就会产⽣相应的多个函数
+OOP W8: Inheritance
+2002-2025 Weng Kai 45
+Manager member functions
+inline void Manager::print( std::ostream& out ) const {
+Employee::print( out ); // call the base class print
+out << m_title << endl;
+}
+inline const std::string& Manager::get_title() const {
+return m_title;
+}
+inline const std::string Manager::title_name() const {
+return string( m_title + ": " + m_name ); // access base m_name
+}
+OOP W8: Inheritance
+2002-2025 Weng Kai 46
+Uses
+int main () {
+Employee bob( "Bob Jones"
+,
+"555-44-0000" );
+Manager bill( "Bill Smith"
+,
+"666-55-1234"
+,
+"Important Person" );
+string name = bill.get_name(); // okay Manager inherits Employee
+//string title = bob.get_title(); // Error -- bob is an Employee!
+cout << bill.title_name() << '\n' << endl;
+bill.print(cout);
+bob.print(cout);
+bob.print(cout,
+"Employee:");
+//bill.print(cout,
+"Employee:"); // Error hidden!
+OOP W8: Inheritance
+2002-2025 Weng Kai 47
+Name Hiding
+If you redefine a member function in the derived class, all other overloaded functions
+in the base class are inaccessible.
+We'll see how the keyword virtual affects function overloading next time.
+OOP W8: Inheritance
+2002-2025 Weng Kai 48
+What is not inherited?
+Constructors
+synthesized constructors use memberwise initialization
+In explicit copy ctor, explicity call base-class copy ctor or the default ctor will be
+called instead.
+Destructors
+Assignment operation
+synthesized operator= uses memberwise assignment
+explicit operator= be sure to explicity call the base class version of operator=
+Private data is hidden, but still present
+OOP W8: Inheritance
+2002-2025 Weng Kai 49
+Access protection
+Members
+Public: visible to all clients
+Protected: visible to classes derived from self (and to friends)
+Private: visible only to self and to friends!
+Inheritance
+Public: class Derived : public Base ...
+Protected: class Derived : protected Base ...
+Private: class Derived : private Base ...
+default
+OOP W8: Inheritance
+2002-2025 Weng Kai 50
+How inheritance affects access
+Suppose class B is derived from A . Then
+Base class member access specifier
+Inheritance Type (B is) public protected private
+public A public in B protected in B hidden
+private A private in B private in B hidden
+protected A protected in B protected in B hidden
+OOP W8: Inheritance
+2002-2025 Weng Kai 51
+When is protected not protected?
+When your derived classes are ill-behaved!
+Protected is public to all derived classes
+For this reason
+make member functions protected
+keep member variables private
+OOP W8: Inheritance
+2002-2025 Weng Kai 52
+What we've learned?
+inheritance
+OOP W8: Inheritance
+2002-2025 Weng Kai 53

@@ -1,0 +1,582 @@
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 2.2 Database System Concepts - 7th Edition
+n In the context of this book, which one of the following is a relation (multiple selection):
+l 1) Your pet dog and you
+l 2) Your bank account and you
+l 3) All the members in a football team
+l 4) All the students currently attending this class relation
+relation
+relationship
+relationship
+©Silberschatz, Korth and Sudarshan 2.3 Database System Concepts - 7th Edition
+attributes
+(or column names)
+tuples
+(or rows)
+n Order of tuples is irrelevant (tuples may be stored in an arbitrary order)
+©Silberschatz, Korth and Sudarshan 2.4 Database System Concepts - 7th Edition
+n A1
+, A2
+, …, An are attributes
+n R = (A1
+, A2
+, …, An
+) is a relation schema
+Example:
+instructor = (ID, name, dept_name, salary)
+n Formally, given sets D1
+, D2
+, …. Dn a relation r is a subset of
+D1 x D2 x … x Dn
+Thus, a relation is a set of n-tuples (a1
+, a2
+, …, an
+) where each ai  Di
+l The subset is not always rational, especial temporary relation
+n Naming rule: Upper case “R” is a schema, lower case “r” is an instance. r(R) refers to relation instance “r” based on the schema “R” l both R and r are sets
+l R is a set of attributes
+l r is a set of tuples
+n Table is the an alternative concept to relation instance
+取值范围
+©Silberschatz, Korth and Sudarshan 2.5 Database System Concepts - 7th Edition
+n The set of allowed values for each attribute is called the domain of the
+attribute
+n Attribute values are (normally) required to be atomic; that is, indivisible. l Strictly indivisible example: store first name and last name
+separately, first name: “三”，last name：
+“张”
+l If do not query by last name or first name frequently, can store the full
+name in one attribute, name: “张三” l Non atomic examples: two telephone numbers stored in one attribute;
+all the information of a book stored in one attribute, including
+information of author, title, publisher, etc. n The special value null is a member of every domain. Null means the
+values is unknows or does not exist. Example: domain of Semester:
+Spring, Summer, Autumn, Winter, null; domain of Grade: integer 0 to 100, and null
+n The null value causes complications in the definition of many operations
+不知道
+©Silberschatz, Korth and Sudarshan 2.6 Database System Concepts - 7th Edition
+n A database consists of multiple relations
+n Information about an enterprise is broken up into parts
+instructor
+student
+advisor
+n Bad design:
+univ (instructor -ID, name, dept_name, salary, student_Id, ..)
+results in
+l repetition of information (e.g., two students have the same instructor)
+l the need for null values (e.g., represent an student with no advisor)
+n Normalization theory deals with how to design “good” relational schemas
+n Database schema -- is the logical structure of the database. n Database instance -- is a snapshot of the data in the database at a given
+instant in time.
+©Silberschatz, Korth and Sudarshan 2.7 Database System Concepts - 7th Edition
+n Let K  R
+n K is a superkey of R if values for K are sufficient to identify a unique tuple of each possible
+relation r
+l Example: {ID} and {ID,name} are both superkeys of instructor. n Superkey K is a candidate key if the number of attributes in K is minimal (If we remove one
+more attribute in K, K will not be a superkey)
+l Example: {ID} is a candidate key for Instructor
+n Candidate key can have more than one attribute
+l Example: grade(student_id, course_id, grade)
+n One of the candidate keys is selected to be the primary key. l Exampe: student(student_id, name, mobile_phone, email), how many candidate keys, which one will be the primary key
+n Foreign key constraint: Value in one relation must appear in another
+l Referencing relation ；Referenced relation
+l Example: dept_name in instructor is a foreign key from instructor referencing department
+超级码
+候选码
+©Silberschatz, Korth and Sudarshan 2.8 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 2.9 Database System Concepts - 7th Edition
+n Procedural language, but not a traditional programming language
+n Input and output are all relations
+n Part One: Relational Algebra – Basic Operators, mainly:
+l For one relation:
+4 select: 
+4 project: 
+4 rename: 
+l For two relations:
+4 union: 
+4 set difference: – 4 Cartesian product: x
+n Part two: Relational Algebra - Additional Operations
+l Operations that can be expressed with basic operations, for example: intersection can be
+expressed with set difference
+n Part three: Relational Algebra - Extended Operations
+l Operations that can not be expressed with basic operations. Mainly aggregation functions
+取行
+取列
+乘法
+除法：可以用前面的来表达
+无法用前面的表达
+©Silberschatz, Korth and Sudarshan 2.10 Database System Concepts - 7th Edition
+n Six basic operators
+l select: 
+l project: 
+l union: 
+l set difference: – l Cartesian product: x
+l rename: 
+©Silberschatz, Korth and Sudarshan 2.11 Database System Concepts - 7th Edition
+n Relation r
+¡ A=B ^ D > 5
+(r)
+运
+算
+符
+条
+件
+relation
+instance
+©Silberschatz, Korth and Sudarshan 2.12 Database System Concepts - 7th Edition
+n The select operation selects tuples that satisfy a given predicate. n Notation:  p
+(r)
+n p is called the selection predicate
+n Defined as:
+p
+(r) = {t | t  r and p(t)}
+Where p is a formula in propositional calculus consisting of terms
+connected by :  (and),  (or),  (not)
+Each term is one of:
+<attribute> op <attribute> or <constant>
+where op is one of: =, , >, . <. 
+n Example of selection:
+ dept_name=“Physics”(instructor)
+ dept_name=“Physics”  salary >50000
+(instructor)
+©Silberschatz, Korth and Sudarshan 2.13 Database System Concepts - 7th Edition
+n Relation r:
+n A,C (r)
+消除冗余行
+©Silberschatz, Korth and Sudarshan 2.14 Database System Concepts - 7th Edition
+n A unary operation that returns its argument relation, with certain
+attributes left out. n Notation:
+where A1
+, A2 are attribute names and r is a relation name. n The result is defined as the relation of k columns obtained by
+erasing the columns that are not listed
+n Duplicate rows removed from result, since relations are sets
+n Example: To eliminate the dept_name attribute of instructor
+ID, name, salary (instructor)
+course_id
+( semester=“Fall” Λ year=2009
+(section))
+( )
+1
+, 2
+, , r A
+k A A  
+©Silberschatz, Korth and Sudarshan 2.15 Database System Concepts - 7th Edition
+n Relations r, s:
+n r  s:
+©Silberschatz, Korth and Sudarshan 2.16 Database System Concepts - 7th Edition
+n The union operation allows us to combine two relations
+n Notation: r  s
+n Defined as:
+r  s = {t | t  r or t  s}
+n For r  s to be valid. 1. r, s must have the same arity (same number of attributes)
+2. The attribute domains must be compatible (example: 2nd column
+of r deals with the same type of values as does the 2nd
+column of s)
+n Duplicate rows removed from result
+n Example: to find all courses taught in the Fall 2009 semester, or in the
+Spring 2010 semester, or in both
+course_id
+( semester=“Fall” Λ year=2009
+(section)) 
+course_id
+( semester=“Spring” Λ year=2010
+(section))
+有相同值域
+©Silberschatz, Korth and Sudarshan 2.17 Database System Concepts - 7th Edition
+n Relations r, s:
+n r – s:
+©Silberschatz, Korth and Sudarshan 2.18 Database System Concepts - 7th Edition
+n The set-difference operation allows us to find tuples that are in one
+relation but are not in another. n Notation r – s
+n Defined as:
+r – s = {t | t  r and t  s}
+n Set differences must be taken between compatible relations. l r and s must have the same arity
+l attribute domains of r and s must be compatible
+n Example: to find all courses taught in the Fall 2009 semester, but
+not in the Spring 2010 semester
+course_id
+( semester=“Fall” Λ year=2009
+(section)) − course_id
+( semester=“Spring” Λ year=2010
+(section))
+©Silberschatz, Korth and Sudarshan 2.19 Database System Concepts - 7th Edition
+n Relations r, s:
+n r x s:
+©Silberschatz, Korth and Sudarshan 2.20 Database System Concepts - 7th Edition
+n The Cartesian-product operation (denoted by X) allows us to
+combine information from any two relations. n Notation r x s
+n Defined as:
+r x s = {t q | t  r and q  s}
+n Assume that attributes of r(R) and s(S) are disjoint. (That is, R 
+S = , or, no attributes with the same name). n If attributes of r(R) and s(S) are not disjoint, then renaming must
+be used, e.g, instructor.ID, teaches.ID. n The resulting relation may be huge
+n In real application, most of the tuples in the resulting relation may
+be useless. Followed by “”, “x” may be the most frequently used
+operation in database applications, as database consists of many
+interrelated relations.
+©Silberschatz, Korth and Sudarshan 2.21 Database System Concepts - 7th Edition
+n The Cartesian-Product
+instructor X teaches
+associates every tuple of instructor with every tuple of teaches. l Most of the resulting rows have information about instructors who did
+NOT teach a particular course. n To get only those tuples of “instructor X teaches “ that pertain to
+instructors and the courses that they taught, we write:
+ instructor.id = teaches.id
+(instructor x teaches ))
+l We get only those tuples of “instructor X teaches” that pertain to
+instructors and the courses that they taught. n The result of this expression, shown in the next slide
+©Silberschatz, Korth and Sudarshan 2.22 Database System Concepts - 7th Edition
+n The table corresponding to:
+ instructor.id = teaches.id
+(instructor x teaches))
+©Silberschatz, Korth and Sudarshan 2.23 Database System Concepts - 7th Edition
+n The join operation allows us to combine a select operation and a
+Cartesian-Product operation into a single operation. n Consider relations r (R) and s (S)
+n Let “theta” be a predicate on attributes in the schema R “union” S. The
+join operation r ⋈? s is defined as follows:
+?⋈?? = ?? (? × ?)
+n Thus
+ instructor.id = teaches.id
+(instructor x teaches ))
+n Can equivalently be written as
+instructor ⋈ Instructor.id = teaches.id
+teaches.
+©Silberschatz, Korth and Sudarshan 2.24 Database System Concepts - 7th Edition
+n Can build expressions using multiple operations
+n Example: A=C(r x s)
+n r x s
+n A=C(r x s)
+instructor.name,course_id
+( instructor.ID=teaches.ID (instructor x teaches))
+©Silberschatz, Korth and Sudarshan 2.25 Database System Concepts - 7th Edition
+n Find the names of all instructors in the Physics department, along with the
+course_id of all courses they have taught
+l Query 1
+instructor.name,course_id
+(dept_name=“Physics” (
+ instructor.ID=teaches.ID (instructor x teaches)))
+l Query 2
+instructor.name,course_id
+(instructor.ID=teaches.ID (
+ dept_name=“Physics” (instructor) x teaches))
+©Silberschatz, Korth and Sudarshan 2.26 Database System Concepts - 7th Edition
+n Allows us to refer to a relation by more than one name. n Example:
+ x (E)
+returns the expression E under the name X
+n If a relational-algebra expression E has arity n, then
+returns the result of expression E under the name X, and with the
+attributes renamed to A1
+, A2
+, …., An
+.
+,..., ) ( )
+2
+, 1
+( E
+n
+ x A A A
+©Silberschatz, Korth and Sudarshan 2.27 Database System Concepts - 7th Edition
+n Find instructors whose salary is greater than some instructors (at least
+one instructor) in physics department
+l Instructor.ID( instructor.salary >d.salary
+(instructor x d
+( department = “physics”( instructor)))) 两张相同的表合在一起时
+©Silberschatz, Korth and Sudarshan 2.28 Database System Concepts - 7th Edition
+n A basic expression in the relational algebra consists of either one of the
+following:
+l A relation in the database
+l A constant relation
+n Let E1 and E2 be relational-algebra expressions; the following are all
+relational-algebra expressions:
+l E1  E2
+l E1 – E2
+l E1 x E2
+l p
+(E1
+), P is a predicate on attributes in E1
+l s(E1
+), S is a list consisting of some of the attributes in E1
+l  x (E1
+), x is the new name for the result of E1
+©Silberschatz, Korth and Sudarshan 2.29 Database System Concepts - 7th Edition
+We define additional operations that do not add any power to the
+relational algebra, but that simplify common queries. n Set intersection
+n Natural join
+n Assignment
+n Outer join
+n Division
+©Silberschatz, Korth and Sudarshan 2.30 Database System Concepts - 7th Edition
+n Relation r, s:
+n r  s
+©Silberschatz, Korth and Sudarshan 2.31 Database System Concepts - 7th Edition
+n The set-intersection operation allows us to find tuples that are in both
+the input relations. n Notation: r  s
+n Defined as:
+n r  s = { t | t  r and t  s }
+n Assume:
+l r, s have the same arity
+l attributes of r and s are compatible
+n Note: r  s = r – (r – s)
+r s
+©Silberschatz, Korth and Sudarshan 2.32 Database System Concepts - 7th Edition
+n Notation: r s
+n Let r and s be relations on schemas R and S respectively. Then, r s is a relation on schema R  S obtained as follows:
+l Consider each pair of tuples tr
+from r and ts
+from s. l If tr and ts have the same value on each of the attributes in R  S, add a
+tuple t to the result, where
+4 t has the same value as tr on r
+4 t has the same value as ts
+on s
+n Example:
+R = (A, B, C, D)
+S = (E, B, D)
+l Result schema = (A, B, C, D, E)
+l r s is defined as:
+r.A, r.B, r.C, r.D, s.E (r.B = s.B  r.D = s.D (r x s))
+©Silberschatz, Korth and Sudarshan 2.33 Database System Concepts - 7th Edition
+n Relations r, s:
+n r s
+instructor.name,course_id
+( instructor teaches)
+©Silberschatz, Korth and Sudarshan 2.34 Database System Concepts - 7th Edition
+n Find the names of all instructors in the Comp. Sci. department together with
+the course titles of all the courses that the instructors teach
+l  name, title
+( dept_name=“Comp. Sci.” (instructor teaches course))
+n Natural join is associative
+l (instructor teaches) course is equivalent to
+instructor (teaches course)
+n Natural join is commutative
+l instruct teaches is equivalent to
+teaches instructor
+©Silberschatz, Korth and Sudarshan 2.35 Database System Concepts - 7th Edition
+n The assignment operation () provides a convenient way to
+express complex queries. l Can assign temporary result to a temporary relation variable
+l A complex query consists of a series of assignments followed
+by an expression whose value is displayed as a result of the
+query. n Example:
+d   department = “physics”( instructor)
+result = instructor.ID( instructor.salary >d.salary(instructor x d))
+先得出一个临时表
+©Silberschatz, Korth and Sudarshan 2.36 Database System Concepts - 7th Edition
+n An extension of the join operation that avoids loss of information. n Computes the join and then adds tuples form one relation that does not
+match tuples in the other relation to the result of the join. n Uses null values:
+l null signifies that the value is unknown or does not exist
+©Silberschatz, Korth and Sudarshan 2.37 Database System Concepts - 7th Edition
+n Relation instructor1
+n Relation teaches1
+ID course_id
+10101
+12121
+76766
+CS-101
+FIN-201
+BIO-101
+Comp. Sci. Finance
+Music
+ID dept_name
+10101
+12121
+15151
+name
+Srinivasan
+Wu
+Mozart
+©Silberschatz, Korth and Sudarshan 2.38 Database System Concepts - 7th Edition
+n Left Outer Join
+instructor teaches
+n Natural Join
+instructor teaches
+ID dept_name
+10101
+12121
+Comp. Sci. Finance
+course_id
+CS-101
+FIN-201
+name
+Srinivasan
+Wu
+ID dept_name
+10101
+12121
+15151
+Comp. Sci. Finance
+Music
+course_id
+CS-101
+FIN-201
+null
+name
+Srinivasan
+Wu
+Mozart
+©Silberschatz, Korth and Sudarshan 2.39 Database System Concepts - 7th Edition
+n Full Outer Join
+instructor teaches
+n Right Outer Join
+instructor teaches
+ID dept_name
+10101
+12121
+76766
+Comp. Sci. Finance
+null
+course_id
+CS-101
+FIN-201
+BIO-101
+name
+Srinivasan
+Wu
+null
+ID dept_name
+10101
+12121
+15151
+76766
+Comp. Sci. Finance
+Music
+null
+course_id
+CS-101
+FIN-201
+null
+BIO-101
+name
+Srinivasan
+Wu
+Mozart
+null
+©Silberschatz, Korth and Sudarshan 2.40 Database System Concepts - 7th Edition
+n Outer join can be expressed using basic operations
+l e.g. r s can be written as
+(r s) U (r – ∏R(r s) x {(null, …, null)}
+©Silberschatz, Korth and Sudarshan 2.41 Database System Concepts - 7th Edition
+n Given relations r(R) and s(S), such that S  R, r  s is the largest
+relation t(R-S) such that
+t x s  r
+n E.g. let r(ID, course_id) = ID, course_id
+(takes ) and
+s(course_id) = course_id
+(dept_name=“Biology”(course ) )
+then r  s gives us students who have taken all courses in the Biology
+department
+©Silberschatz, Korth and Sudarshan 2.42 Database System Concepts - 7th Edition
+n Can write r  s as
+temp1  R-S (r )
+temp2  R-S ((temp1 x s ) – R-S,S (r ))
+result = temp1 – temp2
+l The result to the right of the  is assigned to the relation variable on
+the left of the .
+©Silberschatz, Korth and Sudarshan 2.43 Database System Concepts - 7th Edition
+n Generalized Projection
+n Aggregate Functions
+©Silberschatz, Korth and Sudarshan 2.44 Database System Concepts - 7th Edition
+n Extends the projection operation by allowing arithmetic functions to be
+used in the projection list. n E is any relational-algebra expression
+n Each of F1
+, F2
+, …, Fn are arithmetic expressions involving constants
+and attributes in the schema of E. n Given relation instructor(ID, name, dept_name, salary) where salary is
+annual salary, get the same information but with monthly salary
+ID, name, dept_name, salary/12
+(instructor)
+( ) ,..., ,
+2 1 E Fn F F
+©Silberschatz, Korth and Sudarshan 2.45 Database System Concepts - 7th Edition
+n Aggregation function takes a collection of values and returns a single value as a
+result. avg: average value
+min: minimum value
+max: maximum value
+sum: sum of values
+count: number of values
+n Aggregate operation in relational algebra
+E is any relational-algebra expression
+l G1
+, G2 …, Gn
+is a list of attributes on which to group (can be empty)
+4 On which to group: to do the aggregation based on a subset of E. For any
+two tuples t1 and t2 in the subset, t1.G1 = t2.G1, t1.G2 = t2.G2, ...,
+t1.Gn=t2.Gn
+l Each Fi is an aggregate function
+l Each Ai is an attribute name
+( )
+( ), ( , , ( ) , , , 1 1 2 2 1 2
+E
+n n n F A F A F A G G G  
+©Silberschatz, Korth and Sudarshan 2.46 Database System Concepts - 7th Edition
+n Relation r:
+A B
+
+
+
+
+
+
+
+
+C
+7
+7
+3
+10
+n sum(c) (r) sum(c )
+27
+n A sum(c) (r) ; A,B sum(c)(r)
+A B
+
+
+
+
+
+
+sum(c)
+7
+7
+13
+A
+
+
+sum(c)
+14
+13
+©Silberschatz, Korth and Sudarshan 2.47 Database System Concepts - 7th Edition
+n Find the average salary in each department
+dept_name avg(salary) (instructor)
+avg_salary
+©Silberschatz, Korth and Sudarshan 2.48 Database System Concepts - 7th Edition
+n Result of aggregation does not have a name
+l Can use rename operation to give it a name
+l For convenience, we permit renaming as part of aggregate
+operation
+dept_name avg(salary) as avg_sal (instructor)
+©Silberschatz, Korth and Sudarshan 2.49 Database System Concepts - 7th Edition
+n The content of the database may be modified using the following
+operations:
+l Deletion
+l Insertion
+l Updating
+n All these operations can be expressed using the assignment
+operator
+©Silberschatz, Korth and Sudarshan 2.50 Database System Concepts - 7th Edition
+n It is possible for tuples to have a null value, denoted by null, for some
+of their attributes
+n null signifies an unknown value or that a value does not exist. n The result of any arithmetic expression involving null is null. l 5 + null = null
+n Aggregate functions simply ignore null values (as in SQL)
+l avg, min, max, sum, count(c): ignore null
+l count(*): count the number of records, if there are null values in
+some records, they will still be counted
+n For duplicate elimination and grouping, null is treated like any other
+value, and two nulls are assumed to be the same (as in SQL)
+©Silberschatz, Korth and Sudarshan 2.51 Database System Concepts - 7th Edition
+n Comparisons with null values return the special truth value: unknown
+n Three-valued logic using the truth value unknown:
+l OR: (unknown or true) = true, (unknown or false) = unknown
+(unknown or unknown) = unknown
+l AND: (true and unknown) = unknown, (false and unknown) = false, (unknown and unknown) = unknown
+l NOT: (not unknown) = unknown
+l In SQL “P is unknown” evaluates to true if predicate P evaluates to
+unknown
+n Result of select predicate is treated as false if it evaluates to unknown
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use

@@ -1,0 +1,161 @@
+OOP W1: Introduction
+Object-Oriented Programming
+Using C++
+2002-2025 Weng Kai
+Course Contents
+Introduction to object-oriented programming
+with a strong software engineering foundation
+aimed at producing and maintaining large, high-quality software systems.
+OOP W1: Introduction
+2002-2025 Weng Kai 2
+Buzzwords
+encapsulation
+inheritance
+polymorphism
+overriding
+interface
+cohesion
+coupling
+collection classes
+template
+responsibility-driven design
+OOP W1: Introduction
+2002-2025 Weng Kai 3
+封装
+继承
+多态
+覆盖
+接口
+内聚
+耦合
+容器
+模板
+责任驱动设计
+Textbooks
+C++ Prime
+Thinking In C++,Ver. 2,Vol. 1 & 2
+References:
+The C++ Programming Language
+C++: The Core Language
+Essential C++
+Effective C++
+Inside the C++ Object Model
+C++ Templates
+OOP W1: Introduction
+2002-2025 Weng Kai 4
+Assessment
+1. In-class performance: 5%, on 学在浙⼤
+2. Assignments: 16%, one problem set for each week, on PTA, due next lecture
+3. 8 Lab/Project: 24%
+4. Mid-Term Exam: 5% on PTA, 90-min at lab period, week 9/10
+5. Final Exam: 50%
+OOP W1: Introduction
+2002-2025 Weng Kai 5
+Tools for C++
+for Windows
+gcc on WSL 2.0 & Ubuntu (Windows) or
+MinGW-W64 aka gcc on MSY32
+(https://code.visualstudio.com/docs/cpp/config-mingw)
+for MacOS
+clang+llvm (XCode cmd-line tools)
+Visual Studio Code
+https://lightly.teamcode.com
+OOP W1: Introduction
+2002-2025 Weng Kai 6
+Introduction to C++
+The trip begins...
+OOP W1: Introduction
+2002-2025 Weng Kai 7
+The C Language
+Strengths
+Efficient programs
+Direct access to machine, suitable for OS and ES
+Flexible
+Weakness
+Insufficient type checking
+Poor support for programming-in-the-large
+Procedure-oriented programming
+OOP W1: Introduction
+2002-2025 Weng Kai 8
+Bjarne Stroustrup
+http://www.research.att.com/~bs/homepage.html
+C++ was first designed and implemented by Bjarne Stroustrup, AT&T, early 1980ʼs
+Oct. 2002, Stroustrup visited Zhejiang Univ.
+The Design and Evolution of C++, Bjarne Stroustrup, Addison-Wesley, ISBN 0-201-
+54330-3
+OOP W1: Introduction
+2002-2025 Weng Kai 9
+Brief history of C++ (1)
+1978: BS at Cambridge, UK.
+Simulation program in Simula
+Supports classes, inheritance, and type check Poor performance
+OOP W1: Introduction
+2002-2025 Weng Kai 10
+1979: BS at AT&T Labs, Cpre, C w/ classes
+1980: most C++ features but virtual functions
+1983: C++ w/ virtual functions, named C++ by Rick Mascitti 1985: Cfront
+1985:“The C++ Programming Language”
+1990:ANSI C++ Committee ISO/ANSI Standard C++ in 1998: ISO/IEC 14882
+(http://www.open-std.org/jtc1/sc22/ wg21/ )
+OOP W1: Introduction
+2002-2025 Weng Kai 11
+Goal for C++
+Support for object oriented programming (from SmallTalk)
+to combine flexibility and efficiency of C
+OOP W1: Introduction
+2002-2025 Weng Kai 12
+C and C++
+C++ builds on C
+Knowledge of C helps you in C++
+C++ support more styles of programming
+C++ provides more features 26
+OOP W1: Introduction
+2002-2025 Weng Kai 13
+C++ improvements
+Data abstraction
+Access control
+Initialization & cleanup
+References
+Function overloading
+Streams for I/O
+Name control
+Operator overloading
+More safe and powerful memory management
+Templates
+Exception handling
+OOP W1: Introduction
+2002-2025 Weng Kai 14
+C++ can be viewed as a “better” C
+C++ => C=C+1
+but...
+C++ is not C
+Focus on C++ as a language in its own right
+C++ is a hybrid language, supports
+Procedure-oriented programming
+Object-oriented programming
+Generic programming
+OOP W1: Introduction
+2002-2025 Weng Kai 15
+The First C++ Program
+#include <iostream>
+using namespace std;
+int main()
+{
+cout << "Hello, World! I am " << 18 < Today!" << endl;
+return 0;
+}
+OOP W1: Introduction
+2002-2025 Weng Kai 16
+Read input
+#include <iostream>
+using namespace std;
+int main()
+{
+int number;
+cout << "Enter a decimal number: ";
+cin >> number;
+cout << "The number you entered is " << number <<" endl;
+return 0;
+}
+OOP W1: Introduction
+2002-2025 Weng Kai 17
