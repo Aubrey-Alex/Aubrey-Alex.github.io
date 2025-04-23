@@ -499,8 +499,8 @@ int main () {
 
 假设类B派生自A，则：
 
-| 基类成员访问指定符 | 继承类型(B是) | public | protected | private |
-|-------------------|--------------|--------|-----------|---------|
+| 继承类型(B是) | public | protected | private |
+|-------------------|--------|-----------|---------|
 | public A          | public in B  | protected in B | hidden |
 | private A         | private in B | private in B   | hidden |
 | protected A       | protected in B | protected in B | hidden |

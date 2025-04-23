@@ -1,0 +1,844 @@
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 11.2 Database System Concepts - 7th Edition
+n Basic Concepts
+n Ordered Indices
+n B+-Tree Index Files
+n B-Tree Index Files
+n Hashing
+n Write-optimized indices
+n Spatio-Temporal Indexing
+©Silberschatz, Korth and Sudarshan 11.3 Database System Concepts - 7th Edition
+n Indexing mechanisms used to speed up access to desired data. l E.g., author catalog in library
+n Search Key - attribute to set of attributes used to look up records in a
+file. n An index file consists of records (called index entries) of the form
+n Index files are typically much smaller than the original file
+n Two basic kinds of indices:
+l Ordered indices: search keys are stored in sorted order
+l Hash indices: search keys are distributed uniformly across
+“buckets” using a “hash function”.
+search-key pointer
+©Silberschatz, Korth and Sudarshan 11.4 Database System Concepts - 7th Edition
+n Access types supported efficiently. E.g., l records with a specified value in the attribute
+l or records with an attribute value falling in a specified range of values. n Access time
+n Insertion time
+n Deletion time
+n Space overhead
+©Silberschatz, Korth and Sudarshan 11.5 Database System Concepts - 7th Edition
+n In an ordered index, index entries are stored sorted on the search key
+value. E.g., author catalog in library. n Primary index: in a sequentially ordered file, the index whose search
+key specifies the sequential order of the file. l Also called clustering index
+l The search key of a primary index is usually but not necessarily the
+primary key. n Secondary index: an index whose search key specifies an order
+different from the sequential order of the file. Also called
+non-clustering index. n Index-sequential file: ordered sequential file with a primary index.
+©Silberschatz, Korth and Sudarshan 11.6 Database System Concepts - 7th Edition
+n Dense index — Index record appears for every search-key
+value in the file. The file can be sequential or not. n E.g. index on ID attribute of instructor relation
+©Silberschatz, Korth and Sudarshan 11.7 Database System Concepts - 7th Edition
+n Dense index on dept_name, with instructor file sorted on
+dept_name. The file is sorted on dept_name. The index is a
+primary index
+n If the file is not sorted on dept_name. The index will be a
+secondary index, which is always dense. The pointer in the
+index entry will point to a bucket instead of the file record
+©Silberschatz, Korth and Sudarshan 11.8 Database System Concepts - 7th Edition
+n Sparse Index: contains index records for only some search-key
+values. l Applicable when records are sequentially ordered on search-key
+n To locate a record with search-key value K we:
+l Find index record with largest search-key value < K
+l Search file sequentially starting at the record to which the index
+record points
+©Silberschatz, Korth and Sudarshan 11.9 Database System Concepts - 7th Edition
+n Compared to dense indices:
+l Less space and less maintenance overhead for insertions and deletions. l Generally slower than dense index for locating records. n Good tradeoff: sparse index with an index entry for every block in file, corresponding to least
+search-key value in the block.
+©Silberschatz, Korth and Sudarshan 11.10 Database System Concepts - 7th Edition
+n Frequently, one wants to find all the records whose values in
+a certain field (which is not the search-key of the primary
+index) satisfy some condition. l Example 1: In the instructor relation stored sequentially by
+ID, we may want to find all instructors in a particular
+department
+l Example 2: as above, but where we want to find all
+instructors with a specified salary or with salary in a
+specified range of values
+n We can have a secondary index with an index record for each
+search-key value
+©Silberschatz, Korth and Sudarshan 11.11 Database System Concepts - 7th Edition
+n Data file is not sorted on the search key
+n Index record points to a bucket that contains pointers to all the
+actual records with that particular search-key value. n Secondary indices have to be dense
+Secondary index on salary field of instructor
+©Silberschatz, Korth and Sudarshan 11.12 Database System Concepts - 7th Edition
+n Indices offer substantial benefits when searching for records. n BUT: Updating indices imposes overhead on database modification --when a file is
+modified, every index on the file must be updated,
+n Sequential scan using primary index is efficient, but a sequential scan using a
+secondary index is expensive
+l Each record access may fetch a new block from disk
+l Block fetch requires about 5 to 10 milliseconds, versus about 100 nanoseconds for
+memory access
+©Silberschatz, Korth and Sudarshan 11.13 Database System Concepts - 7th Edition
+n If index does not fit in memory, access becomes expensive. n Solution: treat index kept on disk as a sequential file and
+construct a sparse index on it. l outer index – a sparse index of primary index
+l inner index – the primary index file
+n If even outer index is too large to fit in main memory, yet
+another level of index can be created, and so on. n Indices at all levels must be updated on insertion or deletion
+from the file.
+©Silberschatz, Korth and Sudarshan 11.14 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 11.15 Database System Concepts - 7th Edition
+n Single-level index entry deletion:
+l Dense indices – deletion of search-key is similar to file record
+deletion. l Sparse indices – 4 If the search key is not found in the index, do nothing
+4 If an entry for the search key exists in the index, it is
+deleted by replacing the entry in the index with the next
+search-key value in the file (in search-key order). If the
+next search-key value already has an index entry, the entry
+is deleted instead of being replaced.
+n If deleted record was the
+only record in the file with its
+particular search-key value,
+the search-key is deleted
+from the index also.
+©Silberschatz, Korth and Sudarshan 11.16 Database System Concepts - 7th Edition
+n Single-level index insertion:
+l Perform a lookup using the search-key value appearing in
+the record to be inserted. l Dense indices – if the search-key value does not appear in
+the index, insert it. l Sparse indices – if index stores an entry for each block of
+the file, no change needs to be made to the index unless a
+new block is created. 4 If a new block is created, the first search-key value
+appearing in the new block is inserted into the index. n Multilevel insertion and deletion: algorithms are simple
+extensions of the single-level algorithms
+©Silberschatz, Korth and Sudarshan 11.17 Database System Concepts - 7th Edition
+n Composite search key
+l E.g., index on instructor relation on attributes (name, ID)
+l Values are sorted lexicographically
+4 E.g. (John, 12121) < (John, 13514) and
+(John, 13514) < (Peter, 11223)
+l Can query on just name, or on (name, ID)
+©Silberschatz, Korth and Sudarshan 11.18 Database System Concepts - 7th Edition
+n Disadvantage of indexed-sequential files
+l performance degrades as file grows, since many overflow
+blocks get created. l Periodic reorganization of entire file is required. n Advantage of B+-tree index files:
+l automatically reorganizes itself with small changes in the
+face of insertions and deletions. l Reorganization of entire file is not required to maintain
+performance. (For most of the cases)
+n (Minor) disadvantage of B+-trees:
+l extra insertion and deletion overhead, space overhead. n Advantages of B+-trees outweigh disadvantages
+l B+-trees are used extensively
+B+-tree indices are an alternative to indexed-sequential files. For B+-tree index, the data file does not have to be sequential
+©Silberschatz, Korth and Sudarshan 11.19 Database System Concepts - 7th Edition
+Example of B+-Tree
+©Silberschatz, Korth and Sudarshan 11.20 Database System Concepts - 7th Edition
+n All paths from root to leaf are of the same length
+n Each node has n places to store pointers and n-1 places to store
+search key values. n Each node that is not a root or a leaf (internal node) has between
+n/2 and n children. n A leaf node has between (n–1)/2 and n–1 search key values
+n Special cases:
+l If the root is not a leaf, it has at least 2 children. l If the root is a leaf (that is, there are no other nodes in the
+tree), it can have between 0 and (n–1) values.
+A B+-tree is a rooted tree satisfying the following properties:
+©Silberschatz, Korth and Sudarshan 11.21 Database System Concepts - 7th Edition
+n Typical node
+l Ki are the search-key values
+l Pi are pointers to children (for non-leaf nodes) or pointers to records or buckets of
+records (for leaf nodes). n The search-keys in a node are ordered
+K1 < K2 < K3 < . . . < Kn–1
+©Silberschatz, Korth and Sudarshan 11.22 Database System Concepts - 7th Edition
+n For i = 1, 2, . . ., n–1, pointer Pi points to a file record or bucket of
+records with search-key value Ki,
+n Pn points to next leaf node in search-key order
+n If Li, Lj are leaf nodes and i < j, Li
+’s search-key values are less
+than or equal to Lj
+’s search-key values
+Properties of a leaf node:
+©Silberschatz, Korth and Sudarshan 11.23 Database System Concepts - 7th Edition
+n Non leaf nodes form a multi-level sparse index on the leaf nodes. For a non-leaf node
+with n pointers:
+l For 1  i  n – 1, all the search-keys in the subtree to which Pi points are less than
+Ki , all the search-keys in the subtree to which Pi+1 points are greater than or equal
+to Ki
+©Silberschatz, Korth and Sudarshan 11.24 Database System Concepts - 7th Edition
+n Leaf nodes must have between 3 and 5 values
+((n–1)/2 and n –1, with n = 6). n Non-leaf nodes other than root must have between 3
+and 6 children ((n/2 and n with n =6). n Root must have at least 2 children.
+B+-tree for instructor file (n = 6)
+©Silberschatz, Korth and Sudarshan 11.25 Database System Concepts - 7th Edition
+n Since the inter-node connections are done by pointers,
+“logically” close blocks need
+not be “physically” close. n The non-leaf levels of the B+-tree form a hierarchy of sparse indices. n The B+-tree contains a relatively small number of levels
+4 If h = 1, has at least 0 value, at most n-1 values
+4 If h = 3, leaf level has at least 2* n/2 * （n-1）/2 values, at most n2 *(n-1)
+values
+4 For height h, leaf level has at least 2*(( n/2 )h-2)* （n-1）/2 values, and at
+most (nh-1)* (n-1) values
+l To calculate the max height, use 2*(( n/2 )h-2)* （n-1）/2 = K to calculate h and
+then get the floor value of h, To calculate the min height, use (nh-1)* (n-1) = K to
+calculate h and then get the ceiling value of h,
+l If there are K search-key values in the file, the tree height is no more than 
+logn/2(K), searches can be conducted efficiently. n Insertions and deletions to the main file can be handled efficiently, as the index can
+be restructured in logarithmic time (as we shall see).
+©Silberschatz, Korth and Sudarshan 11.26 Database System Concepts - 7th Edition
+n Find record with search-key value V. 1. C=root
+2. While C is not a leaf node {
+1. Find the minimum i s.t. V  Ki. //find from left to right in the node
+2. If found { if (V= Ki ) Set C = Pi +1 else set C = Pi}
+3. Else set C = last non-null pointer in C
+}
+//now go to the leaf node and search in the leaf node
+3. Find the minimum i s.t. Ki = V
+4. If found, follow pointer Pi to the desired record. 5. Else no record with search-key value k exists.
+©Silberschatz, Korth and Sudarshan 11.27 Database System Concepts - 7th Edition
+n If there are K search-key values in the file, the height of the tree is no
+more than logn/2(K). n A node is generally the same size as a disk block, typically 4
+kilobytes
+l and n is typically around 100 (40 bytes per index entry). n With 1 million search key values and n = 100
+l at most  log50
+(1,000,000)  = 4 nodes are accessed in a lookup. n Contrast this with a balanced binary tree with 1 million search key
+values — around 20 nodes are accessed in a lookup
+l above difference is significant since every node access may need
+a disk I/O, costing around 20 milliseconds
+©Silberschatz, Korth and Sudarshan 11.28 Database System Concepts - 7th Edition
+1. Find the leaf node in which the search-key value would appear
+2. If the search-key value is already present in the leaf node
+1. Add record to the file
+2. If necessary add a pointer to the bucket. 3. If the search-key value is not present, then
+1. add the record to the main file (and create a bucket if necessary)
+2. If there is room in the leaf node, insert (key-value, pointer) pair in the leaf node
+3. Otherwise, split the node (along with the new (key-value, pointer) entry) as
+discussed in the next slide.
+©Silberschatz, Korth and Sudarshan 11.29 Database System Concepts - 7th Edition
+n Splitting a leaf node:
+l take the n (search-key value, pointer) pairs (including the one being inserted) in sorted
+order. Place the first n/2 in the original node, and the rest in a new node. l let the new node be p, and let k be the least key value in p. Insert (k,p) in the parent of the
+node being split. l If the parent is full, split it and propagate the split further up. // split a non-leaf node is a little
+bit different from splitting a leaf node, see later slides
+n Splitting of nodes proceeds upwards till a node that is not full is found. l In the worst case the root node may be split increasing the height of the tree by 1. Result of splitting node containing Brandt, Califieri and Crick on inserting Adams
+Next step: insert entry with (Califieri,pointer-to-new-node) into parent
+©Silberschatz, Korth and Sudarshan 11.30 Database System Concepts - 7th Edition
+B+-Tree before and after insertion of “Adams”
+©Silberschatz, Korth and Sudarshan 11.31 Database System Concepts - 7th Edition
+B+-Tree before and after insertion of “Lamport”, causes splitting of internal node
+©Silberschatz, Korth and Sudarshan 11.32 Database System Concepts - 7th Edition
+n Splitting a non-leaf node: when inserting (k,p) into an already full internal node N
+l Copy N to an in-memory area M with space for n+1 pointers and n keys
+l Insert (k,p) into M
+l Copy P1
+,K1
+, …, K n/2-1
+,P n/2 from M back into node N
+l Copy Pn/2+1
+,K n/2+1
+,…,Kn
+,Pn+1
+from M into newly allocated node N’ l Insert (K n/2,N’) into parent N
+n Read pseudocode in book!
+Crick Adams Brandt Califieri Crick Adams Brandt
+Califieri
+©Silberschatz, Korth and Sudarshan 11.33 Database System Concepts - 7th Edition
+n Deleting “Srinivasan” causes merging of under-full leaves, and merging and spit of parent nodes
+Before and after deleting “Srinivasan”
+©Silberschatz, Korth and Sudarshan 11.34 Database System Concepts - 7th Edition
+Deletion of “Singh” and “Wu” from result of previous example, causes redistribution of two leaf nodes
+n Leaf containing Singh and Wu became underfull, and borrowed a value Kim from
+its left sibling
+n Search-key value in the parent changes as a result
+©Silberschatz, Korth and Sudarshan 11.35 Database System Concepts - 7th Edition
+Before and after deletion of “Gold” from earlier example
+n Node with Gold and Katz became underfull, and was merged with its sibling
+n Parent node becomes underfull, and is merged with its sibling
+l Value separating two nodes (at the parent) is pulled down when merging
+n Root node then has only one child, and is deleted
+©Silberschatz, Korth and Sudarshan 11.36 Database System Concepts - 7th Edition
+n Find the record to be deleted, and remove it from the main file and
+from the bucket (if present)
+n Remove (search-key value, pointer) from the leaf node if there is no
+bucket or if the bucket has become empty
+n If the node has too few entries due to the removal, and the entries in
+the node and a sibling fit into a single node, then merge siblings:
+l Insert all the search-key values in the two nodes into a single node
+(the one on the left), and delete the other node. l Delete the pair (Ki–1
+, Pi), where Pi is the pointer to the deleted
+node, from its parent.
+©Silberschatz, Korth and Sudarshan 11.37 Database System Concepts - 7th Edition
+n If the node has too few entries due to the removal, but the entries in the node and a
+sibling do not fit into a single node, then redistribute pointers:
+l Redistribute the pointers between the node and a sibling such that both have more
+than the minimum number of entries. l Update the corresponding search-key value in the parent of the node. n The node deletions may cascade upwards till a node with enough pointers is found. n For merging with internal nodes, value separating two nodes (at the parent) is pulled
+down when merging. Merging of internal nodes may cause splitting again because of the
+extra pulled down value. n If the root node has only one pointer after deletion, it is deleted and the sole child
+becomes the root.
+©Silberschatz, Korth and Sudarshan 11.38 Database System Concepts - 7th Edition
+n Alternatives to scheme described earlier
+l Buckets on separate block (bad idea)
+l List of tuple pointers with each key
+4 Extra code to handle long lists
+4 Deletion of a tuple can be expensive if there are many
+duplicates on search key (why?)
+4 Low space overhead, no extra cost for queries
+l Make search key unique by adding a record-identifier
+4 Extra storage overhead for keys
+4 Simpler code for insertion/deletion
+4 Widely used
+©Silberschatz, Korth and Sudarshan 11.39 Database System Concepts - 7th Edition
+n Index file degradation problem is solved by using B+-Tree indices. n Data file degradation problem is solved by using B+-Tree File
+Organization. n The leaf nodes in a B+-tree file organization store records, instead of
+pointers. n Leaf nodes are still required to be half full
+l Since records are larger than pointers, the maximum number of
+records that can be stored in a leaf node is less than the number of
+pointers in a nonleaf node. n Insertion and deletion are handled in the same way as insertion and
+deletion of entries in a B+-tree index.
+©Silberschatz, Korth and Sudarshan 11.40 Database System Concepts - 7th Edition
+n Good space utilization important since records use more space than
+pointers. n To improve space utilization, involve more sibling nodes in redistribution
+during splits and merges
+l Involving 2 siblings in redistribution (to avoid split / merge where
+possible) results in each node having at least entries
+Example of B+-tree File Organization
+2n / 3
+©Silberschatz, Korth and Sudarshan 11.41 Database System Concepts - 7th Edition
+n Record relocation and secondary indices
+l If a record moves, all secondary indices that store record pointers
+have to be updated
+l Node splits in B+-tree file organizations become very expensive
+l Solution: use search key of B+-tree file organization instead of
+record pointer in secondary index
+4 Add record-id if B+-tree file organization search key is non- unique
+4 Extra traversal of file organization to locate record
+– Higher cost for queries, but node splits are cheap
+©Silberschatz, Korth and Sudarshan 11.42 Database System Concepts - 7th Edition
+n Variable length strings as keys
+l Variable fanout
+l Use space utilization as criterion for splitting, not number of pointers
+n Prefix compression
+l Key values at internal nodes can be prefixes of full key
+4 Keep enough characters to distinguish entries in the subtrees separated by the
+key value
+– E.g. “Silas” and “Silberschatz” can be separated by “Silb”
+l Keys in leaf node can be compressed by sharing common prefixes
+©Silberschatz, Korth and Sudarshan 11.43 Database System Concepts - 7th Edition
+Bulk Loading and Bottom-Up Build
+n Inserting entries one-at-a-time into a B+-tree requires  1 IO per entry
+l assuming leaf level does not fit in memory
+l can be very inefficient for loading a large number of entries at a time
+(bulk loading)
+n Efficient alternative 1:
+l sort entries first (using efficient external-memory sort algorithms
+discussed later in Section 12.4)
+l insert in sorted order
+4 insertion will go to existing page (or cause a split)
+4 much improved IO performance, but most leaf nodes half full
+n Efficient alternative 2: Bottom-up B+-tree construction
+l As before sort entries
+l And then create tree layer-by-layer, starting with leaf level
+4 details as an exercise
+l Implemented as part of bulk-load utility by most database systems
+©Silberschatz, Korth and Sudarshan 11.44 Database System Concepts - 7th Edition
+n Similar to B+-tree, but B-tree allows search-key values to appear
+only once; eliminates redundant storage of search keys. n Search keys in nonleaf nodes appear nowhere else in the B-tree; an
+additional pointer field for each search key in a nonleaf node must
+be included. n Generalized B-tree leaf node
+n Nonleaf node – pointers Bi are the bucket or file record
+pointers.
+©Silberschatz, Korth and Sudarshan 11.45 Database System Concepts - 7th Edition
+B-tree (above) and B+-tree (below) on same data
+©Silberschatz, Korth and Sudarshan 11.46 Database System Concepts - 7th Edition
+n Advantages of B-Tree indices:
+l May use less tree nodes than a corresponding B+-Tree. l Sometimes possible to find search-key value before reaching leaf
+node. n Disadvantages of B-Tree indices:
+l Only small fraction of all search-key values are found early
+l Non-leaf nodes are larger, so fan-out is reduced. Thus, B-Trees
+typically have greater depth than corresponding B+-Tree
+l Insertion and deletion more complicated than in B+-Trees
+l Implementation is harder than B+-Trees. n Typically, advantages of B-Trees do not out weigh disadvantages.
+©Silberschatz, Korth and Sudarshan 11.47 Database System Concepts - 7th Edition
+n Random I/O cost much lower on flash
+l 20 to 100 microseconds for read/write
+n Writes are not in-place, and (eventually) require a more expensive
+erase
+n Optimum page size therefore much smaller
+n Bulk-loading still useful since it minimizes page erases
+n Write-optimized tree structures (discussed later) have been adapted to
+minimize page writes for flash-optimized search trees
+©Silberschatz, Korth and Sudarshan 11.48 Database System Concepts - 7th Edition
+n Random access in memory
+l Much cheaper than on disk/flash
+l But still expensive compared to cache read
+l Data structures that make best use of cache preferable
+l Binary search for a key value within a large B+-tree node results in
+many cache misses
+n B+- trees with small nodes that fit in cache line are preferable to
+reduce cache misses
+n Key idea: use large node size to optimize disk access, but structure
+data within a node using a tree with small node size, instead of using
+an array.
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 11.50 Database System Concepts - 7th Edition
+n A bucket is a unit of storage containing one or more records (a
+bucket is typically a disk block). n In a hash file organization we obtain the bucket of a record directly
+from its search-key value using a hash function. n Hash function h is a function from the set of all search-key values K
+to the set of all bucket addresses B. n Hash function is used to locate records for access, insertion as well
+as deletion. n Records with different search-key values may be mapped to the
+same bucket; thus entire bucket has to be searched sequentially to
+locate a record.
+©Silberschatz, Korth and Sudarshan 11.51 Database System Concepts - 7th Edition
+n There are 10 buckets, n The binary representation of the ith character is assumed to be the
+integer i. n The hash function returns the sum of the binary representations of
+the characters modulo 10
+l E.g. h(Music) = 1 h(History) = 2
+h(Physics) = 3 h(Elec. Eng.) = 3
+Hash file organization of instructor file, using dept_name as key
+(See figure in next slide.)
+©Silberschatz, Korth and Sudarshan 11.52 Database System Concepts - 7th Edition
+Hash file organization of instructor file, using dept_name as key
+(see previous slide for details).
+©Silberschatz, Korth and Sudarshan 11.53 Database System Concepts - 7th Edition
+n Worst hash function maps all search-key values to the same bucket;
+this makes access time proportional to the number of search-key
+values in the file. n An ideal hash function is uniform, i.e., each bucket is assigned the
+same number of search-key values from the set of all possible values. n Ideal hash function is random, so each bucket will have the same
+number of records assigned to it irrespective of the actual distribution of
+search-key values in the file. n Typical hash functions perform computation on the internal binary
+representation of the search-key. l For example, for a string search-key, the binary representations of
+all the characters in the string could be added and the sum modulo
+the number of buckets could be returned. .
+©Silberschatz, Korth and Sudarshan 11.54 Database System Concepts - 7th Edition
+n Bucket overflow can occur because of
+l Insufficient buckets
+l Skew in distribution of records. This can occur due to two
+reasons:
+4 multiple records have same search-key value
+4 chosen hash function produces non-uniform distribution of key
+values
+n Although the probability of bucket overflow can be reduced, it cannot
+be eliminated; it is handled by using overflow buckets.
+©Silberschatz, Korth and Sudarshan 11.55 Database System Concepts - 7th Edition
+n Overflow chaining – the overflow buckets of a given bucket are
+chained together in a linked list. n Above scheme is called closed hashing. l An alternative, called open hashing, which does not use overflow
+buckets, is not suitable for database applications.
+©Silberschatz, Korth and Sudarshan 11.56 Database System Concepts - 7th Edition
+n Hashing can be used not only for file organization, but also for index-structure creation. n A hash index organizes the search keys, with their associated record pointers, into a hash file
+structure. n Strictly speaking, hash indices are always secondary indices
+l if the file itself is organized using hashing, a separate primary hash index on it using the
+same search-key is unnecessary. l However, we use the term hash index to refer to both secondary index structures and hash
+organized files.
+©Silberschatz, Korth and Sudarshan 11.57 Database System Concepts - 7th Edition
+hash index on instructor, on attribute ID
+©Silberschatz, Korth and Sudarshan 11.58 Database System Concepts - 7th Edition
+n In static hashing, function h maps search-key values to a fixed set of B
+of bucket addresses. Databases grow or shrink with time. l If initial number of buckets is too small, and file grows, performance
+will degrade due to too much overflows. l If space is allocated for anticipated growth, a significant amount of
+space will be wasted initially (and buckets will be underfull). l If database shrinks, again space will be wasted. n One solution: periodic re-organization of the file with a new hash
+function
+l Expensive, disrupts normal operations
+n Better solution: allow the number of buckets to be modified dynamically.
+©Silberschatz, Korth and Sudarshan 11.59 Database System Concepts - 7th Edition
+n Good for database that grows and shrinks in size
+n Allows the hash function to be modified dynamically
+n Extendable hashing – one form of dynamic hashing
+l Hash function generates values over a large range — typically b-bit
+integers, with b = 32. l At any time use only a prefix of the hash function to index into a
+table of bucket addresses. l Let the length of the prefix be i bits, 0  i  32. 4 Bucket address table size = 2
+i. Initially i = 0
+4 Value of i grows and shrinks as the size of the database grows
+and shrinks. l Multiple entries in the bucket address table may point to a bucket
+(why?)
+l Thus, actual number of buckets is < 2
+i
+4 The number of buckets also changes dynamically due to
+coalescing and splitting of buckets.
+©Silberschatz, Korth and Sudarshan 11.60 Database System Concepts - 7th Edition
+In this structure, i2 = i3 = i, whereas i1 = i – 1 (see next
+slide for details)
+©Silberschatz, Korth and Sudarshan 11.61 Database System Concepts - 7th Edition
+n Each bucket j stores a value i
+j
+l All the entries that point to the same bucket have the same values on
+the first i
+j bits. n To locate the bucket containing search-key Kj:
+1. Compute h(Kj) = X
+2. Use the first i high order bits of X as a displacement into bucket
+address table, and follow the pointer to appropriate bucket
+n To insert a record with search-key value Kj
+l follow same procedure as look-up and locate the bucket, say j. l If there is room in the bucket j insert record in the bucket. l Else the bucket must be split and insertion re-attempted (next slide.)
+4 Overflow buckets used instead in some cases (will see shortly)
+©Silberschatz, Korth and Sudarshan 11.62 Database System Concepts - 7th Edition
+n If i > i
+j (more than one pointer to bucket j)
+l allocate a new bucket z, and set i
+j = iz
+= (i
+j + 1)
+l Update the second half of the bucket address table entries originally
+pointing to j, to point to z
+l remove each record in bucket j and reinsert (in j or z)
+l recompute new bucket for Kj and insert record in the bucket (further
+splitting is required if the bucket is still full)
+n If i = i
+j (only one pointer to bucket j)
+l If i reaches some limit b, or too many splits have happened in this
+insertion, create an overflow bucket
+l Else
+4 increment i and double the size of the bucket address table. 4 replace each entry in the table by two entries that point to the
+same bucket. 4 recompute new bucket address table entry for Kj
+Now i > i
+j so use the first case above.
+To split a bucket j when inserting record with search-key value Kj:
+©Silberschatz, Korth and Sudarshan 11.63 Database System Concepts - 7th Edition
+n To delete a key value, l locate it in its bucket and remove it. l The bucket itself can be removed if it becomes empty (with
+appropriate updates to the bucket address table). l Coalescing of buckets can be done (can coalesce only with a
+“buddy” bucket having same value of i
+j and same ij –1 prefix, if it is
+present)
+l Decreasing bucket address table size is also possible
+4 Note: decreasing bucket address table size is an expensive
+operation and should be done only if number of buckets becomes
+much smaller than the size of the table
+©Silberschatz, Korth and Sudarshan 11.64 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 11.65 Database System Concepts - 7th Edition
+n Initial Hash structure; bucket size = 2
+©Silberschatz, Korth and Sudarshan 11.66 Database System Concepts - 7th Edition
+n Hash structure after insertion of “Mozart”
+,
+“Srinivasan”
+,
+and “Wu” records
+©Silberschatz, Korth and Sudarshan 11.67 Database System Concepts - 7th Edition
+n Hash structure after insertion of Einstein record
+©Silberschatz, Korth and Sudarshan 11.68 Database System Concepts - 7th Edition
+n Hash structure after insertion of Gold and El Said records
+©Silberschatz, Korth and Sudarshan 11.69 Database System Concepts - 7th Edition
+n Hash structure after insertion of Katz record
+©Silberschatz, Korth and Sudarshan 11.70 Database System Concepts - 7th Edition
+And after insertion of
+eleven records
+©Silberschatz, Korth and Sudarshan 11.71 Database System Concepts - 7th Edition
+And after insertion of
+Kim record in previous
+hash structure
+©Silberschatz, Korth and Sudarshan 11.72 Database System Concepts - 7th Edition
+n Benefits of extendable hashing:
+l Hash performance does not degrade with growth of file
+l Minimal space overhead
+n Disadvantages of extendable hashing
+l Extra level of indirection to find desired record
+l Bucket address table may itself become very big (larger than
+memory)
+4 Cannot allocate very large contiguous areas on disk either
+4 Solution: B+-tree structure to locate desired record in bucket
+address table
+l Changing size of bucket address table is an expensive operation
+n Linear hashing is an alternative mechanism
+l Allows incremental growth of its directory (equivalent to bucket
+address table)
+l At the cost of more bucket overflows
+©Silberschatz, Korth and Sudarshan 11.73 Database System Concepts - 7th Edition
+n Cost of periodic re-organization
+n Relative frequency of insertions and deletions
+n Is it desirable to optimize average access time at the expense of
+worst-case access time?
+n Expected type of queries:
+l Hashing is generally better at retrieving records having a
+specified value of the key. l If range queries are common, ordered indices are to be
+preferred
+n In practice:
+l PostgreSQL supports hash indices, but discourages use due to
+poor performance
+l Oracle supports static hash organization, but not hash indices
+l SQLServer supports only B+-trees
+©Silberschatz, Korth and Sudarshan 11.74 Database System Concepts - 7th Edition
+n Use multiple indices for certain types of queries. n Example:
+select ID
+from instructor
+where dept_name =
+“Finance
+”
+and salary = 80000
+n Possible strategies for processing query using indices on single
+attributes:
+1. Use index on dept_name to find instructors with department name
+Finance; test salary = 80000
+2. Use index on salary to find instructors with a salary of $80000;
+test dept_name =
+“Finance
+”. 3. Use dept_name index to find pointers to all records pertaining to
+the
+“Finance
+” department. Similarly use index on salary. Take
+intersection of both sets of pointers obtained.
+©Silberschatz, Korth and Sudarshan 11.75 Database System Concepts - 7th Edition
+n Composite search keys are search keys containing more than one
+attribute
+l E.g., (dept_name, salary)
+n Lexicographic ordering: (a1
+, a2
+) < (b1
+, b2
+) if either
+l a1 < b1
+, or
+l a1=b1 and a2 < b2
+©Silberschatz, Korth and Sudarshan 11.76 Database System Concepts - 7th Edition
+n With the where clause
+where dept_name =
+“Finance
+”
+and salary = 80000
+the index on (dept_name, salary) can be used to fetch only records
+that satisfy both conditions. l Using separate indices in less efficient — we may fetch many
+records (or pointers) that satisfy only one of the conditions. n Can also efficiently handle
+where dept_name =
+“Finance
+”
+and salary < 80000
+n But cannot efficiently handle
+where dept_name < “Finance
+”
+and balance = 80000
+l May fetch many records that satisfy the first but not the second
+condition
+Suppose we have an index on combined search-key
+(dept_name, salary).
+©Silberschatz, Korth and Sudarshan 11.77 Database System Concepts - 7th Edition
+Other Features
+n Covering indices
+l Add extra attributes to index so (some) queries can avoid fetching
+the actual records
+l Store extra attributes only at leaf
+4 Why?
+n Particularly useful for secondary indices
+l Why?
+©Silberschatz, Korth and Sudarshan 11.78 Database System Concepts - 7th Edition
+n Example
+create index takes_pk on takes (ID,course_ID, year, semester, section)
+drop index takes_pk
+n Most database systems allow specification of type of index, and
+clustering. n Indices on primary key created automatically by all databases
+l Why?
+n Some database also create indices on foreign key attributes
+l Why might such an index be useful for this query:
+4 takes ⨝ σname='Shankar' (student)
+n Indices can greatly speed up lookups, but impose cost on updates
+l Index tuning assistants/wizards supported on several databases
+to help choose indices, based on query and update workload
+©Silberschatz, Korth and Sudarshan 11.79 Database System Concepts - 7th Edition
+n Create an index
+create index <index-name> on <relation-name>
+(<attribute-list>)
+E.g.,: create index b-index on branch(branch_name)
+n Use create unique index to indirectly specify and enforce the
+condition that the search key is a candidate key is a candidate key. l Not really required if SQL unique integrity constraint is supported
+n To drop an index
+drop index <index-name>
+n Most database systems allow specification of type of index, and
+clustering.
+©Silberschatz, Korth and Sudarshan 11.80 Database System Concepts - 7th Edition
+n Performance of B+-trees can be poor for write-intensive workloads
+l One I/O per leaf, assuming all internal nodes are in memory
+l With magnetic disks, < 100 inserts per second per disk
+l With flash memory, one page overwrite per insert
+n Two approaches to reducing cost of writes
+l Log-structured merge tree
+l Buffer tree
+©Silberschatz, Korth and Sudarshan 11.81 Database System Concepts - 7th Edition
+n Consider only inserts/queries
+for now
+n Records inserted first into in- memory tree (L0
+tree)
+n When in-memory tree is full, records moved to disk (L1
+tree)
+l B+-tree constructed using
+bottom-up build by
+merging existing L1
+tree
+with records from L0
+tree
+n When L1
+tree exceeds some
+threshold, merge into L2
+tree
+l And so on for more levels
+l Size threshold for Li+1
+tree
+is k times size threshold
+for Li tree
+©Silberschatz, Korth and Sudarshan 11.82 Database System Concepts - 7th Edition
+n Benefits of LSM approach
+l Inserts are done using only sequential I/O operations
+l Leaves are full, avoiding space wastage
+l Reduced number of I/O operations per record inserted as
+compared to normal B+-tree (up to some size)
+n Drawback of LSM approach
+l Queries have to search multiple trees
+l Entire content of each level copied multiple times
+n Stepped-merge index
+l Variant of LSM tree with multiple trees at each level
+l Reduces write cost compared to LSM tree
+l But queries are even more expensive
+4 Bloom filters to avoid lookups in most trees
+n Details are covered in Chapter 24
+©Silberschatz, Korth and Sudarshan 11.83 Database System Concepts - 7th Edition
+n Deletion handled by adding special “delete” entries
+l Lookups will find both original entry and the delete entry, and must
+return only those entries that do not have matching delete entry
+l When trees are merged, if we find a delete entry matching an
+original entry, both are dropped. n Update handled using insert+delete
+n LSM trees were introduced for disk-based indices
+l But useful to minimize erases with flash-based indices
+l The stepped-merge variant of LSM trees is used in many BigData
+storage systems
+4 Google BigTable, Apache Cassandra, MongoDB
+4 And more recently in SQLite4, LevelDB, and MyRocks storage
+engine of MySQL
+©Silberschatz, Korth and Sudarshan 11.84 Database System Concepts - 7th Edition
+n Alternative to LSM tree
+n Key idea: each internal node of B+-tree has a buffer to store inserts
+l Inserts are moved to lower levels when buffer is full
+l With a large buffer, many records are moved to lower level each
+time
+l Per record I/O decreases correspondingly
+n Benefits
+l Less overhead on queries
+l Can be used with any tree index structure
+l Used in PostgreSQL Generalized Search Tree (GiST) indices
+n Drawback: more random I/O than LSM tree
+©Silberschatz, Korth and Sudarshan 11.85 Database System Concepts - 7th Edition
+n Bitmap indices are a special type of index designed for efficient
+querying on multiple keys
+n Records in a relation are assumed to be numbered sequentially from, say, 0
+l Given a number n it must be easy to retrieve record n
+4 Particularly easy if records are of fixed size
+n Applicable on attributes that take on a relatively small number of
+distinct values
+l E.g., gender, country, state, …
+l E.g., income-level (income broken up into a small number of
+levels such as 0-9999, 10000-19999, 20000-50000, 50000-
+infinity)
+n A bitmap is simply an array of bits
+©Silberschatz, Korth and Sudarshan 11.86 Database System Concepts - 7th Edition
+n In its simplest form a bitmap index on an attribute has a bitmap for
+each value of the attribute
+l Bitmap has as many bits as records
+l In a bitmap for value v, the bit for a record is 1 if the record has
+the value v for the attribute, and is 0 otherwise
+n Example
+©Silberschatz, Korth and Sudarshan 11.87 Database System Concepts - 7th Edition
+n Bitmap indices are useful for queries on multiple attributes
+l not particularly useful for single attribute queries
+n Queries are answered using bitmap operations
+l Intersection (and)
+l Union (or)
+n Each operation takes two bitmaps of the same size and applies the
+operation on corresponding bits to get the result bitmap
+l E.g., 100110 AND 110011 = 100010
+100110 OR 110011 = 110111
+NOT 100110 = 011001
+l Males with income level L1: 10010 AND 10100 = 10000
+4 Can then retrieve required tuples. 4 Counting number of matching tuples is even faster
+©Silberschatz, Korth and Sudarshan 11.88 Database System Concepts - 7th Edition
+n Bitmap indices generally very small compared with relation size
+l E.g., if record is 100 bytes, space for a single bitmap is 1/800 of
+space used by relation. 4 If number of distinct attribute values is 8, bitmap is only 1% of
+relation size
+©Silberschatz, Korth and Sudarshan 11.89 Database System Concepts - 7th Edition
+n Bitmaps are packed into words; a single word and (a basic CPU
+instruction) computes and of 32 or 64 bits at once
+l E.g., 1-million-bit maps can be and-ed with just 31,250 instruction
+n Counting number of 1s can be done fast by a trick:
+l Use each byte to index into a precomputed array of 256 elements
+each storing the count of 1s in the binary representation
+4 Can use pairs of bytes to speed up further at a higher memory
+cost
+l Add up the retrieved counts
+n Bitmaps can be used instead of Tuple-ID lists at leaf levels of
+B+-trees, for values that have a large number of matching records
+l Worthwhile if > 1/64 of the records have that value, assuming a
+tuple-id is 64 bits
+l Above technique merges benefits of bitmap and B+-tree indices
+©Silberschatz, Korth and Sudarshan 11.90 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 11.91 Database System Concepts - 7th Edition
+n Databases can store data types such as lines, polygons, in addition to
+raster images
+l allows relational databases to store and retrieve spatial
+information
+l Queries can use spatial conditions (e.g. contains or overlaps). l queries can mix spatial and nonspatial conditions
+n Nearest neighbor queries, given a point or an object, find the nearest
+object that satisfies given conditions. n Range queries deal with spatial regions. e.g., ask for objects that lie
+partially or fully inside a specified region. n Queries that compute intersections or unions of regions. n Spatial join of two spatial relations with the location playing the role of
+join attribute.
+©Silberschatz, Korth and Sudarshan 11.92 Database System Concepts - 7th Edition
+n k-d tree - early structure used for
+indexing in multiple dimensions. n Each level of a k-d tree partitions the
+space into two. l Choose one dimension for
+partitioning at the root level of the
+tree. l Choose another dimensions for
+partitioning in nodes at the next
+level and so on, cycling through
+the dimensions. n In each node, approximately half of
+the points stored in the sub-tree fall on
+one side and half on the other. n Partitioning stops when a node has
+less than a given number of points.
+3 1 3
+2
+3 3
+2
+§ The k-d-B tree extends the k-d
+tree to allow multiple child
+nodes for each internal node;
+well-suited for secondary
+storage.
+©Silberschatz, Korth and Sudarshan 11.93 Database System Concepts - 7th Edition
+n Each node of a quadtree is associated with a rectangular region of
+space; the top node is associated with the entire target space. n Each non-leaf nodes divides its region into four equal sized quadrants
+l correspondingly each such node has four child nodes
+corresponding to the four quadrants and so on
+n Leaf nodes have between zero and some fixed maximum number of
+points (set to 1 in example).
+©Silberschatz, Korth and Sudarshan 11.94 Database System Concepts - 7th Edition
+n R-trees are a N-dimensional extension of B+-trees, useful for indexing
+sets of rectangles and other polygons. n Supported in many modern database systems, along with variants like
+R+ -trees and R*-trees. n Basic idea: generalize the notion of a one-dimensional interval
+associated with each B+ -tree node to an
+N-dimensional interval, that is, an N-dimensional rectangle. n Will consider only the two-dimensional case (N = 2)
+l generalization for N > 2 is straightforward, although R-trees work
+well only for relatively small N
+n The bounding box of a node is a minimum sized rectangle that
+contains all the rectangles/polygons associated with the node
+l Bounding boxes of children of a node are allowed to overlap
+©Silberschatz, Korth and Sudarshan 11.95 Database System Concepts - 7th Edition
+n A set of rectangles (solid line) and the bounding boxes (dashed line) of
+the nodes of an R-tree for the rectangles. n The R-tree is shown on the right.
+©Silberschatz, Korth and Sudarshan 11.96 Database System Concepts - 7th Edition
+n To find data items intersecting a given query point/region, do the
+following, starting from the root node:
+l If the node is a leaf node, output the data items whose keys
+intersect the given query point/region. l Else, for each child of the current node whose bounding box
+intersects the query point/region, recursively search the child
+n Can be very inefficient in worst case since multiple paths may need to
+be searched, but works acceptably in practice.
+©Silberschatz, Korth and Sudarshan 11.97 Database System Concepts - 7th Edition
+n Temporal data refers to data that has an associated time period
+(interval)
+l Example: a temporal version of the course relation
+n Time interval has a start and end time
+l End time set to infinity (or large date such as 9999-12-31) if a tuple
+is currently valid and its validity end time is not currently known
+n Query may ask for all tuples that are valid at a point in time or during a
+time interval
+l Index on valid time period speeds up this task
+©Silberschatz, Korth and Sudarshan 11.98 Database System Concepts - 7th Edition
+n To create a temporal index on attribute a:
+l Use spatial index, such as R-tree, with attribute a as one
+dimension, and time as another dimension
+4 Valid time forms an interval in the time dimension
+l Tuples that are currently valid cause problems, since value is
+infinite or very large
+4 Solution: store all current tuples (with end time as infinity) in a
+separate index, indexed on (a, start-time) – To find tuples valid at a point in time t in the current tuple
+index, search for tuples in the range (a, 0) to (a,t)
+n Temporal index on primary key can help enforce temporal primary key
+constraint
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+14.3[a] 、14.4、14.11、24.10

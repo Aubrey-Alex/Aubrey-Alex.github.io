@@ -10,6 +10,8 @@ remote_branch: gh-pages
 remote_name: origin
 # 主题设置
 theme:
+  logo: assets/images/exploding_head_color.svg
+  favicon: assets/images/exploding_head_color.svg
   name: material
   palette:
     # 亮色调
@@ -113,6 +115,8 @@ plugins:
   - search
   - statistics:
       enabled: true
+      words_per_minute: 150
+      codelines_per_minute: 50
   - blog:
       archive_date_format: "YYYY-MM" # 日期格式
 
@@ -144,6 +148,9 @@ nav:
               - Advanced SQL: ComputerScience/Database/ClassNotes/5AdvancedSQL.md
               - ER Model: ComputerScience/Database/ClassNotes/6ERModel.md
               - Relational Database Design: ComputerScience/Database/ClassNotes/7RelationalDatabaseDesign.md
+              - Storage and File Structure: ComputerScience/Database/ClassNotes/1213StorageAndFileStructure.md
+              - Indexing: ComputerScience/Database/ClassNotes/14Indexing.md
+              - Query Processing: ComputerScience/Database/ClassNotes/15QueryProcessing.md
           - Self-Study:
               - ComputerScience/Database/SelfStudy/index.md
               - SQL: ComputerScience/Database/SelfStudy/MySQL.md
@@ -160,6 +167,8 @@ nav:
               - Inside Class: ComputerScience/CPlusPlus/ClassNotes/6InsideClass.md
               - Composition: ComputerScience/CPlusPlus/ClassNotes/7Composition.md
               - Inheritance: ComputerScience/CPlusPlus/ClassNotes/8Inheritance.md
+              - Polymorphism: ComputerScience/CPlusPlus/ClassNotes/9Polymorphism.md
+              - Copy and Move: ComputerScience/CPlusPlus/ClassNotes/10CopyAndMove.md
           - Self-Study:
               - ComputerScience/CPlusPlus/SelfStudy/index.md
               - C++: ComputerScience/CPlusPlus/SelfStudy/C++.md
