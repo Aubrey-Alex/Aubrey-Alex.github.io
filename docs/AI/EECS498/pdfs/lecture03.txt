@@ -1,0 +1,1479 @@
+Justin Johnson January 12, 2022
+Lecture 3:
+Linear Classifiers
+Lecture 3 - 1
+Justin Johnson January 12, 2022
+Reminder: Assignment 1
+Lecture 3 - 2
+• Due Friday 1/14, 11:59pm EST
+• If you enroll late, you get a free extension for A1:
+• due_date = latest_day(original_due_date, your_enroll_date + 7 days)
+• Make sure you submit the right .py file!
+• Make sure to manually save the .py file in Colab
+• After you download the .zip file, check that the .py file is correct
+Justin Johnson January 12, 2022
+Office Hours
+• Check Google Calendar (link also on website):
+https://calendar.google.com/calendar/b/0?cid=dW1pY2guZWR1X2cxMXJnNnZxNmd2YWNqOWRhZDRxOHVvZHNvQGdyb
+3VwLmNhbGVuZGFyLmdvb2dsZS5jb20
+• Office hours may shift a bit from week to week (especially mine) –
+check Google Calendar for up-to-date info
+• We’ll use Umich office hours queue system; find link in the 
+description of each calendar event
+Lecture 3 - 3
+Justin Johnson January 12, 2022
+Last time: Image Classification
+Lecture 3 - 4
+cat
+bird
+deer
+dog
+truck
+Output: Assign image to one 
+of a fixed set of categories
+This image by Nikita is 
+licensed under CC-BY 2.0
+Input: image
+Justin Johnson January 12, 2022
+Last Time: Challenges of Recognition
+Lecture 3 - 5
+This image is CC0 1.0 public domain This image by Umberto Salvagnin is 
+licensed under CC-BY 2.0 This image by jonsson is licensed 
+under CC-BY 2.0
+Illumination Deformation Occlusion
+This image is CC0 1.0 public domain
+Clutter
+This image is CC0 1.0 public domain
+Intraclass Variation
+Viewpoint
+Justin Johnson January 12, 2022
+Last time: Data-Drive Approach, kNN
+Lecture 3 - 6
+1-NN classifier 5-NN classifier
+train test
+train test validation
+Justin Johnson January 12, 2022
+Today: Linear Classifiers
+Lecture 3 - 7
+Justin Johnson January 12, 2022 Lecture 3 - 8
+This image is CC0 1.0 public domain
+Neural Network
+Linear 
+classifiers
+Justin Johnson January 12, 2022
+Recall CIFAR10
+Lecture 3 - 9
+50,000 training images
+each image is 32x32x3
+10,000 test images.
+Justin Johnson January 12, 2022
+Parametric Approach
+Lecture 3 - 10
+Image
+parameters
+or weights
+W
+f(x,W) 10 numbers giving 
+class scores
+Array of 32x32x3 numbers
+(3072 numbers total)
+Justin Johnson January 12, 2022
+Parametric Approach: Linear Classifier
+Lecture 3 - 11
+Image
+parameters
+or weights
+W
+f(x,W) 10 numbers giving 
+class scores
+Array of 32x32x3 numbers
+(3072 numbers total)
+f(x,W) = Wx
+Justin Johnson January 12, 2022
+Parametric Approach: Linear Classifier
+Lecture 3 - 12
+Image
+parameters
+or weights
+W
+f(x,W) 10 numbers giving 
+class scores
+Array of 32x32x3 numbers
+(3072 numbers total)
+f(x,W) = Wx
+(10,) (10, 3072)
+(3072,)
+Justin Johnson January 12, 2022
+Parametric Approach: Linear Classifier
+Lecture 3 - 13
+Image
+parameters
+or weights
+W
+f(x,W) 10 numbers giving 
+class scores
+Array of 32x32x3 numbers
+(3072 numbers total)
+f(x,W) = Wx + b
+(10,) (10, 3072)
+(3072,)
+(10,)
+Justin Johnson January 12, 2022
+Example for 2x2 image, 3 classes (cat/dog/ship)
+Lecture 3 - 14
+Input image
+(2, 2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch pixels into column
+(4,)
+f(x,W) = Wx + b
+Justin Johnson January 12, 2022
+Example for 2x2 image, 3 classes (cat/dog/ship)
+Lecture 3 - 15
+0.2 -0.5 0.1 2.0
+1.5 1.3 2.1 0.0
+0 0.25 0.2 -0.3
+W
+Input image
+(2, 2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch pixels into column
+1.1
+3.2
+-1.2
++
+-96.8
+437.9
+61.95
+=
+b (4,)
+(3, 4)
+(3,)
+(3,)
+f(x,W) = Wx + b
+Justin Johnson January 12, 2022
+Linear Classifier: Algebraic Viewpoint
+Lecture 3 - 16
+0.2 -0.5 0.1 2.0
+1.5 1.3 2.1 0.0
+0 0.25 0.2 -0.3
+W
+Input image
+(2, 2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch pixels into column
+1.1
+3.2
+-1.2
++
+-96.8
+437.9
+61.95
+=
+b (4,)
+(3, 4)
+(3,)
+(3,)
+f(x,W) = Wx + b
+Justin Johnson January 12, 2022
+Linear Classifier: Bias Trick
+Lecture 3 - 17
+0.2 -0.5 0.1 2.0
+1.5 1.3 2.1 0.0
+0 0.25 0.2 -0.3
+W
+Input image
+(2, 2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch pixels into column
+1.1
+3.2
+-1.2
+-96.8
+437.9
+61.95
+=
+(5,)
+(3, 5) (3,)
+1
+Add extra one to data vector; 
+bias is absorbed into last 
+column of weight matrix
+Justin Johnson January 12, 2022
+Linear Classifier: Predictions are Linear!
+Lecture 3 - 18
+f(x, W) = Wx (ignore bias)
+f(cx, W) = W(cx) = c * f(x, W)
+Justin Johnson January 12, 2022
+Linear Classifier: Predictions are Linear!
+Lecture 3 - 19
+f(x, W) = Wx (ignore bias)
+f(cx, W) = W(cx) = c * f(x, W)
+Image 0.5 * Image Scores
+-96.8
+437.8
+62.0
+-48.4
+218.9
+31.0
+0.5 * Scores
+Justin Johnson January 12, 2022 Lecture 3 - 20
+Interpreting a Linear Classifier
+0.2 -0.5 0.1 2.0
+1.5 1.3 2.1 0.0
+0 0.25 0.2 -0.3
+W
+Input	image
+(2,	2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch	pixels	into	column
+1.1
+3.2
+-1.2
++
+-96.8
+437.9
+61.95
+=
+b (4,)
+(3,	4)
+(3,)
+(3,)
+f(x,W) = Wx + b
+Algebraic Viewpoint
+Justin Johnson January 12, 2022 Lecture 3 - 21
+Interpreting a Linear Classifier
+0.2 -0.5
+0.1 2.0
+1.5 1.3
+2.1 0.0
+0 .25
+0.2 -0.3
+1.1 3.2 -1.2
+W
+b
+-96.8 437.9 61.95
+0.2 -0.5 0.1 2.0
+1.5 1.3 2.1 0.0
+0 0.25 0.2 -0.3
+W
+Input	image
+(2,	2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch	pixels	into	column
+1.1
+3.2
+-1.2
++
+-96.8
+437.9
+61.95
+=
+b (4,)
+(3,	4)
+(3,)
+(3,)
+Algebraic Viewpoint
+f(x,W) = Wx + b
+Instead of stretching pixels into 
+columns, we can equivalently 
+stretch rows of W into images!
+Justin Johnson January 12, 2022 Lecture 3 - 22
+0.2 -0.5
+0.1 2.0
+1.5 1.3
+2.1 0.0
+0 .25
+0.2 -0.3
+1.1 3.2 -1.2
+W
+b
+-96.8 437.9 61.95
+Interpreting an Linear Classifier
+Justin Johnson January 12, 2022 Lecture 3 - 23
+0.2 -0.5
+0.1 2.0
+1.5 1.3
+2.1 0.0
+0 .25
+0.2 -0.3
+1.1 3.2 -1.2
+W
+b
+-96.8 437.9 61.95
+Interpreting an Linear Classifier: Visual Viewpoint
+Justin Johnson January 12, 2022 Lecture 3 - 24
+0.2 -0.5
+0.1 2.0
+1.5 1.3
+2.1 0.0
+0 .25
+0.2 -0.3
+1.1 3.2 -1.2
+W
+b
+-96.8 437.9 61.95
+Interpreting an Linear Classifier: Visual Viewpoint
+Linear classifier has one 
+“template” per category
+Justin Johnson January 12, 2022 Lecture 3 - 25
+0.2 -0.5
+0.1 2.0
+1.5 1.3
+2.1 0.0
+0 .25
+0.2 -0.3
+1.1 3.2 -1.2
+W
+b
+-96.8 437.9 61.95
+Interpreting an Linear Classifier: Visual Viewpoint
+Linear classifier has one 
+“template” per category
+A single template cannot capture 
+multiple modes of the data
+e.g. horse template has 2 heads!
+Justin Johnson January 12, 2022
+Interpreting a Linear Classifier: Geometric Viewpoint
+Lecture 3 - 26
+f(x,W) = Wx + b
+Array of 32x32x3 numbers
+(3072 numbers total) Value of pixel (15, 8, 0)
+Airplane 
+Score Car 
+Score Cat 
+Score Classifier 
+score
+Justin Johnson January 12, 2022
+Interpreting a Linear Classifier: Geometric Viewpoint
+Lecture 3 - 27
+f(x,W) = Wx + b
+Array of 32x32x3 numbers
+(3072 numbers total) Value of pixel (15, 8, 0)
+Airplane 
+Score Car 
+Score Cat 
+Score Classifier 
+score
+Decision Regions
+Justin Johnson January 12, 2022
+Interpreting a Linear Classifier: Geometric Viewpoint
+Lecture 3 - 28
+f(x,W) = Wx + b
+Array of 32x32x3 numbers
+(3072 numbers total)
+Pixel
+(15, 8, 0)
+Car Score 
+= 0
+Pixel 
+(11, 11, 0)
+Car score 
+increases 
+this way
+Justin Johnson January 12, 2022
+Interpreting a Linear Classifier: Geometric Viewpoint
+Lecture 3 - 29
+f(x,W) = Wx + b
+Array of 32x32x3 numbers
+(3072 numbers total)
+Car Score 
+= 0
+Car score 
+increases 
+this way
+Car template 
+on this line
+Pixel
+(15, 8, 0)
+Pixel 
+(11, 11, 0)
+Justin Johnson January 12, 2022
+Interpreting a Linear Classifier: Geometric Viewpoint
+Lecture 3 - 30
+f(x,W) = Wx + b
+Array of 32x32x3 numbers
+(3072 numbers total)
+Car Score 
+= 0
+Car score 
+increases 
+this way
+Car template 
+on this line
+Cat 
+Score
+Airplane 
+Score
+Pixel
+(15, 8, 0)
+Pixel 
+(11, 11, 0)
+Justin Johnson January 12, 2022
+Interpreting a Linear Classifier: Geometric Viewpoint
+Lecture 3 - 31
+Car Score 
+= 0
+Car score 
+increases 
+this way
+Car template 
+on this line
+Cat 
+Score
+Airplane 
+Score
+Plot created using Wolfram Cloud
+Hyperplanes carving up a 
+high-dimensional space
+Pixel
+(15, 8, 0)
+Pixel 
+(11, 11, 0)
+Justin Johnson January 12, 2022
+Hard Cases for a Linear Classifier
+Lecture 3 - 32
+Class 1: 
+First and third quadrants
+Class 2: 
+Second and fourth quadrants
+Class 1: 
+1 <= L2 norm <= 2
+Class 2:
+Everything else
+Class 1: 
+Three modes
+Class 2:
+Everything else
+Justin Johnson January 12, 2022
+Recall: Perceptron couldn’t learn XOR
+Lecture 3 - 33
+X Y F(x,y)
+0 0 0
+0 1 1
+1 0 1
+1 1 0 x
+y
+Justin Johnson January 12, 2022
+Linear Classifier: Three Viewpoints
+Lecture 3 - 34
+f(x,W) = Wx
+Algebraic Viewpoint Visual Viewpoint Geometric Viewpoint
+One template 
+per class
+Hyperplanes 
+cutting up space
+Justin Johnson January 12, 2022
+So Far: Defined a linear score function
+Lecture 3 - 35
+f(x,W) = Wx + b
+-3.45
+-8.87
+0.09
+2.9
+4.48
+8.02
+3.78
+1.06
+-0.36
+-0.72
+-0.51
+6.04
+5.31
+-4.22
+-4.19
+3.58
+4.49
+-4.37
+-2.09
+-2.93
+3.42
+4.64
+2.65
+5.1
+2.64
+5.55
+-4.34
+-1.5
+-4.79
+6.14
+Given a W, we can 
+compute class scores 
+for an image x.
+But how can we 
+actually choose a 
+good W?
+Cat image by Nikita is licensed under CC-BY 2.0; Car image is CC0 1.0 public domain; Frog image is in the public domain
+Justin Johnson January 12, 2022
+Choosing a good W
+Lecture 3 - 36
+f(x,W) = Wx + b
+-3.45
+-8.87
+0.09
+2.9
+4.48
+8.02
+3.78
+1.06
+-0.36
+-0.72
+-0.51
+6.04
+5.31
+-4.22
+-4.19
+3.58
+4.49
+-4.37
+-2.09
+-2.93
+3.42
+4.64
+2.65
+5.1
+2.64
+5.55
+-4.34
+-1.5
+-4.79
+6.14
+TODO:
+1. Use a loss function to 
+quantify how good a 
+value of W is
+2. Find a W that minimizes 
+the loss function 
+(optimization)
+Justin Johnson January 12, 2022
+Loss Function
+Lecture 3 - 37
+A loss function tells how good our 
+current classifier is
+Low loss = good classifier
+High loss = bad classifier
+(Also called: objective function; 
+cost function)
+Justin Johnson January 12, 2022
+Loss Function
+Lecture 3 - 38
+A loss function tells how good our 
+current classifier is
+Low loss = good classifier
+High loss = bad classifier
+(Also called: objective function; 
+cost function)
+Negative loss function sometimes 
+called reward function, profit 
+function, utility function, fitness 
+function, etc
+Justin Johnson January 12, 2022
+Loss Function
+Lecture 3 - 39
+A loss function tells how good our 
+current classifier is
+Low loss = good classifier
+High loss = bad classifier
+(Also called: objective function; 
+cost function)
+Negative loss function sometimes 
+called reward function, profit 
+function, utility function, fitness 
+function, etc
+Given a dataset of examples
+Where ?! is image and 
+?! is (integer) label
+?!, ?! !"#
+$
+Justin Johnson January 12, 2022
+Loss Function
+Lecture 3 - 40
+A loss function tells how good our 
+current classifier is
+Low loss = good classifier
+High loss = bad classifier
+(Also called: objective function; 
+cost function)
+Negative loss function sometimes 
+called reward function, profit 
+function, utility function, fitness 
+function, etc
+Given a dataset of examples
+Where ?! is image and 
+?! is (integer) label
+Loss for a single example is
+?! ? ?!, ? , ?!
+?!, ?! !"#
+$
+Justin Johnson January 12, 2022
+Loss Function
+Lecture 3 - 41
+A loss function tells how good our 
+current classifier is
+Low loss = good classifier
+High loss = bad classifier
+(Also called: objective function; 
+cost function)
+Negative loss function sometimes 
+called reward function, profit 
+function, utility function, fitness 
+function, etc
+Given a dataset of examples
+Where ?! is image and 
+?! is (integer) label
+Loss for a single example is
+Loss for the dataset is average of 
+per-example losses:
+? =
+1
+?*
+!
+?! ? ?!, ? , ?!
+?! ? ?!, ? , ?!
+?!, ?! !"#
+$
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 42
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 43
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function ? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 44
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function
+Unnormalized log￾probabilities / logits
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 45
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+Probabilities 
+must be >= 0
+exp
+Softmax
+function
+unnormalized
+probabilities
+Unnormalized log￾probabilities / logits
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 46
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+0.13
+0.87
+0.00
+Probabilities 
+must be >= 0
+Probabilities 
+must sum to 1
+exp normalize
+Softmax
+function
+unnormalized
+probabilities probabilities Unnormalized log￾probabilities / logits
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+Justin Johnson January 12, 2022
+?! = − log ? ? = ?! | ? = ?!
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 47
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+0.13
+0.87
+0.00
+Probabilities 
+must be >= 0
+Probabilities 
+must sum to 1
+exp normalize
+Softmax
+function
+Li = -log(0.13)
+= 2.04
+unnormalized
+probabilities probabilities Unnormalized log￾probabilities / logits
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 48
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+0.13
+0.87
+0.00
+Probabilities 
+must be >= 0
+Probabilities 
+must sum to 1
+exp normalize
+Softmax
+function
+Li = -log(0.13)
+= 2.04
+Maximum Likelihood Estimation
+Choose weights to maximize the 
+likelihood of the observed data
+(See EECS 445 or EECS 545) unnormalized
+probabilities probabilities Unnormalized log￾probabilities / logits
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?! = − log ? ? = ?! | ? = ?!
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 49
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+0.13
+0.87
+0.00
+Probabilities 
+must be >= 0
+Probabilities 
+must sum to 1
+exp normalize
+Softmax
+function
+unnormalized
+probabilities probabilities Unnormalized log￾probabilities / logits
+1.00
+0.00
+0.00
+Correct 
+probs
+Compare
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?! = − log ? ? = ?! | ? = ?!
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 50
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+0.13
+0.87
+0.00
+Probabilities 
+must be >= 0
+Probabilities 
+must sum to 1
+exp normalize
+Softmax
+function
+unnormalized
+probabilities probabilities Unnormalized log￾probabilities / logits
+1.00
+0.00
+0.00
+Correct 
+probs
+Compare
+Kullback–Leibler
+divergence
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?! = − log ? ? = ?! | ? = ?!
+?!" ? || ? =
+&
+#
+? ? log ?
+? ?
+?
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 51
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+24.5
+164.0
+0.18
+0.13
+0.87
+0.00
+Probabilities 
+must be >= 0
+Probabilities 
+must sum to 1
+exp normalize
+Softmax
+function
+unnormalized
+probabilities probabilities Unnormalized log￾probabilities / logits
+1.00
+0.00
+0.00
+Correct 
+probs
+Compare
+Cross Entropy
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?! = − log ? ? = ?! | ? = ?!
+? ?,? =
+? ? + ?"# ? || ?
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 52
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function
+Maximize probability of correct class Putting it all together:
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?$ = − log ? ? = ?$ | ? = ?$
+?! = − log exp ?$!
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 53
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function
+Maximize probability of correct class Putting it all together:
+Q: What is the min / 
+max possible loss Li
+?
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?$ = − log ? ? = ?$ | ? = ?$
+?! = − log exp ?$!
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 54
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function
+Maximize probability of correct class Putting it all together:
+Q: What is the min / 
+max possible loss Li
+? A: Min 0, max +infinity
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?$ = − log ? ? = ?$ | ? = ?$
+?! = − log exp ?$!
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 55
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function
+Maximize probability of correct class Putting it all together:
+Q: If all scores are 
+small random values, 
+what is the loss?
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?$ = − log ? ? = ?$ | ? = ?$
+?! = − log exp ?$!
+∑# exp ?#
+Justin Johnson January 12, 2022
+Cross-Entropy Loss (Multinomial Logistic Regression)
+Lecture 3 - 56
+Want to interpret raw classifier scores as probabilities
+3.2 cat
+car
+frog
+5.1
+-1.7
+Softmax
+function
+Maximize probability of correct class Putting it all together:
+Q: If all scores are 
+small random values, 
+what is the loss?
+A: -log(1/C)
+log(10) ≈ 2.3
+? = ? ?!; ? ? ? = ? | ? = ?! =
+exp ?"
+∑# exp ?#
+?$ = − log ? ? = ?$ | ? = ?$
+?! = − log exp ?$!
+∑# exp ?#
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+”The score of the correct class should 
+be higher than all the other scores”
+Lecture 3 - 57
+Loss
+Score for 
+correct class
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+”The score of the correct class should 
+be higher than all the other scores”
+Lecture 3 - 58
+Loss
+Score for 
+correct class
+Highest score 
+among other classes
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+”The score of the correct class should 
+be higher than all the other scores”
+Lecture 3 - 59
+Loss
+Score for 
+correct class
+Highest score 
+among other classes
+“Margin”
+“Hinge Loss”
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+”The score of the correct class should 
+be higher than all the other scores”
+Lecture 3 - 60
+Loss
+Score for 
+correct class
+Highest score 
+among other classes
+“Margin”
+“Hinge Loss”
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 61
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 62
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+= max(0, 5.1 - 3.2 + 1) 
++ max(0, -1.7 - 3.2 + 1)
+= max(0, 2.9) + max(0, -3.9)
+= 2.9 + 0
+= 2.9 Loss 2.9
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 63
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0
+= max(0, 1.3 - 4.9 + 1) 
++max(0, 2.0 - 4.9 + 1)
+= max(0, -2.6) + max(0, -1.9)
+= 0 + 0
+= 0
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 64
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+= max(0, 2.2 - (-3.1) + 1) 
++max(0, 2.5 - (-3.1) + 1)
+= max(0, 6.3) + max(0, 6.6)
+= 6.3 + 6.6
+= 12.9
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 65
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Loss over the dataset is:
+L = (2.9 + 0.0 + 12.9) / 3
+= 5.27
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 66
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Q: What happens to the 
+loss if the scores for the 
+car image change a bit?
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 67
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Q2: What are the min 
+and max possible loss?
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 68
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Q3: If all the scores 
+were random, what 
+loss would we expect?
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 69
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Q4: What would happen if 
+the sum were over all 
+classes? (including ? = ?$)
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 70
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Q5: What if the loss used 
+a mean instead of a sum?
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+Justin Johnson January 12, 2022
+Multiclass SVM Loss
+Lecture 3 - 71
+3.2 cat
+car
+frog
+5.1
+-1.7
+1.3
+4.9
+2.0
+2.2
+2.5
+-3.1
+Loss 2.9 0 12.9
+Q6: What if we used 
+this loss instead?
+Given an example ?$, ?$
+(?$ is image, ?$ is label)
+Let ? = ? ?$, ? be scores
+Then the SVM loss has the form:
+?$ = &%&#!
+max 0, ?% − ?#! + 1
+?$ = &%&#!
+max 0, ?% − ?#! + 1 '
+Justin Johnson January 12, 2022
+Cross-Entropy vs SVM Loss
+Lecture 3 - 72
+assume scores:
+[10, -2, 3]
+[10, 9, 9]
+[10, -100, -100]
+and 
+Q: What is cross-entropy loss? 
+What is SVM loss?
+A: Cross-entropy loss > 0
+SVM loss = 0
+?$ = − log exp ?#!
+∑% exp ?%
+?! = *"#$$
+max 0, ?" − ?$$ + 1
+Justin Johnson January 12, 2022
+Cross-Entropy vs SVM Loss
+Lecture 3 - 73
+assume scores:
+[10, -2, 3]
+[10, 9, 9]
+[10, -100, -100]
+and 
+Q: What is cross-entropy loss? 
+What is SVM loss?
+A: Cross-entropy loss > 0
+SVM loss = 0
+?$ = − log exp ?#!
+∑% exp ?%
+?! = *"#$$
+max 0, ?" − ?$$ + 1
+Justin Johnson January 12, 2022
+Cross-Entropy vs SVM Loss
+Lecture 3 - 74
+assume scores:
+[10, -2, 3]
+[10, 9, 9]
+[10, -100, -100]
+and 
+Q: What happens to each loss if I 
+slightly change the scores of the last 
+datapoint?
+A: Cross-entropy loss will change;
+SVM loss will stay the same
+?$ = − log exp ?#!
+∑% exp ?%
+?! = *"#$$
+max 0, ?" − ?$$ + 1
+Justin Johnson January 12, 2022
+Cross-Entropy vs SVM Loss
+Lecture 3 - 75
+assume scores:
+[10, -2, 3]
+[10, 9, 9]
+[10, -100, -100]
+and 
+Q: What happens to each loss if I 
+slightly change the scores of the last 
+datapoint?
+A: Cross-entropy loss will change;
+SVM loss will stay the same
+?$ = − log exp ?#!
+∑% exp ?%
+?! = *"#$$
+max 0, ?" − ?$$ + 1
+Justin Johnson January 12, 2022
+Cross-Entropy vs SVM Loss
+Lecture 3 - 76
+assume scores:
+[10, -2, 3]
+[10, 9, 9]
+[10, -100, -100]
+and 
+Q: What happens to each loss if I 
+double the score of the correct class 
+from 10 to 20?
+A: Cross-entropy loss will decrease,
+SVM loss still 0
+?$ = − log exp ?#!
+∑% exp ?%
+?! = *"#$$
+max 0, ?" − ?$$ + 1
+Justin Johnson January 12, 2022
+Cross-Entropy vs SVM Loss
+Lecture 3 - 77
+assume scores:
+[10, -2, 3]
+[10, 9, 9]
+[10, -100, -100]
+and 
+Q: What happens to each loss if I 
+double the score of the correct class 
+from 10 to 20?
+A: Cross-entropy loss will decrease,
+SVM loss still 0
+?$ = − log exp ?#!
+∑% exp ?%
+?! = *"#$$
+max 0, ?" − ?$$ + 1
+Justin Johnson January 12, 2022
+Recap: Three ways to think about linear classifiers
+Lecture 3 - 78
+f(x,W) = Wx
+Algebraic Viewpoint Visual Viewpoint Geometric Viewpoint
+One template 
+per class
+Hyperplanes 
+cutting up space
+Justin Johnson January 12, 2022
+Recap: Loss Functions quantify preferences
+Lecture 3 - 79
+- We have some dataset of (x, y)
+- We have a score function: 
+- We have a loss function: Linear classifier
+Softmax: ?! = − log %&' (%$
+∑& %&' (&
+SVM: ?! = ∑"#$$ max 0, ?" − ?$$ + 1
+? = ? ?; ?, ? = ?? + ?
+Justin Johnson January 12, 2022
+Recap: Loss Functions quantify preferences
+Lecture 3 - 80
+- We have some dataset of (x, y)
+- We have a score function: 
+- We have a loss function: 
+Q: How do we find the best W, b?
+Linear classifier
+Softmax: ?! = − log %&' (%$
+∑& %&' (&
+SVM: ?! = ∑"#$$ max 0, ?" − ?$$ + 1
+? = ? ?; ?, ? = ?? + ?
+Justin Johnson January 12, 2022
+Next time:
+Regularization + 
+Optimization
+Lecture 3 - 81

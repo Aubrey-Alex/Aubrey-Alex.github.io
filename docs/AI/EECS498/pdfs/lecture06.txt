@@ -1,0 +1,2505 @@
+Justin Johnson January 26, 2022
+Lecture 6:
+Backpropagation
+Lecture 6 - 1
+Justin Johnson January 26, 2022
+Reminder: A2
+Lecture 6 - 2
+• Use SGD to train linear classifiers and fully-connected networks
+• Today’s lecture can help you compute derivatives in A2
+• Due Friday January 28, 11:59pm ET
+Justin Johnson January 26, 2022
+Autograder
+• A1: 10 submissions / day
+• A2: 5 submissions / day
+• A3+: 3 submissions / day
+Autograder is a val set, not a training set! You shouldn’t be using 
+autograder to debug; you should be testing your code on the side
+Extra incentive to start early
+Lecture 6 - 3
+Justin Johnson January 26, 2022 Lecture 6 - 4
+Last time: Neural Networks
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+Space Warping
+Universal Approximation
+Nonconvex
+From linear classifiers to 
+fully-connected networks
+? ? = ?! max 0, ?"? + ?" + ?!
+Justin Johnson January 26, 2022
+Problem: How to compute gradients?
+Lecture 6 - 5
+? = ?! max 0, ?"? + ?" + ?!
+?# = -
+$%&!
+max 0, ?$ − ?&! + 1
+? ? = -
+'
+?'
+!
+? ?", ?!, ?", ?! =
+1
+?-
+#("
+)
+?# + ?? ?" + ?? ?!
+Nonlinear score function
+Per-element data loss
+L2 Regularization
+Total loss
+If we can compute *
+*+
+,"
+,
+*+
+*,#
+,
+*+
+*-"
+,
+*+
+*-#
+then we can optimize with SGD
+Justin Johnson January 26, 2022
+(Bad) Idea: Derive on paper 
+Lecture 6 - 6
+Problem: What if we want to change 
+loss? E.g. use softmax instead of 
+SVM? Need to re-derive from 
+scratch. Not modular!
+Problem: Very tedious: Lots of matrix 
+calculus, need lots of paper
+Problem: Not feasible for very 
+complex models!
+Justin Johnson January 26, 2022
+Better Idea: Computational Graphs
+Lecture 6 - 7
+x
+W
+hinge 
+loss
+R
++ L s (scores) *
+? = ?? ?! = ∑"#$! max 0, ?" − ?$! + 1
+? ?
+Justin Johnson January 26, 2022
+Deep Network (AlexNet)
+Lecture 6 - 8
+input image
+loss
+weights
+Justin Johnson January 26, 2022
+Neural Turing Machine
+Lecture 6 - 9
+Figure reproduced with permission from a Twitter post by Andrej Karpathy.
+input image
+loss
+Graves et al, arXiv 2014
+Justin Johnson January 26, 2022
+Neural Turing Machine
+Lecture 6 - 10
+Figure reproduced with permission from a Twitter post by Andrej Karpathy. Graves et al, arXiv 2014
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 11
+? ?, ?, ? = ? + ? ⋅ ?
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 12
+e.g. x = -2, y = 5, z = -4
+? ?, ?, ? = ? + ? ⋅ ?
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 13
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+? ?, ?, ? = ? + ? ⋅ ?
+? = ? + ? ? = ? ⋅ ?
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 14
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+? = ? + ? ? = ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 15
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 16
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 17
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ?
+??
+??
+? = ? ⋅ ?
+Justin Johnson January 26, 2022
+??
+??
+= ?
+Backpropagation:
+Simple Example
+Lecture 6 - 18
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ?
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 19
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 20
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+= ?
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 21
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 22
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+Chain Rule
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+=
+??
+??
+??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 23
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+Chain Rule
+Local
+Gradient
+Upstream
+Gradient
+Downstream
+Gradient
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+=
+??
+??
+??
+??
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 24
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+Chain Rule
+Local
+Gradient
+Upstream
+Gradient
+Downstream
+Gradient
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+=
+??
+??
+??
+??
+??
+??
+= 1
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 25
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+Chain Rule
+Local
+Gradient
+Upstream
+Gradient
+Downstream
+Gradient
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+=
+??
+??
+??
+??
+??
+??
+= 1
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 26
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+Chain Rule
+Local
+Gradient
+Upstream
+Gradient
+Downstream
+Gradient
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+=
+??
+??
+??
+??
+??
+??
+= 1
+Justin Johnson January 26, 2022
+Backpropagation:
+Simple Example
+Lecture 6 - 27
+e.g. x = -2, y = 5, z = -4
+1. Forward pass: Compute outputs
+2. Backward pass: Compute derivatives
+Want: 
+Chain Rule
+Local
+Gradient
+Upstream
+Gradient
+Downstream
+Gradient
+? ?, ?, ? = ? + ? ⋅ ?
+??
+?? ,
+??
+??
+,
+??
+??
+? = ? + ? ? = ? ⋅ ? ??
+??
+=
+??
+??
+??
+??
+??
+??
+= 1
+Justin Johnson January 26, 2022
+f
+Lecture 6 - 28
+?
+?
+?
+Justin Johnson January 26, 2022
+f
+??
+??
+Lecture 6 - 29
+Upstream 
+gradient
+?
+?
+?
+Justin Johnson January 26, 2022
+f
+??
+??
+??
+??
+Lecture 6 - 30
+Local 
+gradients
+Upstream 
+gradient
+?
+??
+?? ?
+?
+Justin Johnson January 26, 2022
+f
+??
+??
+??
+??
+Lecture 6 - 31
+Local 
+gradients
+Upstream 
+gradient
+Downstream
+gradients
+?
+??
+?? ?
+??
+??
+=
+??
+??
+??
+??
+??
+?? = ??
+??
+??
+??
+?
+Justin Johnson January 26, 2022
+f
+??
+??
+Lecture 6 - 32
+Local 
+gradients
+Upstream 
+gradient
+Downstream
+gradients
+?
+??
+??
+??
+?? ?
+??
+??
+=
+??
+??
+??
+??
+??
+?? = ??
+??
+??
+??
+?
+Justin Johnson January 26, 2022 Lecture 6 - 33
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+Justin Johnson January 26, 2022 Lecture 6 - 34
+Forward pass: Compute outputs
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+Justin Johnson January 26, 2022 Lecture 6 - 35
+Base Case
+Backward pass: Compute gradients
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+Justin Johnson January 26, 2022 Lecture 6 - 36
+Backward pass: Compute gradients
+Upstream 
+Gradient
+Local Gradient
+Downstream
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+??
+1
+?
+= − 1
+?!
+Justin Johnson January 26, 2022 Lecture 6 - 37
+Backward pass: Compute gradients
+Upstream 
+Gradient
+Local Gradient
+Downstream
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? ? + 1 = 1
+Justin Johnson January 26, 2022 Lecture 6 - 38
+Backward pass: Compute gradients
+Upstream 
+Gradient
+Local Gradient
+Downstream
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? ?. = ?.
+Justin Johnson January 26, 2022 Lecture 6 - 39
+Backward pass: Compute gradients
+Upstream 
+Gradient
+Local Gradient
+Downstream
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? −? = −1
+Justin Johnson January 26, 2022 Lecture 6 - 40
+Backward pass: Compute gradients
+Local Gradient
+Downstream
+Gradient
+Upstream 
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? ? + ? = 1
+?
+?? ? + ? = 1
+Justin Johnson January 26, 2022 Lecture 6 - 41
+Backward pass: Compute gradients
+Local Gradient
+Downstream
+Gradient
+Upstream 
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? ? + ? = 1
+?
+?? ? + ? = 1
+Justin Johnson January 26, 2022 Lecture 6 - 42
+Backward pass: Compute gradients
+Local Gradient
+Downstream Gradient Upstream 
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? ?? = ?
+?
+?? ?? = ?
+Justin Johnson January 26, 2022 Lecture 6 - 43
+Backward pass: Compute gradients
+Local Gradient
+Downstream Gradient Upstream 
+Gradient
+? ?, ? =
+1
+Another Example 1 + ?! "!#!$""#"$"#
+?
+?? ?? = ?
+?
+?? ?? = ?
+Justin Johnson January 26, 2022
+? ?, ? =
+1
+1 + ?! "!#!$""#"$"#
+= ? ?%?% + ?&?& + ?' Another Example
+Lecture 6 - 44
+Backward pass: Compute gradients
+Sigmoid
+Computational graph is not 
+unique: we can use primitives 
+that have simple local gradients
+? ? = 1 / (1 + ?#)
+Justin Johnson January 26, 2022 Lecture 6 - 45
+Backward pass: Compute gradients
+Sigmoid
+Computational graph is not 
+unique: we can use primitives 
+that have simple local gradients
+Sigmoid local 
+gradient:
+? ?, ? =
+1
+1 + ?! "!#!$""#"$"#
+= ? ?%?% + ?&?& + ?' Another Example
+?
+?? ? ? =
+?!#
+1 + ?!# '
+=
+1 + ?!# − 1
+1 + ?!#
+1
+1 + ?!#
+= 1 − ? ? ? ?
+? ? = 1 / (1 + ?#)
+Justin Johnson January 26, 2022 Lecture 6 - 46
+Backward pass: Compute gradients
+Sigmoid
+Computational graph is not 
+unique: we can use primitives 
+that have simple local gradients
+[Downstream] = [Local] * [Upstream]
+= (1 – 0.73) * 0.73 * 1.0 = 0.2
+Sigmoid local 
+gradient:
+? ?, ? =
+1
+1 + ?! "!#!$""#"$"#
+= ? ?%?% + ?&?& + ?' Another Example
+?
+?? ? ? =
+?!#
+1 + ?!# '
+=
+1 + ?!# − 1
+1 + ?!#
+1
+1 + ?!#
+= 1 − ? ? ? ?
+? ? = 1 / (1 + ?#)
+Justin Johnson January 26, 2022
+Patterns in Gradient Flow
+Lecture 6 - 47
+add gate: gradient distributor
++
+3
+4
+7
+2
+2
+2
+Justin Johnson January 26, 2022
+Patterns in Gradient Flow
+Lecture 6 - 48
+add gate: gradient distributor
++
+3
+4
+7
+2
+2
+2
+copy gate: gradient adder
+7
+7
+7
+4+2=6
+4
+2
+Justin Johnson January 26, 2022
+Patterns in Gradient Flow
+Lecture 6 - 49
+add gate: gradient distributor
++
+3
+4
+7
+2
+2
+2
+mul gate: “swap multiplier”
+copy gate: gradient adder
+×
+2
+3
+6
+5
+5*3=15
+2*5=10
+7
+7
+7
+4+2=6
+4
+2
+Justin Johnson January 26, 2022
+Patterns in Gradient Flow
+Lecture 6 - 50
+add gate: gradient distributor
++
+3
+4
+7
+2
+2
+2
+mul gate: “swap multiplier”
+max
+copy gate: gradient adder
+×
+2
+3
+6
+5
+5*3=15
+2*5=10
+4
+5
+5
+9
+0
+9
+7
+7
+7
+4+2=6
+4
+2
+max gate: gradient router
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 51
+Forward pass:
+Compute output
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 52
+Forward pass:
+Compute output
+Backward pass:
+Compute grads
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 53
+Forward pass:
+Compute output
+Base case
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 54
+Forward pass:
+Compute output
+Sigmoid
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 55
+Forward pass:
+Compute output
+Add
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 56
+Forward pass:
+Compute output
+Add
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 57
+Forward pass:
+Compute output
+Multiply
+Justin Johnson January 26, 2022
+Backprop Implementation:
+”Flat” gradient code:
+Lecture 6 - 58
+Forward pass:
+Compute output
+Multiply
+Justin Johnson January 26, 2022
+“Flat” Backprop: Do this for Assignment 2!
+Lecture 6 - 59
+E.g. for the SVM:
+Your gradient code should look like a “reversed version” of your forward pass!
+Justin Johnson January 26, 2022
+“Flat” Backprop: Do this for Assignment 2!
+Lecture 6 - 60
+Your gradient code should look like a “reversed version” of your forward pass!
+E.g. for two-layer neural net:
+Justin Johnson January 26, 2022
+Backprop Implementation: Modular API
+Lecture 6 - 61
+Graph (or Net) object (rough pseudo code)
+Justin Johnson January 26, 2022
+Example: PyTorch Autograd Functions
+Lecture 6 - 62
+(x,y,z are scalars)
+x
+y
+z
+*
+Need to stash some 
+values for use in 
+backward
+Upstream 
+gradient
+Multiply upstream 
+and local gradients
+Justin Johnson January 26, 2022
+Example: PyTorch operators
+Lecture 6 - 63
+Justin Johnson January 26, 2022 Lecture 6 - 64
+Source
+PyTorch sigmoid layer
+Justin Johnson January 26, 2022 Lecture 6 - 65
+Source
+Forward
+PyTorch sigmoid layer
+Justin Johnson January 26, 2022 Lecture 6 - 66
+Source
+Forward
+PyTorch sigmoid layer
+Forward actually defined elsewhere...
+Justin Johnson January 26, 2022 Lecture 6 - 67
+Source
+Forward
+Backward
+PyTorch sigmoid layer
+Justin Johnson January 26, 2022 Lecture 6 - 68
+So far: backprop with scalars
+What about vector-valued functions?
+Justin Johnson January 26, 2022
+Recap: Vector Derivatives
+Lecture 6 - 69
+Regular derivative:
+If x changes by a small 
+amount, how much 
+will y change?
+? ∈ ℝ, ? ∈ ℝ
+??
+?? ∈ ℝ
+Justin Johnson January 26, 2022
+Recap: Vector Derivatives
+Lecture 6 - 70
+Regular derivative:
+If x changes by a small 
+amount, how much 
+will y change?
+Derivative is Gradient:
+For each element of x, 
+if it changes by a small 
+amount then how 
+much will y change?
+? ∈ ℝ, ? ∈ ℝ ? ∈ ℝ0
+, ? ∈ ℝ
+??
+?? ∈ ℝ
+??
+?? ∈ ℝ!
+,
+??
+?? "
+=
+??
+??"
+Justin Johnson January 26, 2022
+Recap: Vector Derivatives
+Lecture 6 - 71
+Regular derivative:
+If x changes by a small 
+amount, how much 
+will y change?
+Derivative is Gradient:
+For each element of x, 
+if it changes by a small 
+amount then how 
+much will y change?
+Derivative is Jacobian:
+For each element of x, if it 
+changes by a small amount 
+then how much will each 
+element of y change?
+? ∈ ℝ, ? ∈ ℝ ? ∈ ℝ0
+, ? ∈ ℝ ? ∈ ℝ0
+, ? ∈ ℝ1
+??
+?? ∈ ℝ
+??
+?? ∈ ℝ!
+,
+??
+?? "
+=
+??
+??"
+??
+?? ∈ ℝ!×$
+??
+?? ",&
+=
+??&
+??"
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 72
+f
+Dx
+Dy
+Dz
+Loss L still a scalar!
+Dy
+Dx
+?
+?
+?
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 73
+f
+Upstream Gradient
+Dx
+Dy
+Dz
+Dz
+Loss L still a scalar!
+For each element of z, how 
+much does it influence L?
+Dy
+Dx
+?
+?
+?
+??
+??
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 74
+f
+Upstream Gradient
+Dx
+Dy
+Dz
+Dz
+Loss L still a scalar!
+[Dy x Dz] 
+[Dx x Dz] 
+For each element of z, how 
+much does it influence L?
+Dy
+Dx
+Local 
+Jacobian matrices
+?
+?
+?
+??
+??
+??
+??
+??
+??
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 75
+f
+Upstream Gradient
+Downstream 
+Gradients
+Dx
+Dy
+Dz
+Dz
+Loss L still a scalar!
+[Dy x Dz] 
+[Dx x Dz] 
+For each element of z, how 
+much does it influence L?
+Dy
+Dx
+Matrix-vector
+multiply
+Local 
+Jacobian matrices
+?
+?
+?
+??
+??
+??
+??
+??
+??
+??
+??
+=
+??
+??
+??
+??
+??
+?? = ??
+??
+??
+??
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 76
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 77
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+4D dL/dy: 
+[ 4 ]
+[ -1 ]
+[ 5 ]
+[ 9 ]
+Upstream
+gradient
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 78
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+4D dL/dy: 
+[ 4 ]
+[ -1 ]
+[ 5 ]
+[ 9 ]
+Jacobian dy/dx
+[ 1 0 0 0 ]
+[ 0 0 0 0 ]
+[ 0 0 1 0 ]
+[ 0 0 0 0 ]
+Upstream
+gradient
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 79
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+4D dL/dy: 
+[ 4 ]
+[ -1 ]
+[ 5 ]
+[ 9 ]
+[dy/dx] [dL/dy]
+[ 1 0 0 0 ] [ 4 ]
+[ 0 0 0 0 ] [ -1 ]
+[ 0 0 1 0 ] [ 5 ]
+[ 0 0 0 0 ] [ 9 ]
+Upstream
+gradient
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 80
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+4D dL/dy: 
+[ 4 ]
+[ -1 ]
+[ 5 ]
+[ 9 ]
+[dy/dx] [dL/dy]
+[ 1 0 0 0 ] [ 4 ]
+[ 0 0 0 0 ] [ -1 ]
+[ 0 0 1 0 ] [ 5 ]
+[ 0 0 0 0 ] [ 9 ]
+Upstream
+gradient
+4D dL/dx: 
+[ 4 ]
+[ 0 ]
+[ 5 ]
+[ 0 ]
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 81
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+4D dL/dy: 
+[ 4 ]
+[ -1 ]
+[ 5 ]
+[ 9 ]
+[dy/dx] [dL/dy]
+[ 1 0 0 0 ] [ 4 ]
+[ 0 0 0 0 ] [ -1 ]
+[ 0 0 1 0 ] [ 5 ]
+[ 0 0 0 0 ] [ 9 ]
+Upstream
+gradient
+Jacobian is sparse: off-diagonal entries 
+all zero! Never explicitly form Jacobian;
+instead use implicit multiplication
+4D dL/dx: 
+[ 4 ]
+[ 0 ]
+[ 5 ]
+[ 0 ]
+Justin Johnson January 26, 2022
+Backprop with Vectors
+Lecture 6 - 82
+f(x) = max(0,x)
+(elementwise)
+4D input x:
+[ 1 ]
+[ -2 ]
+[ 3 ]
+[ -1 ]
+4D output y: 
+[ 1 ]
+[ 0 ]
+[ 3 ]
+[ 0 ]
+4D dL/dy: 
+[ 4 ]
+[ -1 ]
+[ 5 ]
+[ 9 ]
+[dy/dx] [dL/dy]
+Upstream
+gradient
+Jacobian is sparse: off-diagonal entries 
+all zero! Never explicitly form Jacobian;
+instead use implicit multiplication
+4D dL/dx: 
+[ 4 ]
+[ 0 ]
+[ 5 ]
+[ 0 ]
+??
+?? $
+= 5 ??
+??
+$
+, ?? ?$ > 0
+0, ??ℎ??????
+Justin Johnson January 26, 2022
+Backprop with Matrices (or Tensors):
+Lecture 6 - 83
+[Dx×Mx]
+[Dy×My]
+[Dx×Mx]
+[Dy×My]
+?
+?
+?
+Justin Johnson January 26, 2022
+Backprop with Matrices (or Tensors):
+Lecture 6 - 84
+[Dx×Mx]
+Loss L still a scalar!
+[Dy×My]
+[Dz×Mz]
+[Dx×Mx]
+[Dy×My]
+dL/dx always has the 
+same shape as x! ?
+?
+?
+Justin Johnson January 26, 2022
+Backprop with Matrices (or Tensors):
+Lecture 6 - 85
+Upstream gradient
+[Dx×Mx]
+Loss L still a scalar!
+For each element of z, how 
+much does it influence L?
+[Dy×My]
+[Dz×Mz]
+[Dz×Mz]
+[Dx×Mx]
+[Dy×My]
+dL/dx always has the 
+same shape as x! ?
+?
+??
+??
+?
+Justin Johnson January 26, 2022
+Backprop with Matrices (or Tensors):
+Lecture 6 - 86
+Local 
+Jacobian matrices
+Upstream gradient
+[Dx×Mx]
+Loss L still a scalar!
+[(Dx×Mx)×(Dz×Mz)] 
+For each element of z, how 
+much does it influence L? For each element of y, how much does 
+it influence each element of z?
+[Dy×My]
+[Dz×Mz]
+[Dz×Mz]
+[(Dy×My)×(Dz×Mz)] 
+[Dx×Mx]
+[Dy×My]
+dL/dx always has the 
+same shape as x! ?
+?
+??
+??
+??
+?? ??
+??
+?
+Justin Johnson January 26, 2022
+Backprop with Matrices (or Tensors):
+Lecture 6 - 87
+Local 
+Jacobian matrices
+Upstream gradient
+[Dx×Mx]
+Loss L still a scalar!
+[(Dx×Mx)×(Dz×Mz)] 
+For each element of z, how 
+much does it influence L? For each element of y, how much does 
+it influence each element of z?
+Matrix-vector
+multiply
+[Dy×My]
+[Dz×Mz]
+[Dz×Mz]
+[(Dy×My)×(Dz×Mz)] 
+[Dx×Mx]
+[Dy×My]
+dL/dx always has the 
+same shape as x! ?
+?
+??
+??
+??
+?? ??
+??
+?
+??
+??
+=
+??
+??
+??
+??
+??
+?? = ??
+??
+??
+??
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 88
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ] Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 89
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+Matrix Multiply y = xw
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 90
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Jacobians:
+dy/dx: [(N×D)×(N×M)]
+dy/dw: [(D×M)×(N×M)]
+For a neural net we may have 
+N=64, D=M=4096
+Each Jacobian takes 256 GB of memory! Must 
+work with them implicitly!
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 91
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ ? ? ? ? ]
+[ ? ? ? ? ] dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 92
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ ? ? ? ? ]
+[ ? ? ? ? ]
+dy1,1/dx1,1 dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 93
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ ? ? ? ? ]
+[ ? ? ? ? ]
+dy1,1/dx1,1
+y1,1 = x1,1w1,1 + x1,2w2,1 + x1,3w3,1
+dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 94
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 ? ? ? ]
+[ ? ? ? ? ]
+dy1,1/dx1,1
+y1,1 = x1,1w1,1 + x1,2w2,1 + x1,3w3,1
+=> dy1,1/dx1,1 = w1,1
+dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 95
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 ? ? ? ]
+[ ? ? ? ? ]
+dy1,2/dx1,1 dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 96
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 ? ? ? ]
+[ ? ? ? ? ]
+dy1,2/dx1,1
+y1,2 = x1,1w1,2 + x1,2w2,2 + x1,3w3,2
+dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 97
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 ? ? ]
+[ ? ? ? ? ]
+dy1,2/dx1,1
+y1,2 = x1,1w1,2 + x1,2w2,2 + x1,3w3,2
+=> dy1,2/dx1,1 = w1,2
+dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 98
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 1 -1 ]
+[ ? ? ? ? ]
+dy1,2/dx1,1 dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 99
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 1 -1 ]
+[ ? ? ? ? ]
+dy1,2/dx1,1
+y2,1 = x2,1w1,1 + x2,2w2,1 + x2,3w3,1
+dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 100
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 1 -1 ]
+[ 0 ? ? ? ]
+dy1,2/dx1,1
+y2,1 = x2,1w1,1 + x2,2w2,1 + x2,3w3,1
+=> dy2,1/dx1,1 = 0
+dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 101
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 1 -1 ]
+[ 0 0 0 0 ]
+dy1,2/dx1,1 dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 102
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+? ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 1 -1 ]
+[ 0 0 0 0 ] dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 103
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+0 ? ?
+? ? ?
+Local Gradient Slice:
+dy/dx1,1
+[ 3 2 1 -1 ]
+[ 0 0 0 0 ] dL/dx1,1
+= (dy/dx1,1) · (dL/dy)
+= (w1,:) · (dL/dy1,:)
+= 3*2 + 2*3 + 1*(-3) + (-1)*9 = 0
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 104
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+0 ? ?
+? ? -30
+Local Gradient Slice:
+dy/dx2,3
+[ 0 0 0 0 ]
+[ 3 2 1 -2 ] dL/dx2,3
+= (dy/dx2,3) · (dL/dy)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 105
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+0 ? ?
+? ? -30
+Local Gradient Slice:
+dy/dx2,3
+[ 0 0 0 0 ]
+[ 3 2 1 -2 ] dL/dx2,3
+= (dy/dx2,3) · (dL/dy)
+= (w3,:) · (dL/dy2,:)
+= 3*(-8) + 2*1 + 1*4 + (-2)*6 = -30
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 106
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+dL/dxi,j
+= (dy/dxi,j) · (dL/dy)
+= (wj,:) · (dL/dyi,:)
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 107
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+dL/dxi,j
+= (dy/dxi,j) · (dL/dy)
+= (wj,:) · (dL/dyi,:)
+dL/dx = (dL/dy) wT
+[N x D] [N x M] [M x D] Easy way to remember:
+It’s the only way the 
+shapes work out! 
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Example: Matrix Multiplication
+Lecture 6 - 108
+x: [N×D]
+[ 2 1 -3 ]
+[ -3 4 2 ]
+w: [D×M]
+[ 3 2 1 -1]
+[ 2 1 3 2]
+[ 3 2 1 -2]
+y: [N×M]
+[-1 -1 2 6 ]
+[ 5 2 11 7 ]
+dL/dy: [N×M]
+[ 2 3 -3 9 ]
+[ -8 1 4 6 ] dL/dx: [N×D]
+[ 0 16 -9 ]
+[-24 9 -30 ]
+Easy way to remember:
+It’s the only way the 
+shapes work out! dL/dw = xT (dL/dy)
+[D x M] [D x N] [N x M]
+dL/dx = (dL/dy) wT
+[N x D] [N x M] [M x D] 
+Matrix Multiply y = xw
+?",& = *
+'
+?",'?',&
+Justin Johnson January 26, 2022
+Backpropagation: Another View
+Lecture 6 - 109
+x0
+D0
+x1
+D1
+L
+scalar
+x2
+D2
+x3
+D3
+f1 f2 f3 f4
+Chain 
+rule
+??
+??!
+=
+??"
+??!
+??#
+??"
+??$
+??#
+??
+??$
+Justin Johnson January 26, 2022
+Backpropagation: Another View
+Lecture 6 - 110
+x0
+D0
+x1
+D1
+L
+scalar
+x2
+D2
+x3
+D3
+f1 f2 f3 f4
+Matrix multiplication is associative: we can compute products in any order
+Chain 
+rule
+[D0 x D1] [D1 x D2] [D2 x D3] [D3]
+??
+??!
+=
+??"
+??!
+??#
+??"
+??$
+??#
+??
+??$
+Justin Johnson January 26, 2022 Lecture 6 - 111
+x0
+D0
+x1
+D1
+L
+scalar
+x2
+D2
+x3
+D3
+f1 f2 f3 f4
+Matrix multiplication is associative: we can compute products in any order
+Computing products right-to-left avoids matrix-matrix products; only needs matrix-vector
+Chain 
+rule
+Reverse-Mode Automatic Differentiation
+[D0 x D1] [D1 x D2] [D2 x D3] [D3]
+??
+??!
+=
+??"
+??!
+??#
+??"
+??$
+??#
+??
+??$
+Justin Johnson January 26, 2022
+Reverse-Mode Automatic Differentiation
+Lecture 6 - 112
+x0
+D0
+x1
+D1
+L
+scalar
+x2
+D2
+x3
+D3
+f1 f2 f3 f4
+[D0 x D1] [D1 x D2] [D2 x D3] [D3]
+Matrix multiplication is associative: we can compute products in any order
+Computing products right-to-left avoids matrix-matrix products; only needs matrix-vector
+Chain 
+rule
+What if we want 
+grads of scalar 
+input w/respect 
+to vector 
+outputs? Compute grad of scalar output
+w/respect to all vector inputs
+??
+??!
+=
+??"
+??!
+??#
+??"
+??$
+??#
+??
+??$
+Justin Johnson January 26, 2022
+Forward-Mode Automatic Differentiation
+Lecture 6 - 113
+a
+scalar
+x0
+D0
+x3
+D3
+x1
+D1
+x2
+D2
+f1 f2 f3 f4
+[D0] [D0 x D1] [D1 x D2]
+Chain 
+rule
+[D2 x D3]
+??$
+??
+=
+??!
+??
+??"
+??!
+??#
+??"
+??$
+??#
+Justin Johnson January 26, 2022
+Forward-Mode Automatic Differentiation
+Lecture 6 - 114
+a
+scalar
+x0
+D0
+x3
+D3
+x1
+D1
+x2
+D2
+f1 f2 f3 f4
+Chain 
+rule
+Computing products left-to-right avoids matrix-matrix products; only needs matrix-vector
+[D0] [D0 x D1] [D1 x D2] [D2 x D3]
+??$
+??
+=
+??!
+??
+??"
+??!
+??#
+??"
+??$
+??#
+Justin Johnson January 26, 2022
+Forward-Mode Automatic Differentiation
+Lecture 6 - 115
+a
+scalar
+x0
+D0
+x3
+D3
+x1
+D1
+x2
+D2
+f1 f2 f3 f4
+Chain 
+rule
+Computing products left-to-right avoids matrix-matrix products; only needs matrix-vector
+Beta implementation in PyTorch! https://pytorch.org/tutorials/intermediate/forward_ad_usage.html
+You can also 
+implement 
+forward-mode AD 
+using two calls to 
+reverse-mode AD! 
+(Inefficient but 
+elegant) [D0] [D0 x D1] [D1 x D2] [D2 x D3]
+??$
+??
+=
+??!
+??
+??"
+??!
+??#
+??"
+??$
+??#
+Justin Johnson January 26, 2022
+Backprop: Higher-Order Derivatives
+Lecture 6 - 116
+x0
+D0
+x1
+D1
+L
+scalar
+f1 f2
+Hessian matrix
+H of second 
+derivatives.
+[D0 x D0]
+?#?
+??!
+#
+Justin Johnson January 26, 2022
+Backprop: Higher-Order Derivatives
+Lecture 6 - 117
+x0
+D0
+x1
+D1
+L
+scalar
+f1 f2
+Hessian matrix
+H of second 
+derivatives.
+Hessian / vector multiply
+[D0 x D0]
+?#?
+??!
+#
+?#?
+??!
+# ?
+[D0 x D0] [D0]
+Justin Johnson January 26, 2022
+Backprop: Higher-Order Derivatives
+Lecture 6 - 118
+x0
+D0
+x1
+D1
+L
+scalar
+f1 f2
+Hessian matrix
+H of second 
+derivatives.
+Hessian / vector multiply
+[D0 x D0]
+?#?
+??!
+#
+?#?
+??!
+# ? =
+?
+??!
+??
+??!
+⋅ ?
+[D0 x D0] [D0]
+(if v doesn’t 
+depend on x0)
+Justin Johnson January 26, 2022
+Backprop: Higher-Order Derivatives
+Lecture 6 - 119
+x0
+D0
+x1
+D1
+L
+scalar
+dL/dx1
+D1
+f1 f2 f'2 f'1 dL/dx0
+D0
+(dL/dx0) · v
+scalar
+· v
+Hessian matrix
+H of second 
+derivatives.
+Hessian / vector multiply
+[D0 x D0]
+?#?
+??!
+#
+?#?
+??!
+# ? =
+?
+??!
+??
+??!
+⋅ ?
+[D0 x D0] [D0]
+(if v doesn’t 
+depend on x0)
+Justin Johnson January 26, 2022
+Backprop: Higher-Order Derivatives
+Lecture 6 - 120
+x0
+D0
+x1
+D1
+L
+scalar
+dL/dx1
+D1
+f1 f2 f'2 f'1 dL/dx0
+D0
+(dL/dx0) · v
+scalar
+· v
+Hessian matrix
+H of second 
+derivatives.
+Hessian / vector multiply
+Backprop!
+[D0 x D0]
+?#?
+??!
+#
+?#?
+??!
+# ? =
+?
+??!
+??
+??!
+⋅ ?
+[D0 x D0] [D0]
+(if v doesn’t 
+depend on x0)
+Justin Johnson January 26, 2022
+?#?
+??!
+# ? =
+?
+??!
+??
+??!
+⋅ ?
+Backprop: Higher-Order Derivatives
+Lecture 6 - 121
+x0
+D0
+x1
+D1
+L
+scalar
+dL/dx1
+D1
+f1 f2 f'2 f'1 dL/dx0
+D0
+(dL/dx0) · v
+scalar
+· v
+Hessian matrix
+H of second 
+derivatives.
+[D0 x D0] [D0 x D0] [D0]
+Hessian / vector multiply
+(if v doesn’t 
+depend on x0)
+Backprop!
+This is implemented in 
+PyTorch / Tensorflow!
+?#?
+??!
+#
+Justin Johnson January 26, 2022
+Backprop: Higher-Order Derivatives
+Lecture 6 - 122
+x0
+D0
+x1
+D1
+L
+scalar
+dL/dx1
+D1
+f1 f2 f'2 f'1 dL/dx0
+D0
+|dL/dx0|2
+scalar
+norm
+Backprop!
+Example: Regularization to penalize the norm of the gradient
+Gulrajani et al, “Improved Training of Wasserstein GANs”, NeurIPS 2017
+? ? =
+??
+?? !
+!
+=
+??
+?? ⋅ ??
+??
+?
+??"
+? ? = 2
+?!?
+??"
+!
+??
+??"
+This is implemented in 
+PyTorch / Tensorflow!
+Justin Johnson January 26, 2022
+Summary
+Lecture 6 - 123
+x
+W
+hinge	
+loss
+R
++ L s (scores) *
+Represent complex expressions 
+as computational graphs
+Forward pass computes outputs
+Backward pass computes gradients
+f
+Local	
+gradients
+Upstream	
+gradient
+Downstream
+gradients
+During the backward pass, each node in 
+the graph receives upstream gradients
+and multiplies them by local gradients to 
+compute downstream gradients
+Justin Johnson January 26, 2022
+Summary
+Lecture 6 - 124
+Backprop can be implemented with “flat” code 
+where the backward pass looks like forward pass 
+reversed (Use this for A2!)
+Backprop can be implemented with a modular API, 
+as a set of paired forward/backward functions
+(We will do this on A3!)
+Justin Johnson January 26, 2022 Lecture 6 - 125
+Input	image
+(2,	2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch	pixels	into	column
+(4,)
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+f(x,W) = Wx Problem: So far our 
+classifiers don’t respect the 
+spatial structure of images!
+Justin Johnson January 26, 2022
+Next time:
+Convolutional Neural Networks
+Lecture 6 - 126

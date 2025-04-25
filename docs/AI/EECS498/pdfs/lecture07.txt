@@ -1,0 +1,1625 @@
+Justin Johnson January 31, 2022
+Lecture 7:
+Convolutional Networks
+Lecture 7 - 1
+Justin Johnson January 31, 2022
+Lecture Format
+Lecture 7 - 2
+Justin Johnson January 31, 2022
+Lecture Format
+Lecture 7 - 3
+Justin Johnson January 31, 2022
+Lecture Format
+Lecture 7 - 4
+- We will remain remote for at least another 2-3 weeks
+- Idea: book a conference room for “watch parties?” 
+Or just use lecture hall
+- COVID in MI have (hopefully!) peaked? If they continue to 
+drop we will consider in-person OH in the next 1-2 weeks
+- May revisit after Spring Break
+- Feel free to raise hand to ask questions in Zoom!
+- Midterm will be remote (but still working on exact format)
+Justin Johnson January 31, 2022
+Reminder: A2
+Lecture 7 - 5
+Due last Friday
+Justin Johnson January 31, 2022
+A3
+Lecture 7 - 6
+Will be released tonight, covering:
+- Backpropagation with modular API
+- Different update rules (Momentum, RMSProp, Adam, etc)
+- Batch Normalization
+- Dropout
+- Convolutional Networks
+Justin Johnson January 31, 2022
+Last Time: Backpropagation
+Lecture 7 - 7
+x
+W
+hinge	
+loss
+R
++ L s (scores) *
+Represent complex expressions 
+as computational graphs
+Forward pass computes outputs
+Backward pass computes gradients
+f
+Local	
+gradients
+Upstream	
+gradient
+Downstream
+gradients
+During the backward pass, each node in 
+the graph receives upstream gradients
+and multiplies them by local gradients to 
+compute downstream gradients
+Justin Johnson January 31, 2022 Lecture 7 - 8
+Input	image
+(2,	2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch	pixels	into	column
+(4,)
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+f(x,W) = Wx Problem: So far our classifiers don’t 
+respect the spatial structure of images!
+Justin Johnson January 31, 2022 Lecture 7 - 9
+Input	image
+(2,	2)
+56
+231
+24
+2
+56 231
+24 2
+Stretch	pixels	into	column
+(4,)
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+f(x,W) = Wx Problem: So far our classifiers don’t 
+respect the spatial structure of images!
+Solution: Define new computational 
+nodes that operate on images!
+Justin Johnson January 31, 2022
+Components of a Fully-Connected Network
+Lecture 7 - 10
+x h s
+Fully-Connected Layers Activation Function
+Justin Johnson January 31, 2022
+Components of a Convolutional Network
+Lecture 7 - 11
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers Activation Function
+Normalization
+?
+!
+!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022
+?
+!
+!,# =
+?!,# − ?#
+?#
+$ + ?
+Components of a Convolutional Network
+Lecture 7 - 12
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers Activation Function
+Normalization
+Justin Johnson January 31, 2022
+Fully-Connected Layer
+Lecture 7 - 13
+3072
+1
+32x32x3 image -> stretch to 3072 x 1 
+10 x 3072 
+weights
+Output Input
+1
+10
+Justin Johnson January 31, 2022
+Fully-Connected Layer
+Lecture 7 - 14
+3072
+1
+32x32x3 image -> stretch to 3072 x 1 
+10 x 3072 
+weights
+Output Input
+1 number: 
+the result of taking a dot 
+product between a row of W 
+and the input (a 3072-
+dimensional dot product)
+1
+10
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 15
+32
+3
+3x32x32 image: preserve spatial structure
+width
+depth / 
+channels
+32 height
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 16
+32
+3
+3x32x32 image
+width
+depth / 
+channels
+3x5x5 filter
+Convolve the filter with the image
+i.e. “slide over the image spatially, 
+computing dot products”
+32 height
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 17
+32
+3
+3x32x32 image
+width
+height
+depth / 
+channels
+3x5x5 filter
+Filters always extend the full 
+depth of the input volume
+Convolve the filter with the image
+i.e. “slide over the image spatially, 
+computing dot products”
+32
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 18
+32
+3
+3x32x32 image
+3x5x5 filter
+32
+1 number: 
+the result of taking a dot product between the filter 
+and a small 3x5x5 chunk of the image
+(i.e. 3*5*5 = 75-dimensional dot product + bias)
+?!? + ?
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 19
+32
+3
+3x32x32 image
+3x5x5 filter
+32
+convolve (slide) over 
+all spatial locations
+1x28x28 
+activation map
+1
+28
+28
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 20
+32
+3
+3x32x32 image
+3x5x5 filter
+32
+convolve (slide) over 
+all spatial locations
+two 1x28x28 
+activation map
+1
+28
+1
+28
+28
+Consider repeating with 
+a second (green) filter:
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 21
+32
+3
+3x32x32 image
+32
+6 activation maps,
+each 1x28x28
+Consider 6 filters, 
+each 3x5x5 
+Convolution 
+Layer
+6x3x5x5 
+filters Stack activations to get a 
+6x28x28 output image!
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 22
+32
+3
+3x32x32 image
+32
+6 activation maps,
+each 1x28x28 Also 6-dim bias vector:
+Convolution 
+Layer
+6x3x5x5 
+filters Stack activations to get a 
+6x28x28 output image!
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 23
+32
+3
+3x32x32 image
+32
+28x28 grid, at each 
+point a 6-dim vector
+Also 6-dim bias vector:
+Convolution 
+Layer
+6x3x5x5 
+filters Stack activations to get a 
+6x28x28 output image!
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 24
+32
+3
+2x3x32x32
+Batch of images
+32
+2x6x28x28
+Batch of outputs
+Also 6-dim bias vector:
+Convolution 
+Layer
+6x3x5x5 
+filters
+Justin Johnson January 31, 2022
+Convolution Layer
+Lecture 7 - 25
+W
+Cin
+N x Cin x H x W
+Batch of images
+H
+N x Cout x H’ x W’
+Batch of outputs
+Also Cout-dim bias vector:
+Convolution 
+Layer
+Cout x Cinx Kw x Kh
+filters
+Cout
+Justin Johnson January 31, 2022 Lecture 7 - 26
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6 10
+26
+26
+….
+Stacking Convolutions
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+W2: 10x6x3x3
+b2: 10
+Second hidden layer: 
+N x 10 x 26 x 26
+Conv Conv Conv
+W3: 12x10x3x3
+b3: 12
+Justin Johnson January 31, 2022 Lecture 7 - 27
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6 10
+26
+26
+….
+Stacking Convolutions
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+W2: 10x6x3x3
+b2: 10
+Second hidden layer: 
+N x 10 x 26 x 26
+Conv Conv Conv
+W3: 12x10x3x3
+b3: 12
+Q: What happens if we stack 
+two convolution layers?
+Justin Johnson January 31, 2022 Lecture 7 - 28
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6 10
+26
+26
+….
+Stacking Convolutions
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+W2: 10x6x3x3
+b2: 10
+Second hidden layer: 
+N x 10 x 26 x 26
+Conv Conv Conv
+W3: 12x10x3x3
+b3: 12
+Q: What happens if we stack 
+two convolution layers?
+A: We get another convolution!
+(Recall y=W2W1x is 
+a linear classifier)
+Justin Johnson January 31, 2022 Lecture 7 - 29
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6 10
+26
+26
+….
+Stacking Convolutions
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+W2: 10x6x3x3
+b2: 10
+Second hidden layer: 
+N x 10 x 26 x 26
+Conv
+W3: 12x10x3x3
+b3: 12
+Q: What happens if we stack 
+two convolution layers?
+A: We get another convolution!
+(Recall y=W2W1x is 
+a linear classifier)
+ReLU Conv ReLU Conv ReLU
+Solution: Add 
+activation function 
+between conv layers
+Justin Johnson January 31, 2022 Lecture 7 - 30
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6 10
+26
+26
+….
+What do convolutional filters learn? 
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+W2: 10x6x3x3
+b2: 10
+Second hidden layer: 
+N x 10 x 26 x 26
+Conv
+W3: 12x10x3x3
+b3: 12
+ReLU Conv ReLU Conv ReLU
+Justin Johnson January 31, 2022 Lecture 7 - 31
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6
+What do convolutional filters learn? 
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+Conv ReLU
+Linear classifier: One template per class
+Justin Johnson January 31, 2022 Lecture 7 - 32
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6
+What do convolutional filters learn? 
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+Conv ReLU
+MLP: Bank of whole-image templates
+Justin Johnson January 31, 2022 Lecture 7 - 33
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6
+What do convolutional filters learn? 
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+Conv ReLU
+First-layer conv filters: local image templates
+(Often learns oriented edges, opposing colors)
+AlexNet: 64 filters, each 3x11x11
+Justin Johnson January 31, 2022 Lecture 7 - 34
+32
+32
+3
+W1: 6x3x5x5
+b1: 6 28
+28
+6
+A closer look at spatial dimensions
+Input: 
+N x 3 x 32 x 32
+First hidden layer: 
+N x 6 x 28 x 28
+Conv ReLU
+Justin Johnson January 31, 2022 Lecture 7 - 35
+A closer look at spatial dimensions
+7
+7
+Input: 7x7
+Filter: 3x3
+Justin Johnson January 31, 2022 Lecture 7 - 36
+A closer look at spatial dimensions
+7
+7
+Input: 7x7
+Filter: 3x3
+Justin Johnson January 31, 2022 Lecture 7 - 37
+A closer look at spatial dimensions
+7
+7
+Input: 7x7
+Filter: 3x3
+Justin Johnson January 31, 2022 Lecture 7 - 38
+A closer look at spatial dimensions
+7
+7
+Input: 7x7
+Filter: 3x3
+Justin Johnson January 31, 2022 Lecture 7 - 39
+A closer look at spatial dimensions
+7
+7
+Input: 7x7
+Filter: 3x3
+Output: 5x5
+Justin Johnson January 31, 2022 Lecture 7 - 40
+A closer look at spatial dimensions
+7
+7
+Input: 7x7
+Filter: 3x3
+Output: 5x5
+In general:
+Input: W
+Filter: K
+Output: W – K + 1
+Problem: Feature 
+maps “shrink” 
+with each layer!
+Justin Johnson January 31, 2022
+0 0 0 0 0 0 0 0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0 0 0 0 0 0 0 0
+Lecture 7 - 41
+A closer look at spatial dimensions
+Input: 7x7
+Filter: 3x3
+Output: 5x5
+In general:
+Input: W
+Filter: K
+Output: W – K + 1
+Problem: Feature 
+maps “shrink” 
+with each layer!
+Solution: padding
+Add zeros around the input
+Justin Johnson January 31, 2022
+0 0 0 0 0 0 0 0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0 0 0 0 0 0 0 0
+Lecture 7 - 42
+A closer look at spatial dimensions
+Input: 7x7
+Filter: 3x3
+Output: 5x5
+In general:
+Input: W
+Filter: K
+Padding: P
+Output: W – K + 1 + 2P
+Very common:
+Set P = (K – 1) / 2 to 
+make output have 
+same size as input!
+Justin Johnson January 31, 2022 Lecture 7 - 43
+Receptive Fields
+Input Output
+For convolution with kernel size K, each element in the 
+output depends on a K x K receptive field in the input
+Justin Johnson January 31, 2022 Lecture 7 - 44
+Receptive Fields
+Input Output
+Each successive convolution adds K – 1 to the receptive field size
+With L layers the receptive field size is 1 + L * (K – 1)
+Be careful – ”receptive field in the input” vs “receptive field in the previous layer”
+Hopefully clear from context!
+Justin Johnson January 31, 2022 Lecture 7 - 45
+Receptive Fields
+Input Output
+Each successive convolution adds K – 1 to the receptive field size
+With L layers the receptive field size is 1 + L * (K – 1)
+Problem: For large images we need many layers 
+for each output to “see” the whole image image
+Justin Johnson January 31, 2022 Lecture 7 - 46
+Receptive Fields
+Input Output
+Each successive convolution adds K – 1 to the receptive field size
+With L layers the receptive field size is 1 + L * (K – 1)
+Problem: For large images we need many layers 
+for each output to “see” the whole image image
+Solution: Downsample inside the network
+Justin Johnson January 31, 2022 Lecture 7 - 47
+Strided Convolution
+Input: 7x7
+Filter: 3x3
+Stride: 2
+Justin Johnson January 31, 2022 Lecture 7 - 48
+Strided Convolution
+Input: 7x7
+Filter: 3x3
+Stride: 2
+Justin Johnson January 31, 2022 Lecture 7 - 49
+Strided Convolution
+Input: 7x7
+Filter: 3x3
+Stride: 2
+Output: 3x3
+Justin Johnson January 31, 2022 Lecture 7 - 50
+Strided Convolution
+Input: 7x7
+Filter: 3x3
+Stride: 2
+Output: 3x3
+In general:
+Input: W
+Filter: K
+Padding: P
+Stride: S
+Output: (W – K + 2P) / S + 1
+Justin Johnson January 31, 2022
+Convolution Example
+Lecture 7 - 51
+Input volume: 3 x 32 x 32
+10 5x5 filters with stride 1, pad 2
+Output volume size: ?
+Justin Johnson January 31, 2022
+Convolution Example
+Lecture 7 - 52
+Input volume: 3 x 32 x 32
+10 5x5 filters with stride 1, pad 2
+Output volume size: 
+(32+2*2-5)/1+1 = 32 spatially, so
+10 x 32 x 32
+Justin Johnson January 31, 2022
+Convolution Example
+Lecture 7 - 53
+Input volume: 3 x 32 x 32
+10 5x5 filters with stride 1, pad 2
+Output volume size: 10 x 32 x 32
+Number of learnable parameters: ?
+Justin Johnson January 31, 2022
+Convolution Example
+Lecture 7 - 54
+Input volume: 3 x 32 x 32
+10 5x5 filters with stride 1, pad 2
+Output volume size: 10 x 32 x 32
+Number of learnable parameters: 760
+Parameters per filter: 3*5*5 + 1 (for bias) = 76
+10 filters, so total is 10 * 76 = 760
+Justin Johnson January 31, 2022
+Convolution Example
+Lecture 7 - 55
+Input volume: 3 x 32 x 32
+10 5x5 filters with stride 1, pad 2
+Output volume size: 10 x 32 x 32
+Number of learnable parameters: 760
+Number of multiply-add operations: ?
+Justin Johnson January 31, 2022
+Convolution Example
+Lecture 7 - 56
+Input volume: 3 x 32 x 32
+10 5x5 filters with stride 1, pad 2
+Output volume size: 10 x 32 x 32
+Number of learnable parameters: 760
+Number of multiply-add operations: 768,000
+10*32*32 = 10,240 outputs; each output is the inner product 
+of two 3x5x5 tensors (75 elems); total = 75*10240 = 768K
+Justin Johnson January 31, 2022
+Example: 1x1 Convolution
+Lecture 7 - 57
+64
+56
+56
+1x1 CONV
+with 32 filters
+32
+56
+56
+(each filter has size 1x1x64, 
+and performs a 64-
+dimensional dot product)
+Justin Johnson January 31, 2022
+Example: 1x1 Convolution
+Lecture 7 - 58
+64
+56
+56
+1x1 CONV
+with 32 filters
+32
+56
+56
+(each filter has size 1x1x64, 
+and performs a 64-
+dimensional dot product)
+Lin et al, “Network in Network”, ICLR 2014
+Stacking 1x1 conv layers 
+gives MLP operating on 
+each input position
+Justin Johnson January 31, 2022
+Convolution Summary
+Lecture 7 - 59
+Input: Cin x H x W
+Hyperparameters:
+- Kernel size: KH x KW
+- Number filters: Cout
+- Padding: P
+- Stride: S
+Weight matrix: Cout x Cin x KH x KW
+giving Cout filters of size Cin x KH x KW
+Bias vector: Cout
+Output size: Cout x H’ x W’ where:
+- H’ = (H – K + 2P) / S + 1
+- W’ = (W – K + 2P) / S + 1
+Justin Johnson January 31, 2022
+Convolution Summary
+Lecture 7 - 60
+Input: Cin x H x W
+Hyperparameters:
+- Kernel size: KH x KW
+- Number filters: Cout
+- Padding: P
+- Stride: S
+Weight matrix: Cout x Cin x KH x KW
+giving Cout filters of size Cin x KH x KW
+Bias vector: Cout
+Output size: Cout x H’ x W’ where:
+- H’ = (H – K + 2P) / S + 1
+- W’ = (W – K + 2P) / S + 1
+Common settings:
+KH = KW (Small square filters)
+P = (K – 1) / 2 (”Same” padding)
+Cin, Cout = 32, 64, 128, 256 (powers of 2)
+K = 3, P = 1, S = 1 (3x3 conv)
+K = 5, P = 2, S = 1 (5x5 conv)
+K = 1, P = 0, S = 1 (1x1 conv)
+K = 3, P = 1, S = 2 (Downsample by 2)
+Justin Johnson January 31, 2022
+Other types of convolution
+Lecture 7 - 61
+So far: 2D Convolution
+Cin
+W
+H
+Input: Cin x H x W
+Weights: Cout x Cin x K x K
+Justin Johnson January 31, 2022
+Other types of convolution
+Lecture 7 - 62
+So far: 2D Convolution 1D Convolution
+Cin
+W
+H
+Input: Cin x H x W
+Weights: Cout x Cin x K x K
+Cin
+W
+Input: Cin x W
+Weights: Cout x Cin x K
+Justin Johnson January 31, 2022
+Other types of convolution
+Lecture 7 - 63
+So far: 2D Convolution 3D Convolution
+Cin
+W
+H
+Input: Cin x H x W
+Weights: Cout x Cin x K x K
+Cin-dim vector 
+at each point 
+in the volume
+W
+D
+H
+Input: Cin x H x W x D
+Weights: Cout x Cin x K x K x K
+Justin Johnson January 31, 2022 Lecture 7 - 64
+PyTorch Convolution Layer
+Justin Johnson January 31, 2022 Lecture 7 - 65
+PyTorch Convolution Layers
+Justin Johnson January 31, 2022
+Components of a Convolutional Network
+Lecture 7 - 66
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers Activation Function
+Normalization
+?
+!
+!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022
+Pooling Layers: Another way to downsample
+Lecture 7 - 67
+Hyperparameters:
+Kernel Size
+Stride
+Pooling function
+64 x 224 x 224
+64 x 112 x 112
+Justin Johnson January 31, 2022
+Max Pooling
+Lecture 7 - 68
+1 1 2 4
+5 6 7 8
+3 2 1 0
+1 2 3 4
+Single depth slice
+x
+y
+Max pooling with 2x2 
+kernel size and stride 2 6 8
+3 4
+Introduces invariance to 
+small spatial shifts
+No learnable parameters!
+64 x 224 x 224
+Justin Johnson January 31, 2022
+Pooling Summary
+Lecture 7 - 69
+Input: C x H x W
+Hyperparameters:
+- Kernel size: K
+- Stride: S
+- Pooling function (max, avg)
+Output: C x H’ x W’ where
+- H’ = (H – K) / S + 1
+- W’ = (W – K) / S + 1
+Learnable parameters: None!
+Common settings:
+max, K = 2, S = 2
+max, K = 3, S = 2 (AlexNet)
+Justin Johnson January 31, 2022
+Components of a Convolutional Network
+Lecture 7 - 70
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers Activation Function
+Normalization
+?
+!
+!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022
+Convolutional Networks
+Lecture 7 - 71
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Classic architecture: [Conv, ReLU, Pool] x N, flatten, [FC, ReLU] x N, FC
+Example: LeNet-5
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 72
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 73
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 74
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 75
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 76
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 77
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 78
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 79
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 80
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+As we go through the network:
+Spatial size decreases 
+(using pooling or strided conv)
+Number of channels increases
+(total “volume” is preserved!)
+Justin Johnson January 31, 2022
+Example: LeNet-5
+Lecture 7 - 81
+Layer Output Size Weight Size
+Input 1 x 28 x 28
+Conv (Cout=20, K=5, P=2, S=1) 20 x 28 x 28 20 x 1 x 5 x 5
+ReLU 20 x 28 x 28
+MaxPool(K=2, S=2) 20 x 14 x 14
+Conv (Cout=50, K=5, P=2, S=1) 50 x 14 x 14 50 x 20 x 5 x 5
+ReLU 50 x 14 x 14
+MaxPool(K=2, S=2) 50 x 7 x 7
+Flatten 2450
+Linear (2450 -> 500) 500 2450 x 500
+ReLU 500
+Linear (500 -> 10) 10 500 x 10
+Lecun et al, “Gradient-based learning applied to document recognition”, 1998
+As we go through the network:
+Spatial size decreases 
+(using pooling or strided conv)
+Number of channels increases
+(total “volume” is preserved!)
+Some modern architectures 
+break this trend -- stay tuned!
+Justin Johnson January 31, 2022
+Problem: Deep Networks very hard to train!
+Lecture 7 - 82
+Justin Johnson January 31, 2022
+Components of a Convolutional Network
+Lecture 7 - 83
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers Activation Function
+Normalization
+?
+!
+!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 84
+Ioffe and Szegedy, “Batch normalization: Accelerating deep network training by reducing internal covariate shift”, ICML 2015
+Idea: “Normalize” the outputs of a layer so they have zero mean 
+and unit variance
+Why? Helps reduce “internal covariate shift”, improves optimization
+We can normalize a batch of activations like this:
+This is a differentiable function, so 
+we can use it as an operator in our 
+networks and backprop through it!
+?
+!
+=
+? − ? ?
+??? ?
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 85
+Ioffe and Szegedy, “Batch normalization: Accelerating deep network training by reducing internal covariate shift”, ICML 2015
+Input:
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+X N
+D
+Per-channel 
+std, shape is D
+? ∈ ℝ!×# ?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 86
+Ioffe and Szegedy, “Batch normalization: Accelerating deep network training by reducing internal covariate shift”, ICML 2015
+Input:
+X N
+D Problem: What if zero-mean, unit 
+variance is too hard of a constraint? 
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+? ∈ ℝ!×#
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 87
+Learnable scale and 
+shift parameters:
+Output,
+Shape is N x D
+Learning ? = ?, ? = ?
+will recover the identity 
+function (in expectation)
+Input:
+?!,# = ?#
+!
+?!,# + ?#
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+? ∈ ℝ!×#
+?, ? ∈ ℝ#
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 88
+Learnable scale and 
+shift parameters:
+Output,
+Shape is N x D
+Learning ? = ?, ? = ?
+will recover the identity 
+function (in expectation)
+Input:
+?!,# = ?#
+!
+?!,# + ?#
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+? ∈ ℝ!×#
+?, ? ∈ ℝ#
+Problem: Estimates depend on 
+minibatch; can’t do this at test-time!
+Justin Johnson January 31, 2022
+Batch Normalization: Test-Time
+Lecture 7 - 89
+Learnable scale and 
+shift parameters:
+Input:
+Learning ? = ?, ? = ?
+will recover the identity 
+function (in expectation)
+? ∈ ℝ!×#
+?, ? ∈ ℝ#
+Output,
+Shape is N x D
+?!,# = ?#
+!
+?!,# + ?#
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+(Running) average of 
+values seen during 
+training
+(Running) average of 
+values seen during training
+Justin Johnson January 31, 2022
+Batch Normalization: Test-Time
+Lecture 7 - 90
+Learnable scale and 
+shift parameters:
+Input:
+Learning ? = ?, ? = ?
+will recover the identity 
+function (in expectation)
+? ∈ ℝ!×#
+?, ? ∈ ℝ#
+Output,
+Shape is N x D
+?!,# = ?#
+!
+?!,# + ?#
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+?
+1 +!%&
+'
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+(Running) average of 
+values seen during 
+training
+(Running) average of 
+values seen during training
+?"
+#$%# = 0
+For each training iteration:
+?" =
+&
+' ∑(
+'
+)& ?(,"
+?"
+#$%# = 0.99 ?"
+#$%# + 0.01 ?"
+(Similar for ?)
+Justin Johnson January 31, 2022
+Batch Normalization: Test-Time
+Lecture 7 - 91
+Learnable scale and 
+shift parameters:
+Input:
+Learning ? = ?, ? = ?
+will recover the identity 
+function (in expectation)
+? ∈ ℝ!×#
+?, ? ∈ ℝ#
+Output,
+Shape is N x D
+?!,# = ?#
+!
+?!,# + ?#
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+(Running) average of 
+values seen during 
+training
+(Running) average of 
+values seen during training
+Justin Johnson January 31, 2022
+Batch Normalization: Test-Time
+Lecture 7 - 92
+Learnable scale and 
+shift parameters:
+Input: ? ∈ ℝ!×#
+?, ? ∈ ℝ#
+Output,
+Shape is N x D
+?!,# = ?#?
+!
+!,# + ?#
+Per-channel 
+mean, shape is D
+Normalized x,
+Shape is N x D
+Per-channel 
+std, shape is D
+?# =
+1
+?+!
+'
+%&
+?!,#
+?#
+$ =
+1
+?+!
+'
+%&
+?!,# − ?#
+$
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+(Running) average of 
+values seen during 
+training
+(Running) average of 
+values seen during training
+During testing batchnorm
+becomes a linear operator! 
+Can be fused with the previous 
+fully-connected or conv layer
+Justin Johnson January 31, 2022
+? ∶ ? × ?
+?, ? ∶ 1 × ?
+?, ? ∶ 1 × ?
+? =
+? − ?
+?
+? + ?
+Batch Normalization for ConvNets
+Lecture 7 - 93
+? ∶ ? × ? × ? × ?
+?, ? ∶ 1 × ? × 1 × 1
+?, ? ∶ 1 × ? × 1 × 1
+? =
+? − ?
+?
+? + ?
+Normalize
+Batch Normalization for 
+fully-connected networks
+Batch Normalization for 
+convolutional networks
+(Spatial Batchnorm, BatchNorm2D)
+Normalize
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 94
+FC
+BN
+tanh
+FC
+BN
+tanh
+Usually inserted after Fully Connected 
+or Convolutional layers, and before 
+nonlinearity.
+Ioffe and Szegedy, “Batch normalization: Accelerating deep 
+network training by reducing internal covariate shift”, ICML 2015
+?
+!
+=
+? − ? ?
+??? ?
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 95
+FC
+BN
+tanh
+FC
+BN
+tanh
+- Makes deep networks much easier to train!
+- Allows higher learning rates, faster convergence
+- Networks become more robust to initialization
+- Acts as regularization during training
+- Zero overhead at test-time: can be fused with conv!
+Training iterations
+ImageNet 
+accuracy
+Ioffe and Szegedy, “Batch normalization: Accelerating deep 
+network training by reducing internal covariate shift”, ICML 2015
+Justin Johnson January 31, 2022
+Batch Normalization
+Lecture 7 - 96
+FC
+BN
+tanh
+FC
+BN
+tanh
+- Makes deep networks much easier to train!
+- Allows higher learning rates, faster convergence
+- Networks become more robust to initialization
+- Acts as regularization during training
+- Zero overhead at test-time: can be fused with conv!
+- Not well-understood theoretically (yet)
+- Behaves differently during training and testing: this 
+is a very common source of bugs!
+Ioffe and Szegedy, “Batch normalization: Accelerating deep 
+network training by reducing internal covariate shift”, ICML 2015
+Justin Johnson January 31, 2022
+? ∶ ? × ?
+?, ? ∶ 1 × ?
+?, ? ∶ 1 × ?
+? =
+? − ?
+?
+? + ?
+? ∶ ? × ?
+?, ? ∶ ? × 1
+?, ? ∶ 1 × ?
+? =
+? − ?
+?
+? + ?
+Layer Normalization
+Lecture 7 - 97
+Normalize
+Batch Normalization for 
+fully-connected networks
+Normalize
+Layer Normalization for fully￾connected networks
+Same behavior at train and test!
+Used in RNNs, Transformers
+Justin Johnson January 31, 2022
+Instance Normalization
+Lecture 7 - 98
+? ∶ ? × ? × ? × ?
+?, ? ∶ 1 × ? × 1 × 1
+?, ? ∶ 1 × ? × 1 × 1
+? =
+? − ?
+?
+? + ?
+Batch Normalization for 
+convolutional networks
+Normalize
+? ∶ ? × ? × ? × ?
+?, ? ∶ ? × ? × 1 × 1
+?, ? ∶ 1 × ? × 1 × 1
+? =
+? − ?
+?
+? + ?
+Instance Normalization for 
+convolutional networks
+Normalize
+Justin Johnson January 31, 2022
+Comparison of Normalization Layers
+Lecture 7 - 99
+Wu and He, “Group Normalization”, ECCV 2018
+Justin Johnson January 31, 2022
+Group Normalization
+Lecture 7 - 100
+Wu and He, “Group Normalization”, ECCV 2018
+Justin Johnson January 31, 2022
+Components of a Convolutional Network
+Lecture 7 - 101
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers
+Activation Function Normalization
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022
+Components of a Convolutional Network
+Lecture 7 - 102
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers
+Activation Function Normalization
+Most 
+computationally 
+expensive!
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022 Lecture 7 - 103
+Summary: Components of a Convolutional Network
+Convolution Layers Pooling Layers
+x h s
+Fully-Connected Layers
+Activation Function Normalization
+!
+?!,# =
+?!,# − ?#
+?#
+$ + ?
+Justin Johnson January 31, 2022 Lecture 7 - 104
+Summary: Components of a Convolutional Network
+Problem: What is the right way to combine all these components?
+Justin Johnson January 31, 2022
+Next time:
+CNN Architectures
+Lecture 7 - 105

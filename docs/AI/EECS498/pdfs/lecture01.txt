@@ -1,0 +1,1158 @@
+Justin Johnson January 5, 2022
+EECS 498-008 / 598-008
+Deep Learning for Computer Vision
+Lecture 1: Introduction
+Lecture 1 - 1
+Justin Johnson January 5, 2022
+Logistics:
+• Remote for first two weeks (Lectures 1 – 3)
+• After that, in-person lecture in Chrysler 220
+Lecture 1 - 2
+Justin Johnson January 5, 2022 Lecture 1 - 3
+Deep Learning for Computer Vision
+Justin Johnson January 5, 2022 Lecture 1 - 4
+Deep Learning for Computer Vision
+Building artificial systems 
+that process, perceive, and 
+reason about visual data
+Justin Johnson January 5, 2022
+Computer Vision is everywhere!
+Lecture 1 - 5
+Left to right:
+Image by Roger H Goun is licensed 
+under CC BY 2.0
+Image is CC0 1.0 public domain
+Image is CC0 1.0 public domain
+Image is CC0 1.0 public domain
+Left to right:
+Image is free to use
+Image is CC0 1.0 public domain
+Image by NASA is licensed 
+under CC BY 2.0
+Image is CC0 1.0 public domain
+Bottom row, left to right
+Image is CC0 1.0 public domain
+Image by Derek Keats is 
+licensed under CC BY 2.0; 
+changes made
+Image is public domain
+Image is licensed under CC-BY 
+2.0; changes made
+Justin Johnson January 5, 2022 Lecture 1 - 6
+Deep Learning for Computer Vision
+Building artificial systems that 
+learn from data and experience
+Justin Johnson January 5, 2022 Lecture 1 - 7
+Deep Learning for Computer Vision
+Hierarchical learning algorithms 
+with many “layers”, (very) loosely 
+inspired by the brain
+Justin Johnson January 5, 2022 Lecture 1 - 8
+Artificial Intelligence
+Justin Johnson January 5, 2022 Lecture 1 - 9
+Artificial Intelligence
+Machine Learning
+Computer 
+Vision
+Justin Johnson January 5, 2022 Lecture 1 - 10
+Artificial Intelligence
+Machine Learning
+Deep 
+Learning
+Computer 
+Vision
+Justin Johnson January 5, 2022 Lecture 1 - 11
+Artificial Intelligence
+Machine Learning
+Deep 
+Learning
+Computer 
+Vision
+This class
+Justin Johnson January 5, 2022
+This class
+Lecture 1 - 12
+Artificial Intelligence
+Machine Learning
+Deep 
+Learning
+Computer 
+Vision
+Natural Language 
+Processing
+Justin Johnson January 5, 2022
+This class
+Lecture 1 - 13
+Artificial Intelligence
+Machine Learning
+Deep 
+Learning
+Computer 
+Vision
+Natural Language 
+Processing
+Speech 
+Recognition
+Justin Johnson January 5, 2022
+This class
+Lecture 1 - 14
+Artificial Intelligence
+Machine Learning
+Deep 
+Learning
+Computer 
+Vision
+Natural Language 
+Processing
+Speech 
+Recognition
+Robotics
+Justin Johnson January 5, 2022
+Today’s Agenda
+• A brief history of computer vision and deep learning
+• Course overview and logistics
+Lecture 1 - 15
+Justin Johnson January 5, 2022 Lecture 1 - 16
+Hubel and Wiesel, 1959
+Stimulus Response
+Measure 
+brain activity
+Simple cells: 
+Response to light 
+orientation
+No response
+Cat image by CNX OpenStax is licensed 
+under CC BY 4.0; changes made
+1959
+Hubel & Wiesel
+Justin Johnson January 5, 2022 Lecture 1 - 17
+Hubel and Wiesel, 1959
+Stimulus Response
+Measure 
+brain activity
+Simple cells: 
+Response to light 
+orientation
+Complex cells:
+Response to light 
+orientation and 
+movement
+No response
+Cat image by CNX OpenStax is licensed 
+under CC BY 4.0; changes made
+1959
+Hubel & Wiesel
+Justin Johnson January 5, 2022
+Larry Roberts, 1963
+Lecture 1 - 18
+(a) Original picture (b) Differentiated picture (c) Feature points selected
+1959
+Hubel & Wiesel
+1963
+Roberts
+Lawrence Gilman Roberts, “Machine Perception of Three-Dimensional Solids”, 1963
+Justin Johnson January 5, 2022 Lecture 1 - 19
+1959
+Hubel & Wiesel
+1963
+Roberts
+https://dspace.mit.edu/handle/1721.1/6125
+Justin Johnson January 5, 2022 Lecture 1 - 20
+This image is CC0 1.0 public domain This image is CC0 1.0 public domain
+Input image Edge image 2 ½-D sketch 3-D model
+Input
+Image
+Perceived
+intensities
+Primal
+Sketch
+Zero crossings,
+blobs, edges, 
+bars, ends, 
+virtual lines,
+groups, curves 
+boundaries
+2 ½-D
+Sketch
+Local surface 
+orientation and 
+discontinuities in 
+depth and in 
+surface 
+orientation
+3-D Model
+Representation
+3-D models 
+hierarchically 
+organized in 
+terms of surface 
+and volumetric 
+primitives
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+Stages of Visual Representation, David Marr, 1970s
+Justin Johnson January 5, 2022 Lecture 1 - 21
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+b
+b
+Generalized Cylinders, 
+Brooks and Binford, 1979
+Pictorial Structures,
+Fischler and Elshlager, 1973
+Recognition via Parts (1970s)
+Justin Johnson January 5, 2022 Lecture 1 - 22
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+John Canny, 1986
+David Lowe, 1987
+Image is CC0 1.0 public domain
+Recognition via Edge Detection (1980s)
+Justin Johnson January 5, 2022 Lecture 1 - 23
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+Left Image is CC BY 3.0 Middl Image is public domain Right Image is CC-BY 2.0; changes made
+1997
+Norm. Cuts
+AI Winter
+Normalized Cuts, Shi and Malik, 1997
+Recognition via Grouping (1990s)
+Justin Johnson January 5, 2022 Lecture 1 - 24
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+Recognition via Matching (2000s)
+SIFT, David 
+Lowe, 1999
+Image is public domain Image is public domain
+1999
+SIFT
+Justin Johnson January 5, 2022 Lecture 1 - 25
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+Viola and Jones, 2001
+One of the first successful 
+applications of machine 
+learning to vision
+Face Detection
+2001
+V&J
+1999
+SIFT
+Justin Johnson January 5, 2022
+PASCAL Visual Object Challenge
+Lecture 1 - 26
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+Airplane
+Train
+Person
+Image is CC0 1.0 public domain
+Image is CC0 1.0 public domain
+2007
+PASCAL
+Justin Johnson January 5, 2022 Lecture 1 - 27
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+The Image Classification Challenge:
+1,000 object classes
+1,431,167 images
+Output:
+Scale
+T-shirt
+Steel drum
+Drumstick
+Mud turtle
+Deng et al, 2009
+Russakovsky et al. IJCV 2015
+Justin Johnson January 5, 2022 Lecture 1 - 28
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+Enter Deep Learning
+2012
+AlexNet
+Justin Johnson January 5, 2022 Lecture 1 - 29
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+AlexNet: Deep Learning Goes Mainstream
+Krizhevsky, Sutskever, and Hinton, NeurIPS 2012
+Justin Johnson January 5, 2022 Lecture 1 - 30
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+Perceptron
+One of the earliest algorithms that could learn from data
+Implemented in hardware! Weights stored in potentiometers, 
+updated with electric motors during learning
+Connected to a camera that used 20x20 cadmium sulfide 
+photocells to make a 400-pixel image
+Could learn to recognize letters of the alphabet
+Today we would recognize it as a linear classifier
+Frank Rosenblatt, ~1957
+Justin Johnson January 5, 2022
+Minsky and Papert, 1969
+Lecture 1 - 31
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+X Y F(x,y)
+0 0 0
+0 1 1
+1 0 1
+1 1 0 x
+y
+1969 
+Minsky & Papert
+Showed that Perceptrons could not learn the XOR function
+Caused a lot of disillusionment in the field
+Justin Johnson January 5, 2022
+Neocognitron: Fukushima, 1980
+Lecture 1 - 32
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+Computational model the visual system, 
+directly inspired by Hubel and Wiesel’s 
+hierarchy of complex and simple cells
+Interleaved simple cells (convolution) 
+and complex cells (pooling)
+No practical training algorithm
+Justin Johnson January 5, 2022
+Neocognitron: Fukushima, 1980
+Lecture 1 - 33
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+Looks a lot like AlexNet
+more than 32 years later!
+Justin Johnson January 5, 2022
+Backprop: Rumelhart, Hinton, and Williams, 1986
+Lecture 1 - 34
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+recognizable 
+math
+Illustration of Rumelhart et al., 1986 by Lane McIntosh, 
+copyright CS231n 2017
+Introduced 
+backpropagation for 
+computing gradients 
+in neural networks
+Successfully trained 
+perceptrons with 
+multiple layers
+Justin Johnson January 5, 2022
+Convolutional Networks: LeCun et al, 1998
+Lecture 1 - 35
+1998
+LeNet
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+Applied backprop algorithm to a Neocognitron-like architecture
+Learned to recognize handwritten digits
+Was deployed in a commercial system by NEC, processed handwritten checks
+Very similar to our modern convolutional networks!
+Justin Johnson January 5, 2022
+2000s: “Deep Learning”
+Lecture 1 - 36
+1998
+LeNet
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+2006
+Deep Learning
+People tried to train neural networks that 
+were deeper and deeper
+Not a mainstream research topic at this time
+Hinton and Salakhutdinov, 2006
+Bengio et al, 2007
+Lee et al, 2009
+Glorot and Bengio, 2010
+Justin Johnson January 5, 2022
+2012 to Present: Deep Learning Explosion
+Lecture 1 - 37
+1998
+LeNet
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+2006
+Deep Learning
+Publications at top Computer Vision conference
+0
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+1985 1990 1995 2000 2005 2010 2015 2020
+CVPR Papers
+Submitted
+Accepted
+arXiv papers per month (source)
+Justin Johnson January 5, 2022
+2012 to Present: Deep Learning is Everywhere
+Lecture 1 - 38
+Image Classification Image Retrieval
+Figures copyright Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton, 2012. Reproduced with permission. 
+Justin Johnson January 5, 2022
+2012 to Present: Deep Learning is Everywhere
+Lecture 1 - 39
+Object Detection Image Segmentation
+Ren, He, Girshick, and Sun, 2015 Fabaret et al, 2012
+Justin Johnson January 5, 2022 Lecture 1 - 40
+Video Classification Activity Recognition
+Simonyan et al, 2014
+2012 to Present: Deep Learning is Everywhere
+Justin Johnson January 5, 2022 Lecture 1 - 41
+2012 to Present: Deep Learning is Everywhere
+Pose Recognition (Toshev and Szegedy, 2014)
+Playing Atari games (Guo et al, 2014)
+Justin Johnson January 5, 2022 Lecture 1 - 42
+2012 to Present: Deep Learning is Everywhere
+Medical Imaging
+Levy et al, 2016 Figure reproduced with permission
+Galaxy Classification
+Dieleman et al, 2014 From left to right: public domain by NASA, usage permitted by 
+ESA/Hubble, public domain by NASA, and public domain.
+Whale recognition
+This image by Christin Khan is in the public domain and 
+originally came from the U.S. NOAA. Kaggle Challenge
+Justin Johnson January 5, 2022 Lecture 1 - 43
+2012 to Present: Deep Learning is Everywhere
+A white teddy bear 
+sitting in the grass
+A man riding a wave 
+on top of a surfboard
+A man in a baseball 
+uniform throwing a ball
+A cat sitting on a 
+suitcase on the floor
+A woman is holding 
+a cat in her hand
+A woman standing on a 
+beach holding a surfboard
+Image Captioning
+Vinyals et al, 2015
+Karpathy and Fei-Fei, 2015
+All images are CC0 Public domain:
+https://pixabay.com/en/luggage-antique-cat-1643010/
+https://pixabay.com/en/teddy-plush-bears-cute-teddy-bear-1623436/
+https://pixabay.com/en/surf-wave-summer-sport-litoral-1668716/
+https://pixabay.com/en/woman-female-model-portrait-adult-983967/
+https://pixabay.com/en/handstand-lake-meditation-496008/
+https://pixabay.com/en/baseball-player-shortstop-infield-1045263/
+Captions generated by Justin Johnson using Neuraltalk2
+Justin Johnson January 5, 2022 Lecture 1 - 44
+Figures copyright Justin Johnson, 2015. Reproduced with permission. Generated using the Inceptionism approach from a blog post by Google Research.
+Original image is CC0 public domain
+Starry Night and Tree Roots by Van Gogh are in the public domain
+Bokeh image is in the public domain
+Stylized images copyright Justin Johnson, 2017; 
+reproduced with permission
+Mordvinsev et al, 2015
+Gatys et al, 2016
+Justin Johnson January 5, 2022 Lecture 1 - 45
+2012 to Present: Deep Learning is Everywhere
+Karras et al, “Progressive Growing of GANs for Improved Quality, Stability, and Variation”, ICLR 2018 
+Justin Johnson January 5, 2022
+2012 to Present: Deep Learning is Everywhere
+Lecture 1 - 46
+Ramesh et al, “DALL·E: Creating Images from Text”, 2021. https://openai.com/blog/dall-e/
+Justin Johnson January 5, 2022
+2012 to Present: Deep Learning is Everywhere
+Lecture 1 - 47
+Ramesh et al, “DALL·E: Creating Images from Text”, 2021. https://openai.com/blog/dall-e/
+Justin Johnson January 5, 2022 Lecture 1 - 48
+Justin Johnson January 5, 2022 Lecture 1 - 49
+0
+5
+10
+15
+20
+25
+30
+35
+40
+45
+Jan-04 Jul-05 Jan-07 Jul-08 Jan-10 Jul-11 Jan-13 Jul-14 Jan-16 Jul-17 Jan-19 Jul-20
+GFLOP per Dollar
+CPU GPU (FP32)
+GeForce 
+8800 GTX
+GeForce 
+GTX 580
+(AlexNet)
+GTX 1080 Ti
+Deep Learning Explosion
+RTX 2080 Ti
+RTX 3080
+RTX 3090
+Justin Johnson January 5, 2022 Lecture 1 - 50
+0
+20
+40
+60
+80
+100
+120
+140
+160
+180
+Jan-04 Jul-05 Jan-07 Jul-08 Jan-10 Jul-11 Jan-13 Jul-14 Jan-16 Jul-17 Jan-19 Jul-20
+GFLOP per Dollar
+CPU GPU (FP32) GPU (Tensor Core)
+Recent GPUs have 
+“Tensor Cores”: 
+Special hardware 
+for deep learning!
+Justin Johnson January 5, 2022
+2018 Turing Award
+Lecture 1 - 51
+1998
+LeNet
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+2006
+Deep Learning
+Yoshua Bengio Geoffrey Hinton Yann LeCun
+2018
+Turing Award
+Justin Johnson January 5, 2022
+Despite our success, computer 
+vision still has a long way to go…
+Lecture 1 - 52
+Justin Johnson January 5, 2022
+Computer Vision can cause harm
+Lecture 1 - 53
+Barocas et al, “The Problem With Bias: Allocative Versus Representational Harms in Machine Learning”, SIGCIS 2017
+Kate Crawford, “The Trouble with Bias”, NeurIPS 2017 Keynote
+Source: https://twitter.com/jackyalcine/status/615329515909156865 (2015)
+Harmful Stereotypes
+Source: https://www.washingtonpost.com/technology/2019/10/22/ai-hiring-face-scanning-algorithm-increasingly-decides-whether-you-deserve-job/
+https://www.hirevue.com/platform/online-video-interviewing-software
+Example Credit: Timnit Gebru
+Affect people’s lives
+Justin Johnson January 5, 2022 Lecture 1 - 54
+This image is copyright￾free United States 
+government work
+Example credit: 
+Andrej Karpathy
+Justin Johnson January 5, 2022 Lecture 1 - 55
+Computer Vision Technology
+Can Better Our Lives
+Outside border images, clockwise, starting from top left:
+Image by Pop Culture Geek is licensed under CC BY 2.0; changes made
+Image by the US Government is in the public domain
+Image by the US Government is in the public domain
+Image by Glogger is licensed under CC BY-SA 3.0; changes made
+Image by Sylenius is licensed under CC BY 3.0; changes made
+Image by US Government is in the public domain
+Inside four images, clockwise, starting from top left:
+Image is CC0 1.0 public domain
+Image by Tucania is licensed under CC BY-SA 3.0; changes made
+Image by Intuitive Surgical, Inc. is licensed under CC BY-SA 3.0; changes made
+Image by Oyundari Zorigtbaatar is licensed under CC BY-SA 4.0
+Justin Johnson January 5, 2022 Lecture 1 - 56
+1998
+LeNet
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+2006
+Deep Learning
+2018
+Turing Award
+Today’s Agenda
+• A brief history of computer vision and deep learning
+• Course overview and logistics
+Justin Johnson January 5, 2022 Lecture 1 - 57
+1998
+LeNet
+1959
+Hubel & Wiesel
+1963
+Roberts
+1970s
+David Marr
+1979
+Gen. Cylinders
+1986
+Canny
+1997
+Norm. Cuts
+AI Winter
+2001
+V&J
+1999
+SIFT
+2007
+PASCAL
+2009
+ImageNet
+2012
+AlexNet
+1958
+Perceptron
+1969 
+Minsky & Papert
+1980
+Neocognitron
+1985
+Backprop
+2006
+Deep Learning
+2018
+Turing Award
+2022
+This class
+Today’s Agenda
+• A brief history of computer vision and deep learning
+• Course overview and logistics
+Justin Johnson January 5, 2022
+Course Staff
+Lecture 1 - 58
+Instructor
+Justin Johnson
+Assistant Professor, CSE
+GSIs / IAs
+Karan Desai (KD) Janpreet Singh (JS)
+Jim Yang Wallace Sui (WS) Gaurav Kaul
+Justin Johnson January 5, 2022
+How to contact us
+• Course Website: https://web.eecs.umich.edu/~justincj/teaching/eecs498/
+• Syllabus, schedule, assignments, slides, lecture videos, etc
+• Piazza: https://piazza.com/class/kxtai72amx34p0
+• (Almost) all questions about the course should go here!
+• We will also use Piazza to communicate with you
+• Use private questions if you want to post code
+• EECS Autograder: https://autograder.io/web/course/151
+• For turning in homework assignments
+• Google Calendar: For office hours (starting next week)
+• Email: Only for sensitive, confidential issues
+Lecture 1 - 59
+Justin Johnson January 5, 2022
+Course Website: Check the Schedule!
+Lecture 1 - 60
+https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/schedule.html
+Justin Johnson January 5, 2022
+Piazza Etiquette
+• Post only short snippets of code (< 20-30 lines)
+• Ask a specific, concrete question
+• Explain what you have tried so far, and what happened
+• See StackOverflow guide on asking good questions:
+https://stackoverflow.com/help/how-to-ask
+Lecture 1 - 61
+Justin Johnson January 5, 2022
+Piazza Etiquette
+• Post only short snippets of code (< 20-30 lines)
+• Ask a specific, concrete question
+• Explain what you have tried so far, and what happened
+• See StackOverflow guide on asking good questions:
+https://stackoverflow.com/help/how-to-ask
+• Don’t expect and answer within 30 minutes of posting
+• Monday – Friday, 10am – 6pm EST we’ll try to answer within 2 hours
+• Other times, we’ll try to answer within 12 hours
+Lecture 1 - 62
+Justin Johnson January 5, 2022
+Optional Textbook
+Lecture 1 - 63
+• Deep Learning by Goodfellow, 
+Bengio, and Courville
+• Free online
+Justin Johnson January 5, 2022
+Course Content and Grading
+• 6 programming assignments (10% each)
+• Midterm Exam (20%)
+• Mini-Project (20%)
+• Late policy
+• 3 free late days to use on assignments
+• Once free late days are exhausted, 25% penalty per day
+Lecture 1 - 64
+Justin Johnson January 5, 2022
+Programming Assignments
+• Python, PyTorch, will use Google Colab
+• “Earn your wings” – implement things “from scratch” in early 
+assignments, then use PyTorch in later assignments
+• ”Challenge Questions”
+• Go above and beyond the basic expectations of each assignment
+• Much higher time/points ratio than other parts of the assignment
+• Not necessary to get an A: will be 5% or less of each assignment
+Lecture 1 - 65
+Justin Johnson January 5, 2022
+Midterm Exam
+• Written exam testing basic concepts from first half of course
+• True / False, Multiple choice, short answer
+• We will provide a practice exam to get a sense of the format of the 
+questions (but not necessarily the length or difficulty)
+Lecture 1 - 66
+Justin Johnson January 5, 2022
+Mini-Project
+• New this year!
+• Work in teams of 1 to 3
+• Homework assignments: We provide starter code, you “fill in the blank”
+• Mini-Project: We provide high-level written description of an algorithm to 
+implement, you do the whole thing “from scratch”
+• We will give ~3 project descriptions, you pick one of those
+• Deliverable: zip of code, and Colab notebook that walks through your 
+implementation and main results (should be like notebooks from 
+homework!)
+Lecture 1 - 67
+Justin Johnson January 5, 2022
+Collaboration Policy
+• Rule 1: Don’t look at solutions or code that are not your own; 
+everything you submit should be your own work
+• Rule 2: Don’t share your solution code with others; however 
+discussing ideas or general strategies is fine and encouraged
+• Rule 3: Indicate in your submissions anyone you worked with
+• Turning in something late / incomplete is better than violating 
+the honor code
+Lecture 1 - 68
+Justin Johnson January 5, 2022
+Course Philosophy
+• Thorough and Detailed.
+• This not “Learn PyTorch in 90 days”, nor “Deep Learning in 10 lines of code”
+• Understand how to write from scratch, debug, and train convolutional and 
+other types of deep neural networks
+• We prefer to write from scratch, rather than rely on existing implementations
+• Practical
+• Focus on practical techniques for training and debugging neural networks
+• Will use state-of-the-art software tools like PyTorch and TensorFlow
+• State of the art
+• Most material we cover is research published in the last 5 years
+Lecture 1 - 69
+Justin Johnson January 5, 2022
+Course Philosophy
+• Will also cover some fun topics:
+• Image captioning 
+• DeepDream, Artistic Style Transfer
+Lecture 1 - 70
+Justin Johnson January 5, 2022
+Course Structure
+• First half: Fundamentals
+• Details of how to implement and train different types of networks
+• Fully-connected networks, convolutional networks, recurrent networks
+• How to train and debug, very detailed
+• Second half: Applications and “Researchy” topics
+• Object detection, image segmentation, 3D vision, videos
+• Attention, Transformers
+• Vision and Language
+• Generative models: GANs, VAEs, etc
+• Less detailed: provide overview and references, but skip some details
+Lecture 1 - 71
+Justin Johnson January 5, 2022
+New Topics since FA2020
+• Modern CNN architectures
+• SENets, MobileNets, NAS
+• EfficientNets, RegNets, NFNets
+• Vision Transformers
+• Architectures: ViT, DeiT, Swin, MViT
+• Applications: DETR
+• MLP-like architectures
+• Vision + Language
+• Language-based pretraining: CLIP, ALIGN
+• Self-Supervised Learning
+• Contrastive learning
+• Masked autoencoding
+Lecture 1 - 72
+Justin Johnson January 5, 2022
+First homework assignment
+• Will be released by today or tomorrow
+• Due Friday 1/14/2022
+• Next lecture will be enough to complete it
+Lecture 1 - 73
+Justin Johnson January 5, 2022
+Next time: Image Classification
+Lecture 1 - 74

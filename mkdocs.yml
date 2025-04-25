@@ -134,7 +134,10 @@ extra_css:
 nav:
   - Home:
       - index.md
-  - Markdown: Markdown/markdown.md
+  - Tools:
+      - Tools/index.md
+      - Markdown: Tools/markdown.md
+      - Git: Tools/git.md
   - Computer Science:
       - ComputerScience/index.md
       - Database:
@@ -182,6 +185,16 @@ nav:
           - AI/MachineLearning/index.md
           - 李宏毅:
               - AI/MachineLearning/ML.md
+          - EECS498:
+              - Course Introduction: AI/EECS498/lecture1.md
+              - Image Classification: AI/EECS498/lecture2.md
+              - Linear Classifiers: AI/EECS498/lecture3.md
+              - Regularization + Optimization: AI/EECS498/lecture4.md
+              - Neural Networks: AI/EECS498/lecture5.md
+              - Backpropagation : AI/EECS498/lecture6.md
+              - Convolutional Networks: AI/EECS498/lecture7.md
+              - CNN Architectures: AI/EECS498/lecture8.md
+              - Training Neural Networks I: AI/EECS498/lecture9.md
   - Foreign Course:
       - ForeignCourse/index.md
   - Paper Reading:
