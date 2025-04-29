@@ -172,6 +172,7 @@ nav:
               - Inheritance: ComputerScience/CPlusPlus/ClassNotes/8Inheritance.md
               - Polymorphism: ComputerScience/CPlusPlus/ClassNotes/9Polymorphism.md
               - Copy and Move: ComputerScience/CPlusPlus/ClassNotes/10CopyAndMove.md
+              - Overloaded Operator: ComputerScience/CPlusPlus/ClassNotes/11OverloadedOperator.md
           - Self-Study:
               - ComputerScience/CPlusPlus/SelfStudy/index.md
               - C++: ComputerScience/CPlusPlus/SelfStudy/C++.md
