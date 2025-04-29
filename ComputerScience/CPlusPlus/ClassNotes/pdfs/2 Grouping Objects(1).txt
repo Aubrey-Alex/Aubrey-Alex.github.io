@@ -1,0 +1,248 @@
+std using namespace std;
+map
+vector
+list
+vector
+deque
+list
+forward_list
+array
+string
+#include <iostream>
+#include <vector>
+using namespace std;
+int main( ) {
+// Declare a vector of ints (no need to worry about size)
+vector<int> x;
+// Add elements
+for (int a=0; a<1000; a++)
+x.push_back(a);
+// Have a pre-defined iterator for vector class, can use it to print out the items in vector
+vector<int>::iterator p;
+for (p=x.begin(); p<x.end(); p++)
+cout << *p << " ";
+return 0;
+}
+vector<int> x;
+vector<string> notes;
+vector
+string
+vector<Elem> c;
+vector<Elem> c1(c2);
+V.size( ) // num items
+V.empty( ) // empty?
+==, !=, <, >, <=, >=
+V.swap(v2) // swap
+I.begin( ) // first position
+I.end( ) // last position
+V.at(index)
+V[index]
+V.front() // first item
+V.back( ) // last item
+V.push_back(e)
+V.pop_back( )
+v.insert(pos, e)
+V.erase(pos)
+V.clear( )
+V.find(first, last, item)
+vector<int> v(100);
+v[80]=1; // okay
+v[200]=1; // bad
+vector<int> v2;
+int i;
+while (cin >> i)
+v.push_back(i);
+== != < <= > >=
+x.front(), x.back()
+x.push_back(item)
+x.push_front(item)
+x.pop_back()
+x.pop_front()
+x.erase(pos1, pos2)
+#include <iostream>
+#include <list>
+#include <string>
+using namespace std;
+int main( ) {
+// Declare a list of strings
+list<string> s;
+s.push_back("hello");
+s.push_back("world");
+s.push_front("tide");
+s.push_front("crimson");
+s.push_front("alabama");
+list<string>::iterator p;
+for (p=s.begin(); p!=s.end(); p++)
+cout << *p << " ";
+cout << endl;
+}
+list<int> lst1;
+list<int>::iterator iter1 = lst1.begin();
+list<int>::iterator iter2 = lst1.end();
+while (iter1 < iter2) {
+//...
+}
+list<int> L;
+for(int i=1; i<=5; ++i)
+L.push_back(i);
+//delete second item.
+L.erase( ++L.begin() );
+copy( L.begin(), L.end(),ostream_iterator<int>(cout,
+"
+,
+")); // Prints: 1,3,4,5,
+cout << endl;
+#include <iostream>
+#include <list>
+#include <string>
+using namespace std;
+int main( ) {
+list<string> s;
+string t;
+list<string>::iterator p;
+for (int a=0; a<5; a++) {
+cout << "enter a string : ";
+cin >> t;
+p = s.begin();
+while (p != s.end() && *p < t)
+p++;
+s.insert(p, t);
+}
+for (p=s.begin(); p!=s.end(); p++)
+cout << *p << " ";
+cout << endl;
+}
+vector
+list forward_list
+vector deque
+list forward_list
+deque
+#include <map>
+#include <string>
+map<string,float> price;
+price["snapple"] = 0.75;
+price["coke"] = 0.50;
+string item;
+double total=0;
+while ( cin >> item )
+total += price[item];
+map<long,int> root;
+root[4] = 2;
+root[1000000] = 1000;
+long l;
+cin >> l;
+if (root.count(l))
+cout<<root[l]
+else cout<<"Not perfect square";
+// Create a map of three (string, int) pairs
+std::map<std::string, int> m{{"CPU"
+, 10}, {"GPU"
+, 15}, {"RAM"
+, 20}};
+print_map("1) Initial map: "
+, m);
+m["CPU"] = 25; // update an existing value
+m["SSD"] = 30; // insert a new value
+print_map("2) Updated map: "
+, m);
+// Using operator[] with non-existent key always performs an insert
+std::cout << "3) m[UPS] = " << m["UPS"] << '\n';
+print_map("4) Updated map: "
+, m);
+m.erase("GPU");
+print_map("5) After erase: "
+, m);
+m.clear();
+std::cout << std::boolalpha << "6) Map is empty: " << m.empty() << '\n';
+list<int>::iterator li;
+list<int> L;
+li = L.begin();
+li = L.end();
+list<int>::iterator li;
+list<int> L;
+li=L.begin();
+++li; // Second thing;
+*li = 10;
+list<int> L;
+vector<int> V;
+// #include <algorithm> for this
+// put list in vector
+copy( L.begin(),
+L.end(),
+V.begin()
+);
+list<int> L;
+for(int i=1; i<=5; ++i) {
+L.push_back(i); //delete second item.
+}
+L.erase(++L.begin());
+copy(L.begin(), L.end(),
+ostream_iterator<int>(cout,
+"
+,
+")); // Prints: 1,3,4,5
+cout << endl;
+for(type variable_name : array/vector_name)
+{
+loop statements
+...
+}
+#include<iostream>
+using namespace std;
+int main()
+{
+int arr[]={1,2,3,4,5}; //array initialization
+cout<<"The elements are: ";
+for(int i : arr)
+{
+cout<<i<<" ";
+}
+return 0;
+}
+#include<iostream>
+#include<vector>
+using namespace std;
+int main()
+{
+vector<int> vec={11,22,33,44,55,66};
+cout<<"The elements are: ";
+for(auto var : vec)
+{
+cout<<var<<" ";
+}
+return 0;
+}
+map
+map<string, string> entries;
+for (auto entry : entries)
+{
+dates.push_back(entry.first + ":" + entry.second);
+}
+auto entry entries
+map<string, list<string>> phonebook;
+map<string, list<string>>::iterator finger;
+typedef map<string,list<string>> PB;
+PB phonebook;
+PB::iterator finger;
+using
+using PB = map<string,list<string>>;
+vector<int> v;
+v[100]=1; // Whoops!
+push_back()
+reserve()
+capacity()
+map<>
+if (foo["bob"]==1)
+//silently created entry “bob”
+count()
+if ( foo.count("bob") )
+count() list<>
+if ( my_list.count() == 0 ) { ... } // Slow
+if ( my_list.empty() ) {...} // Fast
+list<int> L;
+list<int>::iterator li;
+li = L.begin();
+L.erase(li);
+++li; // WRONG
+// Use return value of erase to advance
+li = L.erase(li); // RIGHT

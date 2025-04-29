@@ -1,0 +1,1680 @@
+Justin Johnson January 24, 2022
+Lecture 5:
+Neural Networks
+Lecture 5 - 1
+Justin Johnson January 24, 2022
+Assignment 2
+Lecture 5 - 2
+• Use SGD to train linear classifiers and fully-connected networks
+• After today, can do full assignment
+• If you have a hard time computing derivatives, wait for next lecture 
+on backprop
+• Due Friday January 28, 11:59pm ET
+Justin Johnson January 24, 2022
+Late Enrolls
+Anyone who enrolled today can have until Friday 2/4 for 
+to turn in A1 and A2 without using late days or penalties
+(But please email us / post on Piazza to confirm if you are
+using this extension)
+Lecture 5 - 3
+Justin Johnson January 24, 2022
+Where we are:
+Lecture 5 - 4
+Softmax SVM
+1. Use Linear Models for image 
+classification problems
+2. Use Loss Functions to express 
+preferences over different 
+choices of weights
+3. Use Regularization to prevent 
+overfitting to training data
+4. Use Stochastic Gradient 
+Descent to minimize our loss 
+functions and train the model
+Justin Johnson January 24, 2022
+Problem: Linear Classifiers aren’t that powerful
+Lecture 5 - 5
+x
+y
+Geometric Viewpoint Visual Viewpoint
+One template per class:
+Can’t recognize different 
+modes of a class
+Justin Johnson January 24, 2022
+One solution: Feature Transforms
+Lecture 5 - 6
+x
+y
+Original space
+r = (x2 + y2)
+1/2
+θ = tan-1(y/x)
+Feature 
+transform
+Justin Johnson January 24, 2022
+One solution: Feature Transforms
+Lecture 5 - 7
+x
+y
+Original space
+r = (x2 + y2)
+1/2
+θ = tan-1(y/x)
+Feature space
+Feature 
+transform
+r
+θ
+Justin Johnson January 24, 2022
+One solution: Feature Transforms
+Lecture 5 - 8
+x
+y
+Original space
+r = (x2 + y2)
+1/2
+θ = tan-1(y/x)
+Feature space
+Feature 
+transform
+r
+θ
+Linear classifier 
+in feature space
+Justin Johnson January 24, 2022
+One solution: Feature Transforms
+Lecture 5 - 9
+x
+y
+Original space
+r = (x2 + y2)
+1/2
+θ = tan-1(y/x)
+Feature space
+Feature 
+transform
+r
+θ
+Linear classifier 
+in feature space
+Nonlinear classifier 
+in original space!
+Justin Johnson January 24, 2022
+Image Features: Color Histogram
+Lecture 5 - 10
++1
+Ignores texture, 
+spatial positions
+Frog image is in the public domain
+Justin Johnson January 24, 2022
+Image Features: Histogram of Oriented Gradients (HoG)
+Lecture 5 - 11
+1. Compute edge direction / 
+strength at each pixel
+2. Divide image into 8x8 regions
+3. Within each region compute a 
+histogram of edge directions 
+weighted by edge strength Lowe, “Object recognition from local scale-invariant features”, ICCV 1999
+Dalal and Triggs, "Histograms of oriented gradients for human detection," CVPR 2005
+Justin Johnson January 24, 2022 Lecture 5 - 12
+1. Compute edge direction / 
+strength at each pixel
+2. Divide image into 8x8 regions
+3. Within each region compute a 
+histogram of edge directions 
+weighted by edge strength 
+Example: 320x240 image gets 
+divided into 40x30 bins; 8 
+directions per bin; feature vector 
+has 30*40*9 = 10,800 numbers
+Lowe, “Object recognition from local scale-invariant features”, ICCV 1999
+Dalal and Triggs, "Histograms of oriented gradients for human detection," CVPR 2005
+Image Features: Histogram of Oriented Gradients (HoG)
+Justin Johnson January 24, 2022 Lecture 5 - 13
+1. Compute edge direction / 
+strength at each pixel
+2. Divide image into 8x8 regions
+3. Within each region compute a 
+histogram of edge directions 
+weighted by edge strength 
+Example: 320x240 image gets 
+divided into 40x30 bins; 8 
+directions per bin; feature vector 
+has 30*40*9 = 10,800 numbers
+Lowe, “Object recognition from local scale-invariant features”, ICCV 1999
+Dalal and Triggs, "Histograms of oriented gradients for human detection," CVPR 2005
+Strong diagonal 
+edges
+Edges in all 
+directions
+Weak edges
+Image Features: Histogram of Oriented Gradients (HoG)
+Justin Johnson January 24, 2022 Lecture 5 - 14
+1. Compute edge direction / 
+strength at each pixel
+2. Divide image into 8x8 regions
+3. Within each region compute a 
+histogram of edge directions 
+weighted by edge strength 
+Example: 320x240 image gets 
+divided into 40x30 bins; 8 
+directions per bin; feature vector 
+has 30*40*9 = 10,800 numbers
+Lowe, “Object recognition from local scale-invariant features”, ICCV 1999
+Dalal and Triggs, "Histograms of oriented gradients for human detection," CVPR 2005
+Strong diagonal 
+edges
+Edges in all 
+directions
+Weak edges
+Captures 
+texture and 
+position, 
+robust to 
+small image 
+changes
+Image Features: Histogram of Oriented Gradients (HoG)
+Justin Johnson January 24, 2022
+Image Features: Bag of Words (Data-Driven!)
+Lecture 5 - 15
+Extract random 
+patches 
+Cluster patches to 
+form “codebook” 
+of “visual words”
+Step 1: Build codebook
+Fei-Fei and Perona, “A bayesian hierarchical model for learning natural scene categories”, CVPR 2005
+Car image is CC0 1.0 public domain
+Justin Johnson January 24, 2022
+Image Features: Bag of Words (Data-Driven!)
+Lecture 5 - 16
+Extract random 
+patches 
+Cluster patches to 
+form “codebook” 
+of “visual words”
+Step 1: Build codebook
+Step 2: Encode images
+Fei-Fei and Perona, “A bayesian hierarchical model for learning natural scene categories”, CVPR 2005
+Justin Johnson January 24, 2022
+Image Features
+Lecture 5 - 17
+Justin Johnson January 24, 2022
+Example: Winner of 2011 ImageNet challenge
+Lecture 5 - 18
+F. Perronnin, J. Sánchez, “Compressed Fisher vectors for LSVRC”, PASCAL VOC / ImageNet workshop, ICCV, 2011.
+Justin Johnson January 24, 2022
+Image Features
+Lecture 5 - 19
+Feature Extraction
+f
+10 numbers giving 
+scores for classes
+training
+Justin Johnson January 24, 2022
+Image Features vs Neural Networks
+Lecture 5 - 20
+Feature Extraction
+f
+training
+training
+10 numbers giving 
+scores for classes
+Krizhevsky, Sutskever, and Hinton, “Imagenet classification 
+with deep convolutional neural networks”, NIPS 2012.
+Figure copyright Krizhevsky, Sutskever, and Hinton, 2012. 
+Reproduced with permission.
+10 numbers giving 
+scores for classes
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 21
+Input: ? ∈ ℝ! Output: ? ? ∈ ℝ^?
+Before: Linear Classifier: ? ? = ?? + ?
+Learnable parameters: ? ∈ ℝ!×#
+, ? ∈ ℝ#
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 22
+Input: ? ∈ ℝ! Output: ? ? ∈ ℝ^?
+Before: Linear Classifier: ? ? = ?? + ?
+Learnable parameters: ? ∈ ℝ!×#
+, ? ∈ ℝ#
+Now: Two-Layer Neural Network: ? ? = ?$ max 0, ?%? + ?% + ?2
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 23
+Input: ? ∈ ℝ! Output: ? ? ∈ ℝ^?
+Before: Linear Classifier: ? ? = ?? + ?
+Learnable parameters: ? ∈ ℝ!×#
+, ? ∈ ℝ#
+Now: Two-Layer Neural Network: ? ? = ?$ max 0, ?%? + ?% + ?2
+Learnable parameters: ?% ∈ ℝ&×!
+, ?% ∈ ℝ&
+, ?$ ∈ ℝ#×&
+, ?$ ∈ ℝ#
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 24
+Input: ? ∈ ℝ! Output: ? ? ∈ ℝ^?
+Before: Linear Classifier: ? ? = ?? + ?
+Learnable parameters: ? ∈ ℝ!×#
+, ? ∈ ℝ#
+Now: Two-Layer Neural Network: ? ? = ?$ max 0, ?%? + ?% + ?2
+Learnable parameters: ?% ∈ ℝ&×!
+, ?% ∈ ℝ&
+, ?$ ∈ ℝ#×&
+, ?$ ∈ ℝ#
+Feature Extraction
+Linear Classifier
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 25
+Input: ? ∈ ℝ! Output: ? ? ∈ ℝ^?
+Before: Linear Classifier: ? ? = ?? + ?
+Learnable parameters: ? ∈ ℝ!×#
+, ? ∈ ℝ#
+Now: Two-Layer Neural Network: ? ? = ?$ max 0, ?%? + ?% + ?2
+Learnable parameters: ?% ∈ ℝ&×!
+, ?% ∈ ℝ&
+, ?$ ∈ ℝ#×&
+, ?$ ∈ ℝ#
+Or Three-Layer Neural Network:
+? ? = ?' max 0, ?$ max 0, ?%? + ?% + ?$ + ?'
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 26
+Before: Linear classifier ? ? = ?? + ?
+Now: 2-layer Neural Network ? ? = ?$ max 0, ?%? + ?% + ?$
+x h W1 s W2
+Input:
+3072
+Hidden layer:
+100
+Output: 10
+? ∈ ℝ!
+, ?" ∈ ℝ#×!
+, ?% ∈ ℝ&×#
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 27
+x h s Input:
+3072
+Hidden layer:
+100
+Output: 10
+Element (i, j) 
+of W1 gives 
+the effect on 
+hi from xj
+Element (i, j) 
+of W2 gives 
+the effect on 
+si from hj
+W1 W2
+? ∈ ℝ!
+, ?" ∈ ℝ#×!
+, ?% ∈ ℝ&×#
+Before: Linear classifier ? ? = ?? + ?
+Now: 2-layer Neural Network ? ? = ?$ max 0, ?%? + ?% + ?$
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 28
+x h W1 s W2
+Input:
+3072
+Hidden layer:
+100
+Output: 10
+Element (i, j) of W1 
+gives the effect on 
+hi from xj
+Element (i, j) of W2 
+gives the effect on 
+si from hj
+All elements 
+of x affect all 
+elements of h
+All elements 
+of h affect all 
+elements of s
+Fully-connected neural network
+Also “Multi-Layer Perceptron” (MLP)
+Before: Linear classifier ? ? = ?? + ?
+Now: 2-layer Neural Network ? ? = ?$ max 0, ?%? + ?% + ?$
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 29
+x h W1 s W2
+Input:
+3072
+Hidden layer:
+100
+Output: 10
+Linear classifier: One template per class
+(Before) Linear score function:
+(Now) 2-layer Neural Network
+? ∈ ℝ!
+, ?" ∈ ℝ#×!
+, ?% ∈ ℝ&×#
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 30
+(Before) Linear score function:
+(Now) 2-layer Neural Network
+x h s Input:
+3072
+Hidden layer:
+100
+Output: 10
+Neural net: first layer is bank of templates;
+Second layer recombines templates
+W1 W2
+? ∈ ℝ!
+, ?" ∈ ℝ#×!
+, ?% ∈ ℝ&×#
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 31
+(Before) Linear score function:
+(Now) 2-layer Neural Network
+x h s Input:
+3072
+Hidden layer:
+100
+Output: 10
+Can use different templates to 
+cover multiple modes of a class!
+W1 W2
+? ∈ ℝ!
+, ?" ∈ ℝ#×!
+, ?% ∈ ℝ&×#
+Justin Johnson January 24, 2022
+Neural Networks
+Lecture 5 - 32
+(Before) Linear score function:
+(Now) 2-layer Neural Network
+x h s Input:
+3072
+Hidden layer:
+100
+Output: 10
+“Distributed representation”: 
+Most templates not interpretable!
+W1 W2
+? ∈ ℝ!
+, ?" ∈ ℝ#×!
+, ?% ∈ ℝ&×#
+Justin Johnson January 24, 2022
+Deep Neural Networks
+Lecture 5 - 33
+x W1 h1 s W6
+Input:
+3072
+Output: 10
+h2 h3 h4 h5 W2 W3 W4 W5
+Depth = number of layers
+Width:
+Size of 
+each 
+layer
+? = ?( max 0, ?) max 0, ?* max 0, ?' max 0, ?$ max 0, ?%?
+Justin Johnson January 24, 2022
+? ? = ?$ max 0, ?%? + ?% + ?$
+Activation Functions
+Lecture 5 - 34
+2-layer Neural Network
+The function ???? ? = max(0, ?)
+is called “Rectified Linear Unit”
+This is called the activation function of 
+the neural network
+Justin Johnson January 24, 2022
+Activation Functions
+Lecture 5 - 35
+2-layer Neural Network
+This is called the activation function of 
+the neural network
+Q: What happens if we build a neural 
+network with no activation function?
+The function ???? ? = max(0, ?)
+is called “Rectified Linear Unit”
+? ? = ?$ max 0, ?%? + ?% + ?$
+? ? = ?$ ?%? + ?% + ?$
+Justin Johnson January 24, 2022
+Activation Functions
+Lecture 5 - 36
+2-layer Neural Network
+This is called the activation function of 
+the neural network
+Q: What happens if we build a neural 
+network with no activation function?
+The function ???? ? = max(0, ?)
+is called “Rectified Linear Unit”
+? ? = ?$ max 0, ?%? + ?% + ?$
+? ? = ?$ ?%? + ?% + ?$
+= ?%?$ ? + ?$?% + ?$
+A: We end up with a linear classifier!
+Justin Johnson January 24, 2022
+Activation Functions
+Lecture 5 - 37
+Sigmoid
+? ? =
+1
+1 + ?!"
+tanh
+tanh ? =
+?#" − 1
+?#" + 1
+ReLU
+max(0, ?)
+Leaky ReLU
+max 0.2?, ?
+Softplus
+log 1 + exp ?
+ELU
+? ? = 7
+?
+?,
+exp ? − 1 ,
+?
+?
+>
+≤
+0
+0
+Justin Johnson January 24, 2022
+Activation Functions
+Lecture 5 - 38
+ReLU is a good default choice 
+for most problems
+Sigmoid
+? ? =
+1
+1 + ?!"
+tanh
+tanh ? =
+?#" − 1
+?#" + 1
+ReLU
+max(0, ?)
+Leaky ReLU
+max 0.2?, ?
+Softplus
+log 1 + exp ?
+ELU
+? ? = 7
+?
+?,
+exp ? − 1 ,
+?
+?
+>
+≤
+0
+0
+Justin Johnson January 24, 2022
+Neural Net in <20 lines!
+Lecture 5 - 39
+Justin Johnson January 24, 2022
+Neural Net in <20 lines!
+Lecture 5 - 40
+Initialize weights 
+and data
+Justin Johnson January 24, 2022
+Neural Net in <20 lines!
+Lecture 5 - 41
+Initialize weights 
+and data
+Compute loss 
+(sigmoid activation, 
+L2 loss)
+Justin Johnson January 24, 2022
+Neural Net in <20 lines!
+Lecture 5 - 42
+Initialize weights 
+and data
+Compute loss 
+(sigmoid activation, 
+L2 loss)
+Compute 
+gradients
+Justin Johnson January 24, 2022
+Neural Net in <20 lines!
+Lecture 5 - 43
+Initialize weights 
+and data
+Compute loss 
+(sigmoid activation, 
+L2 loss)
+Compute 
+gradients
+SGD 
+step
+Justin Johnson January 24, 2022 Lecture 5 - 44
+This image by Fotis Bobolas is 
+licensed under CC-BY 2.0
+Justin Johnson January 24, 2022
+Our brains are made of Neurons
+Lecture 5 - 45
+Cell 
+body
+Axon
+Dendrite
+Presynaptic 
+terminal
+Neuron image by Felipe Perucho
+is licensed under CC-BY 3.0
+Justin Johnson January 24, 2022
+Our brains are made of Neurons
+Lecture 5 - 46
+Cell 
+body
+Axon
+Dendrite
+Presynaptic 
+terminal
+Synapse
+Justin Johnson January 24, 2022
+Our brains are made of Neurons
+Lecture 5 - 47
+Cell 
+body
+Axon
+Dendrite
+Presynaptic 
+terminal
+Synapse
+Impulses 
+carried toward 
+cell body
+Impulses carried 
+away from cell body
+Justin Johnson January 24, 2022
+Our brains are made of Neurons
+Lecture 5 - 48
+Cell 
+body
+Axon
+Dendrite
+Presynaptic 
+terminal
+Synapse
+Impulses 
+carried toward 
+cell body
+Impulses carried 
+away from cell body
+Firing rate is a 
+nonlinear function 
+of inputs
+Justin Johnson January 24, 2022 Lecture 5 - 49
+Neuron image by Felipe Perucho
+is licensed under CC-BY 3.0
+dendrite
+cell 
+body
+axon
+presynaptic 
+terminal Biological Neuron
+Artificial Neuron
+Justin Johnson January 24, 2022 Lecture 5 - 50
+This image is CC0 Public Domain
+Biological Neurons: 
+Complex connectivity patterns
+Neurons in a neural network:
+Organized into regular layers for 
+computational efficiency
+Justin Johnson January 24, 2022 Lecture 5 - 51
+This image is CC0 Public Domain
+Biological Neurons: 
+Complex connectivity patterns
+But neural networks with random 
+connections can work too!
+Xie et al, “Exploring Randomly Wired Neural Networks for Image Recognition”, ICCV 2019
+Justin Johnson January 24, 2022
+Be very careful with brain analogies!
+Lecture 5 - 52
+Biological Neurons:
+● Many different types
+● Dendrites can perform complex non-linear computations
+● Synapses are not a single weight but a complex non￾linear dynamical system
+● Abstracting a neuron by “firing rate” isn’t enough; 
+temporal sequences of activations matter too 
+(spiking neural networks)
+[Dendritic Computation. London and Hausser]
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 53
+x1
+x2
+Consider a linear transform: h = Wx
+Where x, h are both 2-dimensional
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 54
+x1
+x2
+Consider a linear transform: h = Wx
+Where x, h are both 2-dimensional
+h1
+Feature transform:
+h = Wx
+h2
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 55
+x1
+x2
+Consider a linear transform: h = Wx
+Where x, h are both 2-dimensional
+h1
+A A B B
+C C D
+D
+Feature transform:
+h = Wx
+h2
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 56
+x1
+x2
+Consider a linear transform: h = Wx
+Where x, h are both 2-dimensional Points not linearly 
+separable in original space
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 57
+x1
+x2
+h1
+h2
+Feature transform:
+h = Wx
+Consider a linear transform: h = Wx
+Where x, h are both 2-dimensional Points not linearly 
+separable in original space Not linearly separable 
+in feature space
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 58
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+Feature transform:
+h = ReLU(Wx)
+h2
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 59
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+Feature transform:
+h = ReLU(Wx)
+A A
+h2
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 60
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+Feature transform:
+h = ReLU(Wx)
+A A B B
+B is “collapsed” 
+onto +h2 axis
+h2
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 61
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+h2
+Feature transform:
+h = ReLU(Wx)
+A A B B
+B is “collapsed” 
+onto +h2 axis
+D
+D
+D “collapsed” 
+onto +h1 axis
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 62
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+h2
+Feature transform:
+h = ReLU(Wx)
+A A B B
+B is “collapsed” 
+onto +h2 axis
+D
+D
+D “collapsed” 
+onto +h1 axis
+C C
+C “collapsed” 
+onto origin
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 63
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+h2
+Feature transform:
+h = Wx
+Points not linearly 
+separable in original space
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 64
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+h2
+Feature transform:
+h = ReLU(Wx)
+Points not linearly 
+separable in original space
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 65
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+h2
+Feature transform:
+h = ReLU(Wx)
+Points are linearly 
+separable in features space!
+Points not linearly 
+separable in original space
+Justin Johnson January 24, 2022
+Space Warping
+Lecture 5 - 66
+x1
+x2
+Consider a neural net hidden layer:
+h = ReLU(Wx) = max(0, Wx)
+Where x, h are both 2-dimensional
+h1
+h2
+Feature transform:
+h = ReLU(Wx)
+Points are linearly 
+separable in features space!
+Points not linearly 
+separable in original space
+Linear classifier in feature 
+space gives nonlinear 
+classifier in original space
+Justin Johnson January 24, 2022
+Setting the number of layers and their sizes
+Lecture 5 - 67
+More hidden units = more capacity
+3 hidden units 6 hidden units 20 hidden units
+Justin Johnson January 24, 2022
+Don’t regularize with size; instead use stronger L2
+Lecture 5 - 68
+(Web demo with ConvNetJS: 
+http://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html)
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 69
+A neural network with one hidden layer can approximate 
+any function f: RN -> RM with arbitrary precision*
+*Many technical conditions: Only holds on compact subsets of RN; function must be continuous; need to define “arbitrary precision”; etc
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 70
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 71
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 72
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 73
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+Output is a sum of shifted, scaled ReLUs:
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 74
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+Output is a sum of shifted, scaled ReLUs:
+Position of 
+“bend” given by bi
+Slope is given 
+by ui * wi
+Flip left / right based on sign of wi
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 75
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 76
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+m1 = t / (s2 – s1)
+m2 = t / (s4 – s3) m2 m1
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 77
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3
+t
+We can build a “bump function” 
+using four hidden units
+m1 = t / (s2 – s1)
+m2 = t / (s4 – s3)
+m1 * max(0, x – s1)
+m2 m1
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 78
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+m1 = t / (s2 – s1)
+m2 = t / (s4 – s3)
+m1 * max(0, x – s1) -m1 * max(0, x – s2)
+m2 m1
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 79
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+m1 = t / (s2 – s1)
+m2 = t / (s4 – s3)
+m1 * max(0, x – s1) -m1 * max(0, x – s2)
+-m2 * max(0, x – s3)
+m2 m1
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 80
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+m1 = t / (s2 – s1)
+m2 = t / (s4 – s3)
+m1 * max(0, x – s1) -m1 * max(0, x – s2)
+-m2 * max(0, x – s3) m2 * max(0, x – s4)
+m2 m1
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 81
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+x
+With 4K hidden units we can 
+build a sum of K bumps
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 82
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+y
+s1 s2 s3 s4
+t
+We can build a “bump function” 
+using four hidden units
+x
+With 4K hidden units we can 
+build a sum of K bumps
+Approximate functions with bumps!
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 83
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+Approximate functions with bumps!
+What about…
+- Gaps between bumps?
+- Other nonlinearities?
+- Higher-dimensional functions?
+See Nielsen, Chapter 4
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 84
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+First layer weights: w (3,1)
+First layer bias: b (3,)
+Second layer weights: u (1,3)
+First layer bias: p (1,)
+Output: 
+y (1,)
+h1 = max(0, w1 * x + b1)
+h2 = max(0, w2 * x + b2)
+h3 = max(0, w3 * x + b3)
+y = u1 * h1 + u2 * h2 + u3 * h3 + p
+y = u1 * max(0, w1 * x + b1)
++ u2 * max(0, w2 * x + b2)
++ u3 * max(0, w3 * x + b3)
++ p
+x
+Approximate functions with bumps!
+Reality check: Networks don’t really learn bumps!
+Justin Johnson January 24, 2022
+Universal Approximation
+Lecture 5 - 85
+Example: Approximating a function f: R -> R with a two-layer ReLU network
+x
+h1
+h2
+h3
+y
+w1
+w2
+w3
+u1
+u2
+u3
+Input: 
+x (1,)
+Output: 
+y (1,)
+x
+Approximate functions with bumps!
+Reality check: Networks don’t really learn bumps!
+Universal approximation tells us:
+- Neural nets can represent any function
+Universal approximation DOES NOT tell us:
+- Whether we can actually learn any function with SGD
+- How much data we need to learn a function
+Remember: kNN is also a universal approximator!
+Justin Johnson January 24, 2022
+Extra topic
+(Won’t be on HW / Exam)
+Lecture 5 - 86
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 87
+A function is convex if for all ,
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 88
+A function is convex if for all ,
+Example: is convex:
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 89
+A function is convex if for all ,
+Example: is convex:
+x1 x2
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 90
+A function is convex if for all ,
+Example: is convex:
+x1 x2
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 91
+A function is convex if for all ,
+Example: 
+is not convex:
+x1 x2
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 92
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+*Many technical details! See e.g. IOE 661 / MATH 663
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 93
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 94
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+Softmax
+SVM
+Linear classifiers optimize 
+a convex function!
+R(W) = L2 or L1 regularization
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 95
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+Neural net losses sometimes look 
+convex-ish: 
+1D slice of loss landscape for a 4-layer ReLU network with 10 input features, 32 units 
+per hidden layer, 10 categories, with softmax loss
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 96
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+But often clearly nonconvex: 
+1D slice of loss landscape for a 4-layer ReLU network with 10 input features, 32 units 
+per hidden layer, 10 categories, with softmax loss
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 97
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+With local minima:
+1D slice of loss landscape for a 4-layer ReLU network with 10 input features, 32 units 
+per hidden layer, 10 categories, with softmax loss
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 98
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+Can get very wild!
+1D slice of loss landscape for a 4-layer ReLU network with 10 input features, 32 units 
+per hidden layer, 10 categories, with softmax loss
+Justin Johnson January 24, 2022
+Convex Functions
+Lecture 4 - 99
+A function is convex if for all ,
+Intuition: A convex function 
+is a (multidimensional) bowl
+Generally speaking, convex
+functions are easy to optimize: can 
+derive theoretical guarantees about 
+converging to global minimum*
+*Many technical details! See e.g. IOE 661 / MATH 663
+Most neural networks need 
+nonconvex optimization
+- Few or no guarantees 
+about convergence
+- Empirically it seems to 
+work anyway
+- Active area of research
+Justin Johnson January 24, 2022
+Summary
+Lecture 5 - 100
+x
+y
+Original	space
+r	=	(x2 +	y2)
+1/2
+θ =	tan-1(y/x)
+Feature	space
+Feature	
+transform
+r
+θ
+Linear	classifier	
+in	feature	space
+Nonlinear	classifier	
+in	original	space!
+Feature transform + Linear classifier 
+allows nonlinear decision boundaries
+Feature	Extraction
+training
+training
+10 numbers	giving	
+scores	for	classes
+Krizhevsky,	Sutskever,	and	Hinton,	“Imagenet	classification	
+with	deep	convolutional	neural	networks”,	NIPS	2012.
+Figure	copyright	Krizhevsky,	Sutskever,	and	Hinton,	2012.	
+Reproduced	 with	permission.
+10 numbers	giving	
+scores	for	classes
+Neural Networks as learnable feature transforms
+Justin Johnson January 24, 2022
+Summary
+Lecture 5 - 101
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+From linear classifiers to 
+fully-connected networks
+? ? = ?# max 0, ?$? + ?$ + ?#
+Linear classifier: One template per class
+Neural networks: Many reusable templates
+Justin Johnson January 24, 2022 Lecture 5 - 102
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+Summary
+Neural networks loosely inspired by biological 
+neurons but be careful with analogies
+From linear classifiers to 
+fully-connected networks
+? ? = ?# max 0, ?$? + ?$ + ?#
+Justin Johnson January 24, 2022 Lecture 5 - 103
+x h W1 s W2
+Input:
+3072
+Hidden	layer:
+100
+Output:	10
+Summary Space Warping Universal Approximation
+Nonconvex
+From linear classifiers to 
+fully-connected networks
+? ? = ?# max 0, ?$? + ?$ + ?#
+Justin Johnson January 24, 2022
+Problem: How to compute gradients?
+Lecture 5 - 104
+? = ?! max 0, ?"? + ?" + ?!
+?# = -
+$%&!
+max 0, ?$ − ?&! + 1
+? ? = -
+'
+?'
+!
+? ?", ?!, ?", ?! =
+1
+?-
+#("
+)
+?# + ?? ?" + ?? ?!
+Nonlinear score function
+Per-element data loss
+L2 Regularization
+Total loss
+If we can compute *
+*+
+,"
+,
+*+
+*,#
+,
+*+
+*-"
+,
+*+
+*-#
+then we can optimize with SGD
+Justin Johnson January 24, 2022
+Next time:
+Backpropagation
+Lecture 5 - 105

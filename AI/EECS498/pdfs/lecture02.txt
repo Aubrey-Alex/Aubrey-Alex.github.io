@@ -1,0 +1,792 @@
+Justin Johnson January 10, 2022
+Lecture 2:
+Image Classification
+Lecture 2 - 1
+Justin Johnson January 10, 2022
+Waitlisted Students
+• We’ll continue sending overrides in waitlist order as seats open
+• If you get one, enroll right now – override will expire in 24h
+• If you received an override and it expires, you will not get 
+another
+Lecture 2 - 2
+Justin Johnson January 10, 2022
+Office Hours
+Office hours start this week; check Google Calendar for details
+Fill out the following form about your office hour time preferences:
+https://forms.gle/Qh41oXuzjrTxFEVk9
+Lecture 2 - 3
+Justin Johnson January 10, 2022
+Piazza
+Reminder: Piazza is our main source of communication this semester
+Right now (enrolled students) < (enrolled students on Piazza)
+Go enroll on Piazza if you haven’t already
+Lecture 2 - 4
+Justin Johnson January 10, 2022
+Assignment 1 Released
+• https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/assi
+gnment1.html
+• Uses Python, PyTorch, and Google Colab
+• Introduction to PyTorch Tensors
+• K-Nearest Neighbor classification
+• Two challenge questions worth 2% each
+• Due Friday January 14, 11:59pm ET
+Lecture 2 - 5
+Justin Johnson January 10, 2022
+Assignment 1 Released
+• https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/assi
+gnment1.html
+• Make sure you download the WI2022 version of the assignment!
+• We released a slightly updated assignment today with minor bugfixes; 
+see Piazza: https://piazza.com/class/kxtai72amx34p0?cid=46
+• Only enrolled students can submit the assignment, but if you enroll
+late we will give you extra days to submit A1
+Lecture 2 - 6
+Justin Johnson January 10, 2022
+Google Colab: Cloud Computing in the Browser
+Lecture 2 - 7
+Justin Johnson January 10, 2022 Lecture 2 - 8
+Google Colab: Cloud Computing in the Browser
+We’ve written a Colab tutorial: 
+https://web.eecs.umich.edu/~j
+ustincj/teaching/eecs498/WI2
+022/colab.html
+Justin Johnson January 10, 2022
+Lecture 2:
+Image Classification
+Lecture 2 - 9
+Justin Johnson January 10, 2022
+Image Classification: A core computer vision task
+Lecture 2 - 10
+cat
+bird
+deer
+dog
+truck
+Output: Assign image to one 
+of a fixed set of categories
+This image by Nikita is 
+licensed under CC-BY 2.0
+Input: image
+Justin Johnson January 10, 2022
+This image by Nikita is 
+licensed under CC-BY 2.0
+Problem: Semantic Gap
+Lecture 2 - 11
+What the computer sees
+An image is just a big grid of 
+numbers between [0, 255]:
+e.g. 800 x 600 x 3
+(3 channels RGB)
+Justin Johnson January 10, 2022
+Challenges: Viewpoint Variation
+Lecture 2 - 12
+All pixels change when 
+the camera moves!
+This image by Nikita is 
+licensed under CC-BY 2.0
+Justin Johnson January 10, 2022
+Challenges: Intraclass Variation
+Lecture 2 - 13
+This image is CC0 1.0 public domain
+Justin Johnson January 10, 2022
+Challenges: Fine-Grained Categories
+Lecture 2 - 14
+This image is free for for use under the Pixabay License
+Maine Coon Ragdoll
+This image is CC0 public domain
+American Shorthair
+This image is CC0 public domain
+Justin Johnson January 10, 2022
+Challenges: Background Clutter
+Lecture 2 - 15
+This image is CC0 1.0 public domain This image is CC0 1.0 public domain
+Justin Johnson January 10, 2022
+Challenges: Illumination Changes
+Lecture 2 - 16
+This image is CC0 1.0 public domain This image is CC0 1.0 public domain This image is CC0 1.0 public domain This image is CC0 1.0 public domain
+Justin Johnson January 10, 2022
+Challenges: Deformation
+Lecture 2 - 17
+This image by Umberto Salvagnin is 
+licensed under CC-BY 2.0
+This image by Tom Thai is licensed 
+under CC-BY 2.0 
+This image by sare bear is licensed 
+under CC-BY 2.0 This image by Umberto Salvagnin is 
+licensed under CC-BY 2.0
+Justin Johnson January 10, 2022
+Challenges: Occlusion
+Lecture 2 - 18
+This image is CC0 1.0 public domain This image by jonsson is licensed 
+under CC-BY 2.0 This image is CC0 1.0 public domain
+Justin Johnson January 10, 2022
+Image Classification: Very Useful!
+Lecture 2 - 19
+Medical Imaging
+Levy et al, 2016 Figure reproduced with permission
+Galaxy Classification
+Dieleman et al, 2014 From left to right: public domain by NASA, usage permitted by 
+ESA/Hubble, public domain by NASA, and public domain.
+Whale recognition
+This image by Christin Khan is in the public domain and 
+originally came from the U.S. NOAA. Kaggle Challenge
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 20
+This image is free to use under the Pexels license
+Example: Object Detection
+Horse
+Person
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 21
+This image is free to use under the Pexels license
+Example: Object Detection
+Background
+Horse
+Person
+Car
+Truck
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 22
+This image is free to use under the Pexels license
+Example: Object Detection
+Background
+Horse
+Person
+Car
+Truck
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 23
+This image is free to use under the Pexels license
+Example: Image Captioning
+riding
+cat
+horse
+man
+when
+…
+<STOP>
+What word 
+to say next?
+Caption:
+Man riding horse
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 24
+This image is free to use under the Pexels license
+Example: Image Captioning
+riding
+cat
+horse
+man
+when
+…
+<STOP>
+What word 
+to say next?
+Caption:
+Man riding horse
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 25
+This image is free to use under the Pexels license
+Example: Image Captioning
+riding
+cat
+horse
+man
+when
+…
+<STOP>
+What word 
+to say next?
+Caption:
+Man riding horse
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 26
+This image is free to use under the Pexels license
+Example: Image Captioning
+riding
+cat
+horse
+man
+when
+…
+<STOP>
+What word 
+to say next?
+Caption:
+Man riding horse
+Justin Johnson January 10, 2022
+Image Classification: Building Block for other tasks!
+Lecture 2 - 27
+This image is CC0 public domain
+Example: Playing Go
+(1, 1)
+(1, 2)
+…
+(1, 19)
+...
+(19, 19)
+Where to 
+play next?
+Justin Johnson January 10, 2022
+An Image Classifier
+Lecture 2 - 28
+Unlike e.g. sorting a list of numbers,
+no obvious way to hard-code the algorithm 
+for recognizing a cat, or other classes.
+Justin Johnson January 10, 2022
+You could try …
+Lecture 2 - 29
+John Canny, “A Computational Approach to Edge Detection”, IEEE TPAMI 1986
+Find edges Find corners
+?
+Justin Johnson January 10, 2022
+Machine Learning: Data-Driven Approach
+Lecture 2 - 30
+1. Collect a dataset of images and labels
+2. Use Machine Learning to train a classifier
+3. Evaluate the classifier on new images
+Example training set
+Justin Johnson January 10, 2022
+Image Classification Datasets: MNIST
+Lecture 2 - 31
+10 classes: Digits 0 to 9
+28x28 grayscale images
+50k training images
+10k test images
+Justin Johnson January 10, 2022
+Image Classification Datasets: MNIST
+Lecture 2 - 32
+10 classes: Digits 0 to 9
+28x28 grayscale images
+50k training images
+10k test images
+“Drosophila of computer vision”
+Results from MNIST often do not 
+hold on more complex datasets!
+Justin Johnson January 10, 2022
+Image Classification Datasets: CIFAR10
+Lecture 2 - 33
+Alex Krizhevsky, “Learning Multiple Layers of Features from Tiny Images”, Technical Report, 2009.
+10 classes
+50k training images (5k per class)
+10k testing images (1k per class)
+32x32 RGB images
+We will use this dataset for 
+homework assignments
+Justin Johnson January 10, 2022
+Image Classification Datasets: CIFAR100
+Lecture 2 - 34
+Alex Krizhevsky, “Learning Multiple Layers of Features from Tiny Images”, Technical Report, 2009.
+100 classes
+50k training images (500 per class)
+10k testing images (100 per class)
+32x32 RGB images
+20 superclasses with 5 classes each:
+Aquatic mammals: beaver, dolphin, 
+otter, seal, whale
+Trees: Maple, oak, palm, pine, willow
+Justin Johnson January 10, 2022
+Image Classification Datasets: ImageNet
+Lecture 2 - 35
+Deng et al, “ImageNet: A Large-Scale Hierarchical Image Database”, CVPR 2009
+Russakovsky et al, “ImageNet Large Scale Visual Recognition Challenge”, IJCV 2015
+1000 classes
+~1.3M training images (~1.3K per class)
+50K validation images (50 per class)
+100K test images (100 per class)
+Performance metric: Top 5 accuracy
+Algorithm predicts 5 labels for each 
+image; one of them needs to be right
+Justin Johnson January 10, 2022
+Image Classification Datasets: ImageNet
+Lecture 2 - 36
+1000 classes
+~1.3M training images (~1.3K per class)
+50K validation images (50 per class)
+100K test images (100 per class)
+test labels are secret!
+Images have variable size, but often 
+resized to 256x256 for training
+There is also a 22k category version of 
+ImageNet, but less commonly used Deng et al, “ImageNet: A Large-Scale Hierarchical Image Database”, CVPR 2009
+Russakovsky et al, “ImageNet Large Scale Visual Recognition Challenge”, IJCV 2015
+Justin Johnson January 10, 2022
+Image Classification Datasets: MIT Places
+Lecture 2 - 37
+Zhou et al, “Places: A 10 million Image Database for Scene Recognition”, TPAMI 2017
+365 classes of different scene types
+~8M training images
+18.25K val images (50 per class)
+328.5K test images (900 per class)
+Images have variable size, often 
+resize to 256x256 for training
+Justin Johnson January 10, 2022
+Classification Datasets: Number of Training Pixels
+Lecture 2 - 38
+1.E+06
+1.E+07
+1.E+08
+1.E+09
+1.E+10
+1.E+11
+1.E+12
+1.E+13
+MNIST CIFAR10 CIFAR100 ImageNet Places365
+~47M ~154M ~154M
+~251B
+~1.6T
+Justin Johnson January 10, 2022
+Image Classification Datasets: Omniglot
+Lecture 2 - 39
+1623 categories: characters 
+from 50 different alphabets
+20 images per category
+Meant to test few shot learning
+Lake et al, “Human-level concept learning through probabilistic program induction”, Science, 2015
+Justin Johnson January 10, 2022
+First classifier: Nearest Neighbor
+Lecture 2 - 40
+Memorize all data 
+and labels
+Predict the label of 
+the most similar 
+training image
+Justin Johnson January 10, 2022
+Distance Metric to compare images
+Lecture 2 - 41
+L1 distance:
+add
+Justin Johnson January 10, 2022 Lecture 2 - 42
+Nearest Neighbor Classifier
+Justin Johnson January 10, 2022 Lecture 2 - 43
+Nearest Neighbor Classifier
+Memorize training data
+Justin Johnson January 10, 2022 Lecture 2 - 44
+Nearest Neighbor Classifier
+For each test image:
+Find nearest training image
+Return label of nearest image
+Justin Johnson January 10, 2022 Lecture 2 - 45
+Nearest Neighbor Classifier
+Q: With N examples, 
+how fast is training?
+Justin Johnson January 10, 2022 Lecture 2 - 46
+Nearest Neighbor Classifier
+Q: With N examples, 
+how fast is training?
+A: O(1)
+Justin Johnson January 10, 2022 Lecture 2 - 47
+Nearest Neighbor Classifier
+Q: With N examples, 
+how fast is training?
+A: O(1)
+Q: With N examples, 
+how fast is testing?
+Justin Johnson January 10, 2022 Lecture 2 - 48
+Nearest Neighbor Classifier
+Q: With N examples, 
+how fast is training?
+A: O(1)
+Q: With N examples, 
+how fast is testing?
+A: O(N)
+Justin Johnson January 10, 2022 Lecture 2 - 49
+Nearest Neighbor Classifier
+Q: With N examples, 
+how fast is training?
+A: O(1)
+Q: With N examples, 
+how fast is testing?
+A: O(N)
+This is bad: We can 
+afford slow training, but 
+we need fast testing!
+Justin Johnson January 10, 2022 Lecture 2 - 50
+Nearest Neighbor Classifier
+There are many methods for 
+fast / approximate nearest 
+neighbors; e.g. see
+https://github.com/facebookresearch/faiss
+Justin Johnson January 10, 2022
+What does this look like?
+Lecture 2 - 51
+Justin Johnson January 10, 2022
+What does this look like?
+Lecture 2 - 52
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 53
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 54
+x0
+x1
+Nearest neighbors
+in two dimensions 
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 55
+x0
+x1
+Nearest neighbors
+in two dimensions 
+Points are training 
+examples; colors 
+give training labels
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 56
+x0
+x1
+Nearest neighbors
+in two dimensions 
+Points are training 
+examples; colors 
+give training labels
+Background colors 
+give the category 
+a test point would 
+be assigned 
+x
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 57
+x0
+x1
+Nearest neighbors
+in two dimensions 
+Points are training 
+examples; colors 
+give training labels
+Background colors 
+give the category 
+a test point would 
+be assigned 
+x
+Decision boundary 
+is the boundary 
+between two 
+classification regions
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 58
+x0
+x1
+Nearest neighbors
+in two dimensions 
+Points are training 
+examples; colors 
+give training labels
+Background colors 
+give the category 
+a test point would 
+be assigned 
+x
+Decision boundary 
+is the boundary 
+between two 
+classification regions
+Decision boundaries 
+can be noisy; 
+affected by outliers
+Justin Johnson January 10, 2022
+Nearest Neighbor Decision Boundaries
+Lecture 2 - 59
+x0
+x1
+Nearest neighbors
+in two dimensions 
+Points are training 
+examples; colors 
+give training labels
+Background colors 
+give the category 
+a test point would 
+be assigned 
+x
+Decision boundary 
+is the boundary 
+between two 
+classification regions
+Decision boundaries 
+can be noisy; 
+affected by outliers
+How to smooth out 
+decision boundaries?
+Use more neighbors!
+Justin Johnson January 10, 2022
+K-Nearest Neighbors
+Lecture 2 - 60
+K = 1 K = 3
+Instead of copying label from nearest neighbor, 
+take majority vote from K closest points
+Justin Johnson January 10, 2022
+K-Nearest Neighbors
+Lecture 2 - 61
+K = 1 K = 3
+Using more neighbors helps smooth 
+out rough decision boundaries
+Justin Johnson January 10, 2022
+K-Nearest Neighbors
+Lecture 2 - 62
+K = 1 K = 3
+Using more neighbors helps 
+reduce the effect of outliers
+Justin Johnson January 10, 2022
+K-Nearest Neighbors
+Lecture 2 - 63
+K = 1 K = 3
+When K > 1 there can be 
+ties between classes. 
+Need to break somehow!
+Justin Johnson January 10, 2022
+K-Nearest Neighbors: Distance Metric
+Lecture 2 - 64
+L1 (Manhattan) distance L2 (Euclidean) distance
+?! ?!,?" = %#
+?!
+# − ?"
+# ?! ?!,?" = %#
+?!
+# − ?"
+# "
+!
+"
+Justin Johnson January 10, 2022
+K-Nearest Neighbors: Distance Metric
+Lecture 2 - 65
+L1 (Manhattan) distance L2 (Euclidean) distance
+K = 1
+?! ?!,?" = %#
+?!
+# − ?"
+# ?! ?!,?" = %#
+?!
+# − ?"
+# "
+!
+"
+Justin Johnson January 10, 2022
+K-Nearest Neighbors: Distance Metric
+Lecture 2 - 66
+With the right choice of distance metric, we can 
+apply K-Nearest Neighbor to any type of data!
+Justin Johnson January 10, 2022
+K-Nearest Neighbors: Distance Metric
+Lecture 2 - 67
+With the right choice of distance metric, we can 
+apply K-Nearest Neighbor to any type of data!
+Example: 
+Compare 
+research 
+papers using 
+tf-idf similarity
+http://www.arxiv-sanity.com/search?q=mesh+r-cnn
+Justin Johnson January 10, 2022
+K-Nearest Neighbors: Distance Metric
+Lecture 2 - 68
+http://www.arxiv-sanity.com/1906.02739v1
+Justin Johnson January 10, 2022
+K-Nearest Neighbors: 
+Web Demo
+Lecture 2 - 69
+http://vision.stanford.edu/teaching/cs231n-demos/knn/
+Interactively move points around 
+and see decision boundaries change
+Play with L1 vs L2 metrics
+Play with changing number of 
+training points, value of K
+Justin Johnson January 10, 2022
+Hyperparameters
+What is the best value of K to use?
+What is the best distance metric to use?
+These are examples of hyperparameters: choices about our 
+learning algorithm that we don’t learn from the training 
+data; instead we set them at the start of the learning process
+Lecture 2 - 70
+Justin Johnson January 10, 2022
+Hyperparameters
+What is the best value of K to use?
+What is the best distance metric to use?
+These are examples of hyperparameters: choices about our 
+learning algorithm that we don’t learn from the training 
+data; instead we set them at the start of the learning process
+Lecture 2 - 71
+Very problem-dependent. In general need to try them all and 
+see what works best for our data / task.
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 72
+Idea #1: Choose hyperparameters that 
+work best on the data
+Your Dataset
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 73
+Idea #1: Choose hyperparameters that 
+work best on the data
+BAD: K = 1 always works 
+perfectly on training data
+Your Dataset
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 74
+Idea #1: Choose hyperparameters that 
+work best on the data
+BAD: K = 1 always works 
+perfectly on training data
+Idea #2: Split data into train and test, choose 
+hyperparameters that work best on test data
+Your Dataset
+train test
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 75
+Idea #1: Choose hyperparameters that 
+work best on the data
+BAD: K = 1 always works 
+perfectly on training data
+Idea #2: Split data into train and test, choose 
+hyperparameters that work best on test data
+BAD: No idea how algorithm 
+will perform on new data
+Your Dataset
+train test
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 76
+Idea #1: Choose hyperparameters that 
+work best on the data
+BAD: K = 1 always works 
+perfectly on training data
+Idea #2: Split data into train and test, choose 
+hyperparameters that work best on test data
+BAD: No idea how algorithm 
+will perform on new data
+Your Dataset
+train test
+Idea #3: Split data into train, val, and test; choose 
+hyperparameters on val and evaluate on test
+Better!
+train test validation
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 77
+Your Dataset
+test fold 1 fold 2 fold 3 fold 4 fold 5
+Idea #4: Cross-Validation: Split data into folds, try each 
+fold as validation and average the results
+test fold 1 fold 2 fold 3 fold 4 fold 5
+test fold 1 fold 2 fold 3 fold 4 fold 5
+Useful for small datasets, but (unfortunately) not used too frequently in deep learning
+Justin Johnson January 10, 2022
+Setting Hyperparameters
+Lecture 2 - 78
+Example of 5-fold cross-validation for 
+the value of k.
+Each point: single outcome. 
+The line goes through the mean, bars
+indicated standard deviation
+(Seems that k ~ 7 works best
+for this data)
+Justin Johnson January 10, 2022
+K-Nearest Neighbor: Universal Approximation
+As the number of training samples goes to infinity, nearest 
+neighbor can represent any(*) function!
+Lecture 2 - 79
+(*) Subject to many technical conditions. Only continuous functions on a compact domain; need to make assumptions about spacing of training points; etc.
+Justin Johnson January 10, 2022
+K-Nearest Neighbor: Universal Approximation
+As the number of training samples goes to infinity, nearest 
+neighbor can represent any(*) function!
+Lecture 2 - 80
+(*) Subject to many technical conditions. Only continuous functions on a compact domain; need to make assumptions about spacing of training points; etc.
+Justin Johnson January 10, 2022
+K-Nearest Neighbor: Universal Approximation
+As the number of training samples goes to infinity, nearest 
+neighbor can represent any(*) function!
+Lecture 2 - 81
+(*) Subject to many technical conditions. Only continuous functions on a compact domain; need to make assumptions about spacing of training points; etc.
+Justin Johnson January 10, 2022
+K-Nearest Neighbor: Universal Approximation
+As the number of training samples goes to infinity, nearest 
+neighbor can represent any(*) function!
+Lecture 2 - 82
+(*) Subject to many technical conditions. Only continuous functions on a compact domain; need to make assumptions about spacing of training points; etc.
+Justin Johnson January 10, 2022
+K-Nearest Neighbor: Universal Approximation
+As the number of training samples goes to infinity, nearest 
+neighbor can represent any(*) function!
+Lecture 2 - 83
+(*) Subject to many technical conditions. Only continuous functions on a compact domain; need to make assumptions about spacing of training points; etc.
+Justin Johnson January 10, 2022 Lecture 2 - 84
+Problem: Curse of Dimensionality
+Curse of dimensionality: For uniform 
+coverage of space, number of training points 
+needed grows exponentially with dimension
+Dimensions = 1
+Points = 4
+Dimensions = 3
+Points = 43
+Dimensions = 2
+Points = 42
+Justin Johnson January 10, 2022 Lecture 2 - 85
+Problem: Curse of Dimensionality
+Curse of dimensionality: For uniform 
+coverage of space, number of training points 
+needed grows exponentially with dimension
+Number of possible 
+32x32 binary images:
+232x32 ≈ 10308
+Justin Johnson January 10, 2022 Lecture 2 - 86
+Problem: Curse of Dimensionality
+Curse of dimensionality: For uniform 
+coverage of space, number of training points 
+needed grows exponentially with dimension
+Number of possible 
+32x32 binary images:
+232x32 ≈ 10308
+Number of elementary particles 
+in the visible universe: (source)
+≈ 1097
+Justin Johnson January 10, 2022
+K-Nearest Neighbor on raw pixels is seldom used
+Lecture 2 - 87
+- Very slow at test time
+- Distance metrics on pixels are not informative
+(all 3 images have same L2 distance to the one on the left)
+Original Boxed Shifted Tinted
+Original image is 
+CC0 public domain
+Justin Johnson January 10, 2022
+Nearest Neighbor with ConvNet features works well!
+Lecture 2 - 88
+Devlin et al, “Exploring Nearest Neighbor Approaches for Image Captioning”, 2015
+Justin Johnson January 10, 2022
+Nearest Neighbor with ConvNet features works well!
+Lecture 2 - 89
+Devlin et al, “Exploring Nearest Neighbor Approaches for Image Captioning”, 2015
+Example: Image Captioning with Nearest Neighbor
+Justin Johnson January 10, 2022
+Summary
+Lecture 2 - 90
+In Image classification we start with a training set of images and labels, and 
+must predict labels on the test set
+Image classification is challenging due to the semantic gap: we need 
+invariance to occlusion, deformation, lighting, intraclass variation, etc
+Image classification is a building block for other vision tasks
+The K-Nearest Neighbors classifier predicts labels based on nearest training 
+examples
+Distance metric and K are hyperparameters
+Choose hyperparameters using the validation set; only run on the test set 
+once at the very end!
+Justin Johnson January 10, 2022
+Next time: Linear Classifiers
+Lecture 2 - 91

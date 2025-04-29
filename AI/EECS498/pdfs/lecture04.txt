@@ -1,0 +1,1282 @@
+Justin Johnson January 19, 2022
+Lecture 4:
+Regularization +
+Optimization
+Lecture 4 - 1
+Justin Johnson January 19, 2022
+Reminder: Assignment 1
+Was due on Friday!
+If you enrolled late, you can have an extension – but email me / 
+post on Piazza so we can track these
+Lecture 4 - 2
+Justin Johnson January 19, 2022
+Assignment 2
+Lecture 4 - 3
+• Released on Sunday
+• Use SGD to train linear classifiers and fully-connected networks
+• After today, can do linear classifiers section
+• After Lecture 5, can do fully-connected networks
+• If you have a hard time computing derivatives, wait for Lecture 6 on 
+backprop
+• Due Friday January 28, 11:59pm ET
+Justin Johnson January 19, 2022 Lecture 4 - 4
+Last Time: Linear Classifiers
+f(x,W) = Wx
+Algebraic Viewpoint Visual Viewpoint Geometric Viewpoint
+One template 
+per class
+Hyperplanes 
+cutting up space
+Justin Johnson January 19, 2022 Lecture 4 - 5
+Last Time: Loss Functions quantify preferences
+- We have some dataset of (x, y)
+- We have a score function: 
+- We have a loss function: 
+Linear classifier
+Softmax: ?! = − log "#$ %
+∑# "#$
+!
+%
+"
+#
+SVM: ?! = ∑'()" max 0, ?' − ?)" + 1
+? = ? ?; ?, ? = ?? + ?
+Justin Johnson January 19, 2022 Lecture 4 - 6
+Last Time: Loss Functions quantify preferences
+- We have some dataset of (x, y)
+- We have a score function: 
+- We have a loss function: 
+Linear classifier
+Softmax: ?! = − log "#$ %
+∑# "#$
+!
+%
+"
+#
+SVM: ?! = ∑'()" max 0, ?' − ?)" + 1
+? = ? ?; ?, ? = ?? + ?
+Problem: Loss functions encourage 
+good performance on training data 
+but we really care about test data
+Justin Johnson January 19, 2022
+Overfitting
+Lecture 4 - 7
+A model is overfit when it performs 
+too well on the training data, and has 
+poor performance for unseen data
+Justin Johnson January 19, 2022
+Overfitting
+Lecture 4 - 8
+A model is overfit when it performs 
+too well on the training data, and has 
+poor performance for unseen data
+Example: Linear classifier with 1D 
+inputs, 2 classes, softmax loss
+?$ = ?$? + ?$
+?$ =
+exp ?$
+exp ?% + exp ?&
+? = − log ?'
+Justin Johnson January 19, 2022
+Overfitting
+Lecture 4 - 9
+A model is overfit when it performs 
+too well on the training data, and has 
+poor performance for unseen data
+Both models have perfect accuracy on train data!
+Example: Linear classifier with 1D 
+inputs, 2 classes, softmax loss
+?$ = ?$? + ?$
+?$ =
+exp ?$
+exp ?% + exp ?&
+? = − log ?'
+Justin Johnson January 19, 2022
+Overfitting
+Lecture 4 - 10
+A model is overfit when it performs 
+too well on the training data, and has 
+poor performance for unseen data
+Example: Linear classifier with 1D 
+inputs, 2 classes, softmax loss
+?$ = ?$? + ?$
+?$ =
+exp ?$
+exp ?% + exp ?&
+? = − log ?'
+Low loss, but unnatural “cliff” 
+between training points
+Both models have perfect accuracy on train data!
+Justin Johnson January 19, 2022
+Overfitting
+Lecture 4 - 11
+A model is overfit when it performs 
+too well on the training data, and has 
+poor performance for unseen data
+Example: Linear classifier with 1D 
+inputs, 2 classes, softmax loss
+?$ = ?$? + ?$
+?$ =
+exp ?$
+exp ?% + exp ?&
+? = − log ?'
+Overconfidence in regions with no training data could give poor generalization
+Justin Johnson January 19, 2022 Lecture 4 - 12
+Regularization: Beyond Training Error
+Data loss: Model predictions 
+should match training data
+? ? =
+1
+?&
+012
+3
+?0 ? ?0, ? , ?0
+Justin Johnson January 19, 2022 Lecture 4 - 13
+Regularization: Beyond Training Error
+Data loss: Model predictions 
+should match training data
+Regularization: Prevent the model 
+from doing too well on training data
+? ? =
+1
+?&
+012
+3
+?0 ? ?0, ? , ?0 + ?? ? ? is a hyperparameter 
+giving regularization 
+strength
+Justin Johnson January 19, 2022 Lecture 4 - 14
+Regularization: Beyond Training Error
+Data loss: Model predictions 
+should match training data
+Regularization: Prevent the model 
+from doing too well on training data
+Simple examples
+L2 regularization: ? ? = ∑!,# ?!
+%
+.#
+L1 regularization: ? ? = ∑!,# ?!,#
+? ? =
+1
+?&
+012
+3
+?0 ? ?0, ? , ?0 + ?? ? ? is a hyperparameter 
+giving regularization 
+strength
+Justin Johnson January 19, 2022 Lecture 4 - 15
+Regularization: Beyond Training Error
+Data loss: Model predictions 
+should match training data
+Regularization: Prevent the model 
+from doing too well on training data
+Simple examples
+L2 regularization: ? ? = ∑!,# ?!
+%
+.#
+L1 regularization: ? ? = ∑!,# ?!,#
+? ? =
+1
+?&
+012
+3
+?0 ? ?0, ? , ?0 + ?? ? ? is a hyperparameter 
+giving regularization 
+strength
+More complex:
+Dropout
+Batch normalization
+Cutout, Mixup, Stochastic depth, etc…
+Justin Johnson January 19, 2022
+Regularization: Prefer Simpler Models
+Lecture 4 - 16
+Example: Linear classifier with 1D inputs, 2 classes, softmax loss
+?$ = ?$? + ?$ ?$ =
+exp ?$
+exp ?% + exp ?&
+? = − log ?' + ?5
+?
+??
+?
+Justin Johnson January 19, 2022
+Regularization: Prefer Simpler Models
+Lecture 4 - 17
+Example: Linear classifier with 1D inputs, 2 classes, softmax loss
+?$ = ?$? + ?$ ?$ =
+exp ?$
+exp ?% + exp ?&
+? = − log ?' + ?5
+?
+??
+?
+Regularization term 
+causes loss to increase
+for model with sharp cliff
+Justin Johnson January 19, 2022
+Regularization: Expressing Preferences
+Lecture 4 - 18
+L2 Regularization
+? ? = $
+!,#
+?!,#
+$
+?5
+6? = ?7
+6? = 1
+? = 1, 1, 1, 1
+?5 = 1, 0, 0, 0
+?7 = 0.25, 0.25, 0.25, 0.25
+Same predictions, so data 
+loss will always be the same
+Justin Johnson January 19, 2022
+Regularization: Expressing Preferences
+Lecture 4 - 19
+L2 Regularization
+L2 regularization prefers 
+weights to be “spread out”
+? ? = $
+!,#
+?!,#
+$
+?5
+6? = ?7
+6? = 1
+? = 1, 1, 1, 1
+?5 = 1, 0, 0, 0
+?7 = 0.25, 0.25, 0.25, 0.25
+Same predictions, so data 
+loss will always be the same
+Justin Johnson January 19, 2022
+Finding a good W
+Lecture 4 - 20
+? ? =
+?
+1 &
+012
+3
+?0 ? ?0, ? , ?0 + ?? ?
+Loss function consists of data loss to fit the training 
+data and regularization to prevent overfitting
+Justin Johnson January 19, 2022
+Optimization
+Lecture 4 - 21
+?∗
+= arg min
++
+? ?
+Justin Johnson January 19, 2022 Lecture 4 - 22
+Walking man image is CC0 1.0 public domain This image is CC0 1.0 public domain
+Justin Johnson January 19, 2022 Lecture 4 - 23
+Walking man image is CC0 1.0 public domain This image is CC0 1.0 public domain
+Justin Johnson January 19, 2022
+Idea #1: Random Search (bad idea!)
+Lecture 4 - 24
+Justin Johnson January 19, 2022
+Idea #1: Random Search (bad idea!)
+Lecture 4 - 25
+15.5% accuracy! not bad!
+Justin Johnson January 19, 2022
+Idea #1: Random Search (bad idea!)
+Lecture 4 - 26
+15.5% accuracy! not bad!
+(SOTA is ~95%)
+Justin Johnson January 19, 2022
+Idea #2: Follow the slope
+Lecture 4 - 27
+Justin Johnson January 19, 2022
+Idea #2: Follow the slope
+Lecture 4 - 28
+In 1-dimension, the derivative of a function gives the slope:
+??
+??
+= lim
+7→9
+? ? + ℎ − ?(?)
+ℎ
+Justin Johnson January 19, 2022
+Idea #2: Follow the slope
+Lecture 4 - 29
+In 1-dimension, the derivative of a function gives the slope:
+In multiple dimensions, the gradient is the vector
+of (partial derivatives) along each dimension
+The slope in any direction is the dot product of the direction with the gradient
+The direction of steepest descent is the negative gradient
+??
+??
+= lim
+7→9
+? ? + ℎ − ?(?)
+ℎ
+Justin Johnson January 19, 2022 Lecture 4 - 30
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+gradient dL/dW:
+[?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,…]
+Justin Johnson January 19, 2022 Lecture 4 - 31
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+gradient dL/dW:
+[?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,…]
+W + h (first dim):
+[0.34 + 0.0001,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25322
+Justin Johnson January 19, 2022 Lecture 4 - 32
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+gradient dL/dW:
+[-2.5,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,…]
+(1.25322 - 1.25347)/0.0001
+= -2.5
+W + h (first dim):
+[0.34 + 0.0001,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25322
+Justin Johnson January 19, 2022 Lecture 4 - 33
+gradient dL/dW:
+[-2.5,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,…]
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+W + h (second dim):
+[0.34,
+-1.11 + 0.0001,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25353
+Justin Johnson January 19, 2022
+gradient dL/dW:
+[-2.5,
+0.6,
+?,
+?,
+?,
+?,
+?,
+?,
+?,…]
+Lecture 4 - 34
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+W + h (second dim):
+[0.34,
+-1.11 + 0.0001,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25353
+(1.25353 - 1.25347)/0.0001
+= 0.6
+Justin Johnson January 19, 2022 Lecture 4 - 35
+gradient dL/dW:
+[-2.5,
+0.6,
+?,
+?,
+?,
+?,
+?,
+?,
+?,…]
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+W + h (third dim):
+[0.34,
+-1.11,
+0.78 + 0.0001,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+Justin Johnson January 19, 2022 Lecture 4 - 36
+gradient dL/dW:
+[-2.5,
+0.6,
+0.0,
+?,
+?,
+?,
+?,
+?,
+?,…]
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+W + h (third dim):
+[0.34,
+-1.11,
+0.78 + 0.0001,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+(1.25347 - 1.25347)/0.0001
+= 0.0
+Justin Johnson January 19, 2022 Lecture 4 - 37
+gradient dL/dW:
+[-2.5,
+0.6,
+0.0,
+?,
+?,
+?,
+?,
+?,
+?,…]
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+W + h (third dim):
+[0.34,
+-1.11,
+0.78 + 0.0001,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+Numeric Gradient:
+- Slow: O(#dimensions)
+- Approximate
+Justin Johnson January 19, 2022
+Loss is a function of W
+Lecture 4 - 38
+? =
+1
+2%!
+$
+"#
+?! + %%
+?%
+&
+?! = %'()!
+max 0, ?' − ?)! + 1
+? = ? ?, ? = ??
+Want ∇*?
+Justin Johnson January 19, 2022
+Loss is a function of W: Analytic Gradient
+Lecture 4 - 39
+? =
+1
+2%!
+$
+"#
+?! + %%
+?%
+&
+?! = %'()!
+max 0, ?' − ?)! + 1
+? = ? ?, ? = ??
+Want ∇*?
+Use calculus to compute an analytic gradient
+This image is in the public domain This image is in the public domain
+Justin Johnson January 19, 2022 Lecture 4 - 40
+gradient dL/dW:
+[-2.5,
+0.6,
+0,
+0.2,
+0.7,
+-0.5,
+1.1,
+1.3,
+-2.1,…]
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+dL/dW = ...
+(some function 
+data and W)
+Justin Johnson January 19, 2022 Lecture 4 - 41
+gradient dL/dW:
+[-2.5,
+0.6,
+0,
+0.2,
+0.7,
+-0.5,
+1.1,
+1.3,
+-2.1,…]
+current W:
+[0.34,
+-1.11,
+0.78,
+0.12,
+0.55,
+2.81,
+-3.1,
+-1.5,
+0.33,…] 
+loss 1.25347
+dL/dW = ...
+(some function 
+data and W)
+(In practice we will 
+compute dL/dW using 
+backpropagation; see 
+Lecture 6)
+Justin Johnson January 19, 2022
+Computing Gradients
+Lecture 4 - 42
+- Numeric gradient: approximate, slow, easy to write
+- Analytic gradient: exact, fast, error-prone
+Justin Johnson January 19, 2022
+Computing Gradients
+Lecture 4 - 43
+- Numeric gradient: approximate, slow, easy to write
+- Analytic gradient: exact, fast, error-prone
+In practice: Always use analytic gradient, but check implementation 
+with numerical gradient. This is called a gradient check.
+Justin Johnson January 19, 2022
+Computing Gradients
+Lecture 4 - 44
+- Numeric gradient: approximate, slow, easy to write
+- Analytic gradient: exact, fast, error-prone
+In practice: Always use analytic gradient, but check implementation 
+with numerical gradient. This is called a gradient check.
+Justin Johnson January 19, 2022
+Computing Gradients
+Lecture 4 - 45
+- Numeric gradient: approximate, slow, easy to write
+- Analytic gradient: exact, fast, error-prone
+In practice: Always use analytic gradient, but check implementation 
+with numerical gradient. This is called a gradient check.
+Justin Johnson January 19, 2022
+- Numeric gradient: approximate, slow, easy to write
+- Analytic gradient: exact, fast, error-prone
+In practice: Always use analytic gradient, but check implementation 
+with numerical gradient. This is called a gradient check.
+Computing Gradients
+Lecture 4 - 46
+Justin Johnson January 19, 2022 Lecture 4 - 47
+Gradient Descent
+Iteratively step in the direction of 
+the negative gradient
+(direction of local steepest descent)
+Hyperparameters:
+- Weight initialization method
+- Number of steps
+- Learning rate
+Justin Johnson January 19, 2022 Lecture 4 - 48
+negative 
+gradient 
+direction
+W_1
+W_2 original W
+Gradient Descent
+Iteratively step in the direction of 
+the negative gradient
+(direction of local steepest descent)
+Hyperparameters:
+- Weight initialization method
+- Number of steps
+- Learning rate
+Justin Johnson January 19, 2022 Lecture 4 - 49
+Gradient Descent
+Iteratively step in the direction of 
+the negative gradient
+(direction of local steepest descent)
+Hyperparameters:
+- Weight initialization method
+- Number of steps
+- Learning rate
+Justin Johnson January 19, 2022
+Batch Gradient Descent
+Lecture 4 - 50
+Full sum expensive 
+when N is large! ? ? =
+1
+?&
+"#$
+%
+?" ?", ?", ? + ?? ?
+∇&? ? =
+1
+?&
+"#$
+%
+∇&?" ?", ?", ? + ?∇&? ?
+Justin Johnson January 19, 2022
+Stochastic Gradient Descent (SGD)
+Lecture 4 - 51
+Full sum expensive 
+when N is large!
+Approximate sum using 
+a minibatch of examples
+32 / 64 / 128 common
+Hyperparameters:
+- Weight initialization
+- Number of steps
+- Learning rate
+- Batch size
+- Data sampling
+? ? =
+1
+?&
+"#$
+%
+?" ?", ?", ? + ?? ?
+∇&? ? =
+1
+?&
+"#$
+%
+∇&?" ?", ?", ? + ?∇&? ?
+Justin Johnson January 19, 2022
+Stochastic Gradient Descent (SGD)
+Lecture 4 - 52
+Think of loss as an 
+expectation over the full 
+data distribution pdata
+Approximate 
+expectation via sampling
+? ? = ? :,< ~>!"#" ? ?, ?, ? + ?? ?
+≈
+1
+?&0
+3
+12
+? ?0, ?0, ? + ?? ?
+Justin Johnson January 19, 2022
+Stochastic Gradient Descent (SGD)
+Lecture 4 - 53
+Think of loss as an 
+expectation over the full 
+data distribution pdata
+Approximate 
+expectation via sampling
+? ? = ? :,< ~>!"#" ? ?, ?, ? + ?? ?
+≈
+1
+?&0
+3
+12
+? ?0, ?0, ? + ?? ?
+∇%? ? = ∇%? &,' ∼)&'(' ? ?, ?, ? + ?∇%? ?
+≈ $*
+-
++,
+∇.?% ?*, ?*, ? + ∇.? ?
+Justin Johnson January 19, 2022
+Interactive Web Demo
+Lecture 4 - 54
+http://vision.stanford.edu/teaching/cs231n-demos/linear-classify/
+Justin Johnson January 19, 2022
+Problems with SGD
+Lecture 4 - 55
+What if loss changes quickly in one direction and slowly in another?
+What does gradient descent do?
+Loss function has high condition number: ratio of largest to smallest singular value 
+of the Hessian matrix is large
+Justin Johnson January 19, 2022
+Problems with SGD
+Lecture 4 - 56
+What if loss changes quickly in one direction and slowly in another?
+What does gradient descent do?
+Very slow progress along shallow dimension, jitter along steep direction
+Loss function has high condition number: ratio of largest to smallest singular value 
+of the Hessian matrix is large
+Justin Johnson January 19, 2022
+Problems with SGD
+Lecture 4 - 57
+What if the loss function 
+has a local minimum or 
+saddle point?
+Local 
+Minimum
+Saddle 
+point
+Justin Johnson January 19, 2022
+Problems with SGD
+Lecture 4 - 58
+What if the loss function 
+has a local minimum or 
+saddle point?
+Zero gradient, gradient 
+descent gets stuck
+Local 
+Minimum
+Saddle 
+point
+Justin Johnson January 19, 2022
+Problems with SGD
+Lecture 4 - 59
+Our gradients come from minibatches 
+so they can be noisy!
+? ? =
+1
+?,
+&'(
+)
+?& ?&, ?&, ? + ?? ?
+∇*? ? =
+1
+?,
+&'(
+)
+∇*?& ?&, ?&, ? + ?∇*? ?
+Justin Johnson January 19, 2022
+SGD
+Lecture 4 - 60
+SGD
+?*+, = ?* − ?∇? ?*
+Justin Johnson January 19, 2022
+SGD + Momentum
+Lecture 4 - 61
+SGD
+Sutskever et al, “On the importance of initialization and momentum in deep learning”, ICML 2013
+SGD+Momentum
+- Build up “velocity” as a running mean of gradients
+- Rho gives “friction”; typically rho=0.9 or 0.99
+?*+, = ?* − ?∇? ?*
+?*+, = ??* + ∇? ?*
+?*+, = ?* − ??*+,
+Justin Johnson January 19, 2022
+SGD + Momentum
+Lecture 4 - 62
+- Build up “velocity” as a running mean of gradients
+- Rho gives “friction”; typically rho=0.9 or 0.99
+Sutskever et al, “On the importance of initialization and momentum in deep learning”, ICML 2013
+SGD+Momentum
+Gradient
+Velocity
+actual step
+Momentum update:
+Combine gradient at current 
+point with velocity to get step 
+used to update weights
+?*+, = ??* + ∇? ?*
+?*+, = ?* − ??*+,
+Justin Johnson January 19, 2022
+SGD + Momentum
+Lecture 4 - 63
+Sutskever et al, “On the importance of initialization and momentum in deep learning”, ICML 2013
+SGD+Momentum
+You may see SGD+Momentum formulated different ways, but 
+they are equivalent - give same sequence of x
+SGD+Momentum
+?*+, = ??* + ∇? ?*
+?*+, = ?* − ??*+,
+?*+, = ??* − ?∇? ?*
+?*+, = ?* + ?*+,
+Justin Johnson January 19, 2022
+SGD + Momentum
+Lecture 4 - 64
+Sutskever et al, “On the importance of initialization and momentum in deep learning”, ICML 2013
+Local Minima Saddle points
+Gradient Noise
+SGD+Momentum SGD
+Poor Conditioning
+Justin Johnson January 19, 2022
+SGD + Momentum
+Lecture 4 - 65
+Gradient
+Velocity
+actual step
+Momentum update:
+Nesterov, “A method of solving a convex programming problem with convergence rate O(1/k^2)”, 1983
+Nesterov, “Introductory lectures on convex optimization: a basic course”, 2004
+Sutskever et al, “On the importance of initialization and momentum in deep learning”, ICML 2013
+Combine gradient at current point 
+with velocity to get step used to 
+update weights
+Justin Johnson January 19, 2022
+Nesterov Momentum
+Lecture 4 - 66
+Gradient
+Velocity
+actual step
+Momentum update:
+Nesterov, “A method of solving a convex programming problem with convergence rate O(1/k^2)”, 1983
+Nesterov, “Introductory lectures on convex optimization: a basic course”, 2004
+Sutskever et al, “On the importance of initialization and momentum in deep learning”, ICML 2013
+Combine gradient at current point 
+with velocity to get step used to 
+update weights
+Gradient
+Velocity
+actual step
+Nesterov Momentum
+“Look ahead” to the point where updating 
+using velocity would take us; compute 
+gradient there and mix it with velocity to 
+get actual update direction
+Justin Johnson January 19, 2022
+Nesterov Momentum
+Lecture 4 - 67
+Gradient
+Velocity
+actual step
+“Look ahead” to the point where updating 
+using velocity would take us; compute 
+gradient there and mix it with velocity to 
+get actual update direction
+Justin Johnson January 19, 2022
+Nesterov Momentum
+Lecture 4 - 68
+Gradient
+Velocity
+actual step
+“Look ahead” to the point where updating 
+using velocity would take us; compute 
+gradient there and mix it with velocity to 
+get actual update direction
+Annoying, usually we want 
+update in terms of
+Justin Johnson January 19, 2022
+Nesterov Momentum
+Lecture 4 - 69
+Change of variables 
+and rearrange: 
+Annoying, usually we want 
+update in terms of
+Justin Johnson January 19, 2022 Lecture 4 - 70
+Nesterov Momentum
+SGD
+SGD+Momentum
+Nesterov
+Justin Johnson January 19, 2022 Lecture 4 - 71
+AdaGrad
+Added element-wise scaling of the gradient based 
+on the historical sum of squares in each dimension
+“Per-parameter learning rates” 
+or “adaptive learning rates”
+Duchi et al, “Adaptive subgradient methods for online learning and stochastic optimization”, JMLR 2011
+Justin Johnson January 19, 2022 Lecture 4 - 72
+AdaGrad
+Duchi et al, “Adaptive subgradient methods for online learning and stochastic optimization”, JMLR 2011
+Justin Johnson January 19, 2022 Lecture 4 - 73
+AdaGrad
+Q: What happens with AdaGrad?
+Justin Johnson January 19, 2022 Lecture 4 - 74
+AdaGrad
+Q: What happens with AdaGrad? Progress along “steep” directions is damped; 
+progress along “flat” directions is accelerated
+Justin Johnson January 19, 2022 Lecture 4 - 75
+RMSProp: “Leaky Adagrad”
+AdaGrad
+Tieleman and Hinton, 2012
+RMSProp
+Justin Johnson January 19, 2022
+RMSProp
+Lecture 4 - 76
+SGD
+SGD+Momentum
+RMSProp
+Justin Johnson January 19, 2022
+Adam (almost): RMSProp + Momentum
+Lecture 4 - 77
+Kingma and Ba, “Adam: A method for stochastic optimization”, ICLR 2015
+Justin Johnson January 19, 2022
+Adam (almost): RMSProp + Momentum
+Lecture 4 - 78
+Momentum
+Kingma and Ba, “Adam: A method for stochastic optimization”, ICLR 2015
+Adam
+SGD+Momentum
+Justin Johnson January 19, 2022
+Adam (almost): RMSProp + Momentum
+Lecture 4 - 79
+Kingma and Ba, “Adam: A method for stochastic optimization”, ICLR 2015
+RMSProp
+Adam
+Momentum
+AdaGrad / RMSProp
+Justin Johnson January 19, 2022
+Adam (almost): RMSProp + Momentum
+Lecture 4 - 80
+Q: What happens at t=1? 
+(Assume beta2 = 0.999)
+Kingma and Ba, “Adam: A method for stochastic optimization”, ICLR 2015
+Adam
+Bias correction
+Momentum
+AdaGrad / RMSProp
+Justin Johnson January 19, 2022
+Adam (almost): RMSProp + Momentum
+Lecture 4 - 81
+Kingma and Ba, “Adam: A method for stochastic optimization”, ICLR 2015
+Bias correction
+Bias correction for the fact 
+that first and second moment 
+estimates start at zero
+Momentum
+AdaGrad / RMSProp
+Justin Johnson January 19, 2022
+Adam (almost): RMSProp + Momentum
+Lecture 4 - 82
+Kingma and Ba, “Adam: A method for stochastic optimization”, ICLR 2015
+Bias correction for the fact 
+that first and second moment 
+estimates start at zero
+Adam with beta1 = 0.9, 
+beta2 = 0.999, and learning_rate = 1e-3, 5e-4, 1e-4
+is a great starting point for many models! 
+Justin Johnson January 19, 2022
+Adam: Very Common in Practice!
+Lecture 4 - 83
+Adam with beta1 = 0.9, 
+beta2 = 0.999, and learning_rate = 1e-3, 5e-4, 1e-4
+is a great starting point for many models! 
+Gkioxari, Malik, and Johnson, ICCV 2019 Zhu, Kaplan, Johnson, and Fei-Fei, ECCV 2018
+Johnson, Gupta, and Fei-Fei, CVPR 2018
+Gupta, Johnson, et al, CVPR 2018
+Bakhtin, van der Maaten, Johnson, Gustafson, and Girshick, NeurIPS 2019
+Justin Johnson January 19, 2022
+Adam
+Lecture 4 - 84
+SGD
+SGD+Momentum
+RMSProp
+Adam
+Justin Johnson January 19, 2022
+Optimization Algorithm Comparison
+Lecture 4 - 85
+Algorithm
+Tracks first 
+moments 
+(Momentum)
+Tracks second 
+moments 
+(Adaptive
+learning rates)
+Leaky 
+second 
+moments
+Bias correction for 
+moment estimates
+SGD ? ? ? ?
+SGD+Momentum ✓ ? ? ?
+Nesterov ✓ ? ? ?
+AdaGrad ? ✓ ? ?
+RMSProp ? ✓ ✓ ?
+Adam ✓ ✓ ✓ ✓
+Justin Johnson January 19, 2022
+L2 Regularization vs Weight Decay
+Lecture 4 - 86
+Optimization Algorithm
+? ? = ?$%&% ? + ?'() ?
+?& = ∇? ?&
+?& = ????????? ?&
+?&*+ = ?& − ??&
+Justin Johnson January 19, 2022
+L2 Regularization vs Weight Decay
+Lecture 4 - 87
+Optimization Algorithm
+? ? = ?$%&% ? + ?'() ?
+?& = ∇? ?&
+?& = ????????? ?&
+?&*+ = ?& − ??&
+L2 Regularization
+? ? = ?$%&% ? + ? ? ?
+?& = ∇? ?& = ∇?$%&% ?& + ????
+?& = ????????? ?&
+?&*+ = ?& − ??&
+Loshchilov and Hutter, “Decoupled Weight Decay Regularization”, ICLR 2019
+Justin Johnson January 19, 2022
+L2 Regularization vs Weight Decay
+Lecture 4 - 88
+Optimization Algorithm
+? ? = ?$%&% ? + ?'() ?
+?& = ∇? ?&
+?& = ????????? ?&
+?&*+ = ?& − ??&
+Weight Decay
+? ? = ?$%&% ?
+?& = ∇?$%&% ?&
+?& = ????????? ?& + ????
+?&*+ = ?& − ??&
+Loshchilov and Hutter, “Decoupled Weight Decay Regularization”, ICLR 2019
+L2 Regularization
+? ? = ?$%&% ? + ? ? ?
+?& = ∇? ?& = ∇?$%&% ?& + ????
+?& = ????????? ?&
+?&*+ = ?& − ??&
+Justin Johnson January 19, 2022
+L2 Regularization vs Weight Decay
+Lecture 4 - 89
+Optimization Algorithm
+? ? = ?$%&% ? + ?'() ?
+?& = ∇? ?&
+?& = ????????? ?&
+?&*+ = ?& − ??&
+L2 Regularization and Weight Decay are 
+equivalent for SGD, SGD+Momentum so 
+people often use the terms interchangeably!
+Loshchilov and Hutter, “Decoupled Weight Decay Regularization”, ICLR 2019
+Weight Decay
+? ? = ?$%&% ?
+?& = ∇?$%&% ?&
+?& = ????????? ?& + ????
+?&*+ = ?& − ??&
+L2 Regularization
+? ? = ?$%&% ? + ? ? ?
+?& = ∇? ?& = ∇?$%&% ?& + ????
+?& = ????????? ?&
+?&*+ = ?& − ??&
+Justin Johnson January 19, 2022
+L2 Regularization vs Weight Decay
+Lecture 4 - 90
+Optimization Algorithm
+? ? = ?$%&% ? + ?'() ?
+?& = ∇? ?&
+?& = ????????? ?&
+?&*+ = ?& − ??&
+L2 Regularization and Weight Decay are 
+equivalent for SGD, SGD+Momentum so 
+people often use the terms interchangeably!
+But they are not the same for adaptive 
+methods (AdaGrad, RMSProp, Adam, etc)
+Loshchilov and Hutter, “Decoupled Weight Decay Regularization”, ICLR 2019
+Weight Decay
+? ? = ?$%&% ?
+?& = ∇?$%&% ?&
+?& = ????????? ?& + ????
+?&*+ = ?& − ??&
+L2 Regularization
+? ? = ?$%&% ? + ? ? ?
+?& = ∇? ?& = ∇?$%&% ?& + ????
+?& = ????????? ?&
+?&*+ = ?& − ??&
+Justin Johnson January 19, 2022
+AdamW: Decoupled Weight Decay
+Lecture 4 - 91
+Loshchilov and Hutter, “Decoupled Weight Decay Regularization”, ICLR 2019
+Justin Johnson January 19, 2022
+AdamW: Decoupled Weight Decay
+Lecture 4 - 92
+Loshchilov and Hutter, “Decoupled Weight Decay Regularization”, ICLR 2019
+AdamW should probably be your 
+“default” optimizer for new problems
+Justin Johnson January 19, 2022
+So far: First-Order Optimization
+Lecture 4 - 93
+Loss
+w1
+Justin Johnson January 19, 2022
+So far: First-Order Optimization
+Lecture 4 - 94
+Loss
+w1
+1. Use gradient to make linear approximation
+2. Step to minimize the approximation
+Justin Johnson January 19, 2022
+Second-Order Optimization
+Lecture 4 - 95
+Loss
+w1
+1. Use gradient and Hessian to make quadratic approximation
+2. Step to minimize the approximation
+Justin Johnson January 19, 2022
+Second-Order Optimization
+Lecture 4 - 96
+Loss
+w1
+1. Use gradient and Hessian to make quadratic approximation
+2. Step to minimize the approximation
+Take bigger steps in areas 
+of low curvature
+Justin Johnson January 19, 2022
+Second-Order Optimization
+Lecture 4 - 97
+Second-Order Taylor Expansion:
+Solving for the critical point we obtain the Newton parameter update:
+Justin Johnson January 19, 2022
+Second-Order Optimization
+Lecture 4 - 98
+Second-Order Taylor Expansion:
+Solving for the critical point we obtain the Newton parameter update:
+Q: Why is this impractical?
+Justin Johnson January 19, 2022
+Second-Order Optimization
+Lecture 4 - 99
+Second-Order Taylor Expansion:
+Solving for the critical point we obtain the Newton parameter update:
+Q: Why is this impractical?
+Hessian has O(N^2) elements
+Inverting takes O(N^3)
+N = (Tens or Hundreds of) Millions
+Justin Johnson January 19, 2022 Lecture 4 - 100
+Second-Order Optimization
+- Quasi-Newton methods (BGFS most popular):
+instead of inverting the Hessian (O(n^3)), approximate inverse 
+Hessian with rank 1 updates over time (O(n^2) each).
+- L-BFGS (Limited memory BFGS): 
+Does not form/store the full inverse Hessian.
+Justin Johnson January 19, 2022 Lecture 4 - 101
+Second-Order Optimization: L-BFGS
+- Usually works very well in full batch, deterministic mode 
+i.e. if you have a single, deterministic f(x) then L-BFGS will 
+probably work very nicely
+- Does not transfer very well to mini-batch setting. Gives bad 
+results. Adapting second-order methods to large-scale, 
+stochastic setting is an active area of research.
+Le et al, “On optimization methods for deep learning, ICML 2011”
+Ba et al, “Distributed second-order optimization using Kronecker-factored approximations”, ICLR 2017
+Justin Johnson January 19, 2022
+In practice:
+Lecture 4 - 102
+- Adam is a good default choice in many cases 
+SGD+Momentum can outperform Adam but may 
+require more tuning
+- If you can afford to do full batch updates then try out 
+L-BFGS (and don’t forget to disable all sources of noise)
+Justin Johnson January 19, 2022
+Summary
+Lecture 4 - 103
+1. Use Linear Models for image 
+classification problems
+2. Use Loss Functions to express 
+preferences over different 
+choices of weights
+3. Use Regularization to prevent 
+overfitting to training data
+4. Use Stochastic Gradient 
+Descent to minimize our loss 
+functions and train the model
+Softmax SVM
+Justin Johnson January 19, 2022
+Next time:
+Neural Networks
+Lecture 4 - 104

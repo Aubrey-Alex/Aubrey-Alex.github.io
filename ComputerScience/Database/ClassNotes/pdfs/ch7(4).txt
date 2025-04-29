@@ -1,0 +1,1009 @@
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 8.2 Database System Concepts - 7th Edition
+n Functional Dependency Concepts
+n Normal Forms
+l Atomic Domains and First Normal Form
+l BCNF and Third Normal Form
+n Functional Dependency Theory and Algorithms
+n Decomposition and Testing Using Functional Dependencies
+n More Normal Form
+n Database-Design Process
+©Silberschatz, Korth and Sudarshan 8.3 Database System Concepts - 7th Edition
+n Constraints on the set of legal relations. n Require that the value for a certain set of attributes determines uniquely the value for another
+set of attributes. n A functional dependency is a generalization of the notion of a key. n Functional dependencies allow us to find/define dependencies whose left sides are not
+superkeys. It can also help us to find illegal dependencies. Consider the schema:
+inst_dept (ID, name, salary, dept_name, building, budget ). We expect these functional dependencies to hold:
+dept_name building (dept_name is not a superkey)
+and ID  building (ID is a superkey)
+but would not expect the following to hold:
+dept_name  salary
+©Silberschatz, Korth and Sudarshan 8.4 Database System Concepts - 7th Edition
+n Let R be a relation schema
+  R and   R
+n The functional dependency
+  
+holds on R if and only if for any legal relations r(R), whenever any
+two tuples t1 and t2 of r agree on the attributes , they also agree
+on the attributes . That is,
+t1
+[] = t2
+[]  t1
+[ ] = t2
+[ ]
+n Example: Consider r(A,B ) with the following instance of r. n On this instance, A  B does NOT hold, but B  A does hold. 1 4
+1 5
+3 7
+©Silberschatz, Korth and Sudarshan 8.5 Database System Concepts - 7th Edition
+n K is a superkey for relation schema R if and only if K  R
+n K is a candidate key for R if and only if
+l K  R, and
+l for no   K,   R
+©Silberschatz, Korth and Sudarshan 8.6 Database System Concepts - 7th Edition
+n A functional dependency is trivial if it is satisfied by all instances of a relation
+l Example:
+4 ID, name  ID
+4 name  name
+l In general,    is trivial if   
+©Silberschatz, Korth and Sudarshan 8.7 Database System Concepts - 7th Edition
+n Given a set F of functional dependencies, there are certain other
+functional dependencies that are logically implied by F. l For example: If A  B and B  C, then we can infer that A 
+C
+n The set of all functional dependencies logically implied by F is the
+closure of F. n We denote the closure of F by F+. n F+ is a superset of F.
+©Silberschatz, Korth and Sudarshan 8.8 Database System Concepts - 7th Edition
+n Trivial and Non Trivial
+n For Non Trivial FD   :
+l : We care more about whether it is a superkey. Two categories
+for  :
+4 is a superkey;
+4 is not a superkey;
+l : We care more about whether there is any part in  that is part of
+a candidate key, which means these part can also determine the
+values of some other attributes. This will bring some complexity. Two categories for  :
+4 No part of  is part of a candidate key;
+4 Some or all of  is (or is part of) a candidate key
+l Combine categories of  and  , we have four different categories
+for non trivial FDs
+n If all  of non trivial FDs in F+ are superkeys, in most cases, R is in
+good form. If some  of non trivial FDs in F+ are not superkeys, we will
+do decomposition based on category of .
+©Silberschatz, Korth and Sudarshan 8.9 Database System Concepts - 7th Edition
+n We use functional dependencies to:
+l specify constraints on the set of legal relations
+4 We say that F holds on R if all legal relations on R satisfy the set
+of functional dependencies F. l test relations to see if they are legal under a given set of functional
+dependencies. 4 If a relation r is legal under a set F of functional dependencies, we
+say that r satisfies F. l if R is not in good form, decompose R which satisfies F into R1
+... Rn
+, so that each of R1
+... Rn
+is in good form
+l In some cases, combine some relations into one relation
+n Note: A specific instance of a relation schema may satisfy a functional
+dependency even if the functional dependency does not hold on all legal
+instances. l For example, a specific instance of instructor may, by chance, satisfy
+name  ID.
+©Silberschatz, Korth and Sudarshan 8.10 Database System Concepts - 7th Edition
+n In this relation. All  in the non-trivial functional dependencies are
+superkeys. No need to decompose. If decompose improperly, some
+information will be lost. See the results of decomposition and combination
+above.
+©Silberschatz, Korth and Sudarshan 8.11 Database System Concepts - 7th Edition
+n inst_dept (ID, name, salary, dept_name, building, budget ). with functional dependencies:
+dept_name building, budget
+where dept_name is not a superkey, building or budget is not part of a candidate key
+n Decompose into instructor and department
+©Silberschatz, Korth and Sudarshan 8.12 Database System Concepts - 7th Edition
+n Lossless join decomposition
+n Decomposition of R = (A, B, C)
+R1 = (A, B) R2 = (B, C)
+A B
+
+
+1
+2
+A
+
+
+B
+1
+2
+r B,C(r)
+A (r) B (r) A B
+
+
+1
+2
+C
+A
+B
+B
+1
+2
+C
+A
+B
+C
+A
+B
+A,B(r)
+©Silberschatz, Korth and Sudarshan 8.13 Database System Concepts - 7th Edition
+n Consider combining relations
+l dept_building(dept_name, building) and
+l dept_budget(dept_name, budget)
+into one relation
+l department(dept_name,building,budget)
+n No repetition in this case
+©Silberschatz, Korth and Sudarshan 8.14 Database System Concepts - 7th Edition
+n Domain is atomic if its elements are considered to be indivisible units
+l Examples of non-atomic domains:
+4 Set of names, composite attributes
+4 Identification numbers like CS101 that can be broken up into
+parts
+n A relational schema R is in first normal form if the domains of all
+attributes of R are atomic
+n Non-atomic values complicate storage and encourage redundant
+(repeated) storage of data
+l Example: Set of accounts stored with each customer, and set of
+owners stored with each account
+l We assume all relations are in first normal form (and revisit this in
+Chapter 22: Object Based Databases)
+©Silberschatz, Korth and Sudarshan 8.15 Database System Concepts - 7th Edition
+n Atomicity is actually a property of how the elements of the domain are
+used. l Example: Strings would normally be considered indivisible
+l Suppose that students are given roll numbers which are strings of
+the form CS0012 or EE1127
+l If the first two characters are extracted to find the department, the
+domain of roll numbers is not atomic. l Doing so is a bad idea: leads to encoding of information in
+application program rather than in the database. n First Normal Form is the basic requirements for a relation. But not the
+last. We need some rules to help us find whether the relation is in
+good form.
+©Silberschatz, Korth and Sudarshan 8.16 Database System Concepts - 7th Edition
+n Decide whether a particular relation R is in “good” form. n In the case that a relation R is not in “good” form, decompose it into a
+set of relations {R1
+, R2
+, ..., Rn
+} such that
+l each relation is in good form
+l the decomposition is a lossless-join decomposition
+n Our theory is based on:
+l functional dependencies
+l multivalued dependencies
+©Silberschatz, Korth and Sudarshan 8.17 Database System Concepts - 7th Edition
+n    is trivial (i.e.,   )
+n  is a superkey for R
+A relation schema R is in BCNF with respect to a set F of functional
+dependencies if for all functional dependencies in F+ of the form
+ 
+where   R and   R, at least one of the following holds:
+Example schema not in BCNF:
+instr_dept (ID, name, salary, dept_name, building, budget )
+because dept_name building, budget
+holds on instr_dept, but dept_name is not a superkey
+©Silberschatz, Korth and Sudarshan 8.18 Database System Concepts - 7th Edition
+n Suppose we have a schema R and a non-trivial dependency 
+causes a violation of BCNF. We decompose R into:
+• (U  )
+• ( R - (  -  ) )
+n In our example, l  = dept_name
+l  = building, budget
+and inst_dept is replaced by
+l (U  ) = ( dept_name, building, budget )
+l ( R - (  -  ) ) = ( ID, name, salary, dept_name )
+©Silberschatz, Korth and Sudarshan 8.19 Database System Concepts - 7th Edition
+n For the case of R = (R1
+, R2
+), we require that for all possible relations r
+on schema R
+r = R1
+(r ) R2
+(r )
+n A decomposition of R into R1 and R2
+is lossless join if at least one of
+the following dependencies is in F+:
+l R1  R2  R1
+l R1  R2  R2
+n The above functional dependencies are a sufficient condition for
+lossless join decomposition;
+©Silberschatz, Korth and Sudarshan 8.20 Database System Concepts - 7th Edition
+n R = (A, B, C )
+F = {A  B
+B  C}
+l R1 = (B,C);
+l R2 = (A,B);
+n R = (A, B, C )
+F = {A B C
+C  B}
+l R1= (C,B);
+l R2 = (A,C);
+l What is the problem for the above decomposition?
+©Silberschatz, Korth and Sudarshan 8.21 Database System Concepts - 7th Edition
+n Constraints, including functional dependencies, are costly to check in practice unless they
+pertain to only one relation
+n If it is sufficient to test only those dependencies on each individual relation of a decomposition
+in order to ensure that all functional dependencies hold, then that decomposition is dependency
+preserving. n Because it is not always possible to achieve both BCNF and dependency preservation, we
+consider a weaker normal form, known as third normal form.
+©Silberschatz, Korth and Sudarshan 8.22 Database System Concepts - 7th Edition
+n A relation schema R is in third normal form (3NF) if for all:
+   in F+
+at least one of the following holds:
+l    is trivial (i.e.,   )
+l  is a superkey for R
+l Each attribute A in  –  is contained in a candidate key for R. (NOTE: each attribute may be in a different candidate key)
+n If a relation is in BCNF it is in 3NF (since in BCNF one of the first two
+conditions above must hold). n Third condition is a minimal relaxation of BCNF to ensure dependency
+preservation.
+©Silberschatz, Korth and Sudarshan 8.23 Database System Concepts - 7th Edition
+n advisor schema with application specific requirement: one student can
+only have one advisor in one department. This constraint can be
+expressed with a functional dependency, and easily checked in DBMS. n If decompose it into two relations: advisor(s_id, i_id) and instructor(i_id, dept_name). l have to combine the two relations to check whether one student only
+has one advisor in one department. l duplication of information(detp_name) is avoided, but efficiency to
+check the constraint is decreased. n Third normal form is a kind of tradeoff. Tolerant some duplication, but
+increase the efficiency of constraint checking (dependency preservation).
+advisor（s_id,i_id,dept_name) //here dept_name is the department of
+advisor, not student. Important FDs (How many candidate keys here?):
+s_id,i_id ->dept_name;
+i_id ->dept_name
+s_id,dept_name->i_id //Application specific requirement. We can use a
+Unique constraint while creating table “advisor” to ensure the constraint.
+©Silberschatz, Korth and Sudarshan 8.24 Database System Concepts - 7th Edition
+n Let R be a relation scheme with a set F of functional dependencies. n Decide whether a relation scheme R is in “good” form. n In the case that a relation scheme R is not in “good” form, decompose it into a set of relation scheme {R1
+, R2
+, ..., Rn
+} such that
+l each relation scheme is in good form
+l the decomposition is a lossless-join decomposition
+l Preferably, the decomposition should be dependency preserving.
+©Silberschatz, Korth and Sudarshan 8.25 Database System Concepts - 7th Edition
+n There are database schemas in BCNF that do not seem to be sufficiently normalized
+n Consider a relation
+inst_info (ID, child_name, phone)
+l where an instructor may have more than one phone and can have multiple children
+ID child_name phone
+99999
+99999
+99999
+99999
+David
+David
+William
+William
+512-555-1234
+512-555-4321
+512-555-1234
+512-555-4321
+inst_info
+©Silberschatz, Korth and Sudarshan 8.26 Database System Concepts - 7th Edition
+n There are no non-trivial functional dependencies and therefore the
+relation is in BCNF
+n Insertion anomalies – i.e., if we add a phone 981-992-3443 to 99999, we need to add two tuples
+(99999, David, 981-992-3443)
+(99999, William, 981-992-3443)
+©Silberschatz, Korth and Sudarshan 8.27 Database System Concepts - 7th Edition
+n Therefore, it is better to decompose inst_info into:
+This suggests the need for higher normal forms, such as Fourth Normal
+Form (4NF), which we shall see later.
+ID child_name
+99999
+99999
+David
+William
+inst_child
+ID phone
+99999
+99999
+512-555-1234
+512-555-4321
+inst_phone
+©Silberschatz, Korth and Sudarshan 8.28 Database System Concepts - 7th Edition
+n We now consider the formal theory that tells us which functional dependencies are implied
+logically by a given set of functional dependencies. n We then develop algorithms to generate lossless decompositions into BCNF and 3NF
+n We then develop algorithms to test if a decomposition is dependency-preserving
+©Silberschatz, Korth and Sudarshan 8.29 Database System Concepts - 7th Edition
+n We can find F+, the closure of F, by repeatedly applying
+Armstrong’s Axioms:
+l if   , then    (reflexivity)
+l if   , then      (augmentation)
+l if   , and   , then    (transitivity)
+n These rules are
+l sound (generate only functional dependencies that actually hold), and
+l complete (generate all functional dependencies that hold).
+©Silberschatz, Korth and Sudarshan 8.30 Database System Concepts - 7th Edition
+n R = (A, B, C, G, H, I)
+F = { A  B
+A  C
+CG  H
+CG  I
+B  H}
+n some members of F+
+l A  H
+4 by transitivity from A  B and B  H
+l AG  I
+4 by augmenting A  C with G, to get AG  CG
+and then transitivity with CG  I
+l CG  HI
+4 by augmenting CG  I to infer CG  CGI, and augmenting of CG  H to infer CGI  HI, and then transitivity
+©Silberschatz, Korth and Sudarshan 8.31 Database System Concepts - 7th Edition
+n To compute the closure of a set of functional dependencies F:
+F + = F
+repeat
+for each functional dependency f in F+
+apply reflexivity and augmentation rules on f
+add the resulting functional dependencies to F +
+for each pair of functional dependencies f1and f2
+in F +
+if f1 and f2 can be combined using transitivity
+then add the resulting functional dependency to F +
+until F + does not change any further
+NOTE: We shall see an alternative procedure for this task later
+©Silberschatz, Korth and Sudarshan 8.32 Database System Concepts - 7th Edition
+n Additional rules:
+l If    holds and    holds, then     holds (union)
+l If     holds, then    holds and    holds
+(decomposition)
+l If    holds and     holds, then     holds
+(pseudotransitivity)
+The above rules can be inferred from Armstrong’s axioms.
+©Silberschatz, Korth and Sudarshan 8.33 Database System Concepts - 7th Edition
+n Given a set of attributes , define the closure of  under F (denoted by +) as the set of
+attributes that are functionally determined by  under F
+n Algorithm to compute +, the closure of  under F
+result := ;
+while (changes to result) do
+for each    in F do
+begin
+if   result then result := result  
+end
+©Silberschatz, Korth and Sudarshan 8.34 Database System Concepts - 7th Edition
+n R = (A, B, C, G, H, I)
+n F = {A  B
+A  C
+CG  H
+CG  I
+B  H}
+n (AG)+
+1. result = AG
+2. result = ABCG (A  C and A  B)
+3. result = ABCGH (CG  H and CG  AGBC)
+4. result = ABCGHI (CG  I and CG  AGBCH)
+n Is AG a candidate key?
+1. Is AG a super key?
+1. Does AG  R? == Is (AG)+  R
+2. Is any subset of AG a superkey?
+1. Does A  R? == Is (A)+  R
+2. Does G  R? == Is (G)+  R
+©Silberschatz, Korth and Sudarshan 8.35 Database System Concepts - 7th Edition
+There are several uses of the attribute closure algorithm:
+n Testing for superkey:
+l To test if  is a superkey, we compute +, and check if + contains all attributes of R. n Testing functional dependencies
+l To check if a functional dependency    holds (or, in other words, is in F+), just check if 
+ +. l That is, we compute + by using attribute closure, and then check if it contains . l Is a simple and cheap test, and very useful
+n Computing closure of F
+l For each   R, we find the closure 
++, and for each S  
++, we output a functional
+dependency   S. l Example：R = (A, B, C ) F = {A  B，B  C}
+©Silberschatz, Korth and Sudarshan 8.36 Database System Concepts - 7th Edition
+n If attribute  only appears in left side of non trivial FDs in F, it should be part of a candidate key
+n If attribute  only appears in right side of non trivial FDs in F, it should not be part of a
+candidate key
+n If attribute  does not appear in any non trivial FDs of F, it should be part of a candidate key
+n Example1: R=(A, B, C, D, E), F= {A B→C, B→D, AD→E}
+l Candidate key: AB
+n Example2: R={A，B，C，D，E}，F={AC→BD，B→A}
+l Candidate keys: ACE，BCE
+©Silberschatz, Korth and Sudarshan 8.37 Database System Concepts - 7th Edition
+n Sets of functional dependencies may have redundant dependencies that can be inferred from
+the others
+l For example: A  C is redundant in: {A  B, B  C, A C}
+l Parts of a functional dependency may be redundant
+4 E.g.: on LHS: F： {A  B, B  C, AC  D} can be simplified to
+F’
+：{A  B, B  C, A  D} where F’ is stronger (i.e. AC  D can be
+derived from A  D only, do not need other FDs in F’ )
+4 E.g.: on RHS: F：{A  B, B  C, A  CD} can be simplified to
+F’
+：{A  B, B  C, A  D} where F is stronger (i.e. A  D can be
+derived from A  CD only, do not need other FDs in F )
+n Intuitively, a canonical cover of F is a “minimal” set of functional dependencies equivalent to F, having no redundant dependencies or redundant parts of dependencies
+©Silberschatz, Korth and Sudarshan 8.38 Database System Concepts - 7th Edition
+n Consider a set F of functional dependencies and the functional dependency    in F. l Attribute A is extraneous in  (LHS) if A  
+and F logically implies ( – A)  . 4 We can use F to calculate ( – A)+ to see if ( – A) + includes 
+l Attribute A is extraneous in  (RHS) if A  
+and the set of functional dependencies
+F’ = (F – {  })  { ( – A)} logically implies   . 4 We can use F’ to calculate + to see if + includes 
+n Note: implication in the opposite direction is trivial in each of the cases above, since a
+“stronger” functional dependency always implies a weaker one
+n Example: Given F = {A  B, B  C, AB  C }
+l B is extraneous in AB  C because F logically implies A  C (i.e. A+ = ABC under F , A+
+includes C ). n Example: Given F = {A  C, AB  CD}
+l C is extraneous in AB  CD because F’ = {A  C, AB  D} logically implies AB  CD
+(i.e. AB+ = ABCD under F’ , AB+ includes CD)
+©Silberschatz, Korth and Sudarshan 8.39 Database System Concepts - 7th Edition
+n Consider a set F of functional dependencies and the functional dependency    in F. n To test if attribute A   is extraneous in 
+1. compute ({} – A)+ using the dependencies in F
+2. check that ({} – A)+ contains ; if it does, A is extraneous in 
+n To test if attribute A   is extraneous in 
+1. compute + using only the dependencies in
+F’ = (F – {  })  { ( – A)}, 2. check that + contains A; if it does, A is extraneous in 
+©Silberschatz, Korth and Sudarshan 8.40 Database System Concepts - 7th Edition
+n A canonical cover for F is a set of dependencies Fc such that
+l F logically implies all dependencies in Fc, and
+l Fc
+logically implies all dependencies in F, and
+l No functional dependency in Fc contains an extraneous attribute, and
+l Each left side of functional dependency in Fc
+is unique. n To compute a canonical cover for F:
+repeat
+Use the union rule to replace any dependencies in F
+1  1 and 1  2 with 1  1 2
+Find a functional dependency    with an
+extraneous attribute either in  or in 
+/* Note: test for extraneous attributes done using Fc, not F*/
+If an extraneous attribute is found, delete it from   
+until F does not change
+n Note: Union rule may become applicable after some extraneous attributes
+have been deleted, so it has to be re-applied
+©Silberschatz, Korth and Sudarshan 8.41 Database System Concepts - 7th Edition
+n R = (A, B, C)
+F = {A  BC
+B  C
+A  B
+AB  C}
+n Combine A  BC and A  B into A  BC
+l Set is now {A  BC, B  C, AB  C}
+n A is extraneous in AB  C
+l Check if the result of deleting A from AB  C is implied by the other
+dependencies
+4 Yes: in fact, B  C is already present!
+l Set is now {A  BC, B  C}
+n C is extraneous in A  BC
+l Check if A  C is logically implied by A  B and the other dependencies
+4 Yes: using transitivity on A  B and B  C. – Can use attribute closure of A in more complex cases
+n The canonical cover is: A  B
+B  C
+©Silberschatz, Korth and Sudarshan 8.42 Database System Concepts - 7th Edition
+n F: (A->B, B->AC, C->AB)
+l one FC: (A->B, B->C, C->A)
+4 F’
+1 = (A->B, B->C, C->AB)
+4 B+ under F’
+1
+is ABC, includes A, so A is extraneous in B->AC in F
+4 F’
+2 = (A->B, B->C, C->A)
+4 C+ under F’
+2
+is ABC, includes B, so B is extraneous in C->AB in F’
+1
+4 FC = F’
+2
+l another FC :(A->B, B->AC, C->B)
+©Silberschatz, Korth and Sudarshan 8.43 Database System Concepts - 7th Edition
+n For the case of R = (R1
+, R2
+), we require that for all possible relations r
+on schema R
+r = R1
+(r ) R2
+(r )
+n A decomposition of R into R1 and R2
+is lossless join if at least one of
+the following dependencies is in F+:
+l R1  R2  R1
+l R1  R2  R2
+n The above functional dependencies are a sufficient condition for
+lossless join decomposition
+©Silberschatz, Korth and Sudarshan 8.44 Database System Concepts - 7th Edition
+n Let Fi be the set of dependencies F + that include only attributes in
+Ri. 4 A decomposition is dependency preserving, if
+(F1  F2  …  Fn
+)+ = F +
+4 If it is not, then checking updates for violation of functional
+dependencies may require computing joins, which is
+expensive.
+©Silberschatz, Korth and Sudarshan 8.45 Database System Concepts - 7th Edition
+n To check if a dependency    is preserved in a decomposition
+of R into R1
+, R2
+, …, Rn we apply the following test (with attribute
+closure done with respect to F)
+l result = 
+while (changes to result) do
+for each Ri in the decomposition
+t = (result  Ri)+  Ri
+result = result  t
+l If result contains all attributes in , then the functional
+dependency
+   is preserved. n We apply the test on all dependencies in F to check if a
+decomposition is dependency preserving
+n This procedure takes polynomial time, instead of the exponential
+time required to compute F+ and (F1  F2  …  Fn
+)+
+©Silberschatz, Korth and Sudarshan 8.46 Database System Concepts - 7th Edition
+n R = (A, B, C)
+F = {A  B, B  C)
+l Can be decomposed in two different ways
+n R1 = (A, B), R2 = (B, C)
+l Lossless-join decomposition:
+R1  R2 = {B} and B  BC
+l Dependency preserving
+n R1 = (A, B), R2 = (A, C)
+l Lossless-join decomposition:
+R1  R2 = {A} and A  AB
+l Not dependency preserving
+(cannot check B  C without computing R1 R2
+)
+©Silberschatz, Korth and Sudarshan 8.47 Database System Concepts - 7th Edition
+n To check if a non-trivial dependency  causes a violation of BCNF
+1. compute + (the attribute closure of ), and
+2. verify that it includes all attributes of R, that is, it is a superkey of R. n Using F to test BCNF conformity of R: To check if a relation schema R is in BCNF,
+it suffices to check only the dependencies in the given set F for violation of BCNF, rather than checking all dependencies in F+. l If none of the dependencies in F causes a violation of BCNF, then none of the
+dependencies in F+ will cause a violation of BCNF either. （For why, Think of
+Armstrong’s Axioms）
+n If R does not conform to BCNF, F+ will be needed to test decomposition of R. Because if there are FDs in F that violate BCNF rules, there will probably be
+FDs in F+ that violate BCNF rules for the decomposition. For why, still think of
+Armstrong’s Axioms
+l Consider R = (A, B, C, D, E), with F = { A  B, BC  D}
+4 Decompose R into R1 = (A,B) and R2 = (A,C,D, E)
+4 Neither of the dependencies in F contain only attributes from
+(A,C,D,E)
+4 In fact, dependency AC  D in F+ shows R2
+is not in BCNF.
+©Silberschatz, Korth and Sudarshan 8.48 Database System Concepts - 7th Edition
+n Let F be the set of functional dependencies on R with no trivial FDs. If all
+functional dependencies in F of the form
+ 
+where   R and   R,  is a superkey for R
+R is in BCNF
+©Silberschatz, Korth and Sudarshan 8.49 Database System Concepts - 7th Edition
+n To check if a relation Ri in a decomposition of R is in BCNF, l Either test Ri for BCNF with respect to the restriction of F to Ri
+(that is, all FDs in F+ that contain only attributes from Ri)
+l or use the original set of dependencies F that hold on R, but with
+the following test: – for every set of attributes   Ri,（not necessary）
+check that + (the attribute closure of ) either includes no
+attribute of Ri - , or includes all attributes of Ri. 4 If the condition is violated by some  in Rj, the dependency
+ (+ - )  Ri
+can be shown to hold on Ri, and Ri violates BCNF.
+©Silberschatz, Korth and Sudarshan 8.50 Database System Concepts - 7th Edition
+result := {R };
+done := false;
+compute F +;
+while (not done) do
+if (there is a schema Ri in result that is not in BCNF)
+then begin
+let    be a nontrivial functional dependency that
+holds on Ri such that   Ri is not in F +, and    = ;
+result := (result – Ri )  (Ri – )  (,  );
+end
+else done := true;
+Note: each Ri is in BCNF, and decomposition is lossless-join.
+©Silberschatz, Korth and Sudarshan 8.51 Database System Concepts - 7th Edition
+n For R = (A, B, C, D, E), with F = { A  B, BC  D}
+n Solution1:R1=(A,B),R2=(A,C,D,E); AC+ = (A,B,C,D); AC+  R2 = (A,C,D); So
+split R2 into (A,C,D), (A,C,E)
+n Solution2: R1= (B,C,D), R2=(A,B,C,E); AC+ = (A,B,C,D); AC+  R2 = (A,B,C);
+So split R2 into (A,B,C)，(A,C,E)
+©Silberschatz, Korth and Sudarshan 8.52 Database System Concepts - 7th Edition
+n R = (A, B, C,D )
+F = {A  B
+B  C}
+n Decomposition1
+l R1 = (B, C), R2 = (A,B,D)
+l R1 = (B, C), R2 = (A,B), R3 = (A,D) //dependency preserving
+n Decomposition2
+l R1 = (A, B), R2 = (A,C,D) //need to decompose R2
+l R1 = (A, B), R2 = (A,C), R3 = (A,D) //not dependency preserving
+©Silberschatz, Korth and Sudarshan 8.53 Database System Concepts - 7th Edition
+n class (course_id, title, dept_name, credits, sec_id, semester, year, building, room_number, capacity, time_slot_id)
+n Functional dependencies:
+l course_id→ title, dept_name, credits
+l building, room_number→capacity
+l course_id, sec_id, semester, year→building, room_number,
+time_slot_id
+n A candidate key {course_id, sec_id, semester, year}. n BCNF Decomposition:
+l course_id→ title, dept_name, credits holds
+4 course_id is not a superkey for class. l We replace class by:
+4 course(course_id, title, dept_name, credits)
+4 class-1 (course_id, sec_id, semester, year, building, room_number, capacity, time_slot_id)
+©Silberschatz, Korth and Sudarshan 8.54 Database System Concepts - 7th Edition
+n course is in BCNF
+n building, room_number→capacity holds on class-1
+l {building, room_number} is not a superkey for class-1. l We replace class-1 by:
+4 classroom (building, room_number, capacity)
+4 section (course_id, sec_id, semester, year, building, room_number, time_slot_id)
+n classroom and section are in BCNF.
+©Silberschatz, Korth and Sudarshan 8.55 Database System Concepts - 7th Edition
+n R = (J, K, L )
+F = {JK  L
+L  K }
+Two candidate keys = JK and JL
+n R is not in BCNF
+n Any decomposition of R will fail to preserve
+JK  L
+This implies that testing for JK  L requires a join
+It is not always possible to get a BCNF decomposition that is
+dependency preserving
+©Silberschatz, Korth and Sudarshan 8.56 Database System Concepts - 7th Edition
+n There are some situations where
+l BCNF is not dependency preserving, and
+l efficient checking for FD violation on updates is important
+n Solution: define a weaker normal form, called Third
+Normal Form (3NF)
+l Allows some redundancy (with resultant problems; we will
+see examples later)
+l But functional dependencies can be checked on individual
+relations without computing a join. l There is always a lossless-join, dependency-preserving
+decomposition into 3NF.
+©Silberschatz, Korth and Sudarshan 8.57 Database System Concepts - 7th Edition
+n Relation dept_advisor:
+l dept_advisor (s_ID, i_ID, dept_name)
+F = {s_ID, dept_name  i_ID, i_ID  dept_name}
+l Two candidate keys: s_ID, dept_name, and i_ID, s_ID
+l R is in 3NF
+4 s_ID, dept_name  i_ID
+– s_ID, dept_name is a candidate key
+4 i_ID  dept_name
+– dept_name is contained in a candidate key
+©Silberschatz, Korth and Sudarshan 8.58 Database System Concepts - 7th Edition
+J
+j1
+j2
+j3
+null
+L
+l1
+l1
+l1
+l2
+K
+k1
+k1
+k1
+k2
+n repetition of information (e.g., the relationship l1
+, k1
+)
+l (i_ID, dept_name)
+n need to use null values (e.g., to represent the relationship
+l2
+, k2 where there is no corresponding value for J). l (i_ID, dept_nameI) if there is no separate relation mapping instructors to
+departments
+n There is some redundancy in this schema
+n Example of problems due to redundancy in 3NF
+l R = (J, K, L)
+F = {JK  L, L  K }
+©Silberschatz, Korth and Sudarshan 8.59 Database System Concepts - 7th Edition
+n Optimization: Need to check only FDs in F, need not check all FDs in F+. n Use attribute closure to check for each dependency   , if  is a superkey. n If  is not a superkey, we have to verify if each attribute in  is contained in a candidate key of
+R
+l this test is rather more expensive, since it involve finding candidate keys
+l testing for 3NF has been shown to be NP-hard
+l Interestingly, decomposition into third normal form (described shortly) can be done in
+polynomial time
+©Silberschatz, Korth and Sudarshan 8.60 Database System Concepts - 7th Edition
+Let Fc be a canonical cover for F;
+i := 0;
+for each functional dependency    in Fc do
+if none of the schemas Rj, 1  j  i contains  
+then begin
+i := i + 1;
+Ri :=  
+end
+if none of the schemas Rj, 1  j  i contains a candidate key for R
+then begin
+i := i + 1;
+Ri := any candidate key for R;
+end
+/* Optionally, remove redundant relations */
+repeat
+if any schema Rj is contained in another schema Rk
+then /* delete Rj
+*/
+Rj = Ri;
+i=i-1;
+return (R1
+, R2
+, ..., Ri)
+©Silberschatz, Korth and Sudarshan 8.61 Database System Concepts - 7th Edition
+n Above algorithm ensures:
+l each relation schema Ri is in 3NF
+l decomposition is dependency preserving and lossless-join
+l Proof of correctness is at end of this presentation
+©Silberschatz, Korth and Sudarshan 8.62 Database System Concepts - 7th Edition
+n Relation schema:
+cust_banker_branch = (customer_id, employee_id, branch_name, type )
+n The functional dependencies for this relation schema are:
+1. customer_id, employee_id  branch_name, type
+2. employee_id  branch_name
+3. customer_id, branch_name  employee_id
+n We first compute a canonical cover
+l branch_name is extraneous in the r.h.s. of the 1st dependency
+l No other attribute is extraneous, so we get FC =
+customer_id, employee_id  type
+employee_id  branch_name
+customer_id, branch_name  employee_id
+©Silberschatz, Korth and Sudarshan 8.63 Database System Concepts - 7th Edition
+n The for loop generates following 3NF schema:
+(customer_id, employee_id, type )
+(employee_id, branch_name)
+(customer_id, branch_name, employee_id)
+l Observe that (customer_id, employee_id, type ) contains a
+candidate key of the original schema, so no further relation schema
+needs be added
+n At end of for loop, detect and delete schemas, such as (employee_id, branch_name), which are subsets of other schemas
+l result will not depend on the order in which FDs are considered
+n The resultant simplified 3NF schema is:
+(customer_id, employee_id, type)
+(customer_id, branch_name, employee_id)
+©Silberschatz, Korth and Sudarshan 8.64 Database System Concepts - 7th Edition
+n It is always possible to decompose a relation into a set of relations that are in 3NF such that:
+l the decomposition is lossless
+l the dependencies are preserved
+n It is always possible to decompose a relation into a set of relations that are in BCNF such that:
+l the decomposition is lossless
+l it may not be possible to preserve dependencies.
+©Silberschatz, Korth and Sudarshan 8.65 Database System Concepts - 7th Edition
+n Goal for a relational database design is:
+l BCNF. l Lossless join. l Dependency preservation. n If we cannot achieve this, we accept one of
+l Lack of dependency preservation
+l Redundancy due to use of 3NF
+n Interestingly, SQL does not provide a direct way of specifying functional
+dependencies other than superkeys. Can specify FDs using assertions, but they are expensive to test, (and
+currently not supported by any of the widely used databases!)
+n Even if we had a dependency preserving decomposition, using SQL we
+would not be able to efficiently test a functional dependency whose left
+hand side is not a key.
+©Silberschatz, Korth and Sudarshan 8.66 Database System Concepts - 7th Edition
+n Suppose we record names of children, and phone numbers for instructors:
+l inst_child(ID, child_name)
+l inst_phone(ID, phone_number)
+n If we were to combine these schemas to get
+l inst_info(ID, child_name, phone_number)
+l Example data:
+(99999, David, 512-555-1234)
+(99999, David, 512-555-4321)
+(99999, William, 512-555-1234)
+(99999, William, 512-555-4321)
+n This relation is in BCNF
+l Why?
+©Silberschatz, Korth and Sudarshan 8.67 Database System Concepts - 7th Edition
+n Let R be a relation schema and let   R and   R. The
+multivalued dependency
+  
+holds on R if in any legal relation r(R), for all pairs for tuples t1 and t2
+in r such that t1
+[] = t2
+[], there exist tuples t3 and t4
+in r such that:
+t1
+[] = t2
+[] = t3
+[] = t4
+[]
+t3
+[] = t1
+[]
+t3
+[R – ] = t2
+[R – ]
+t4
+[] = t2
+[]
+t4
+[R – ] = t1
+[R – ]
+©Silberschatz, Korth and Sudarshan 8.68 Database System Concepts - 7th Edition
+n Tabular representation of   
+©Silberschatz, Korth and Sudarshan 8.69 Database System Concepts - 7th Edition
+n Let R be a relation schema with a set of attributes that are partitioned into 3 nonempty subsets. Y, Z, W
+n We say that Y  Z (Y multidetermines Z )
+if and only if for all possible relations r (R )
+< y1
+, z1
+, w1 >  r and < y1
+, z2
+, w2 >  r
+then
+< y1
+, z1
+, w2 >  r and < y1
+, z2
+, w1 >  r
+n Note that since the behavior of Z and W are identical it follows that
+Y  Z if Y  W
+©Silberschatz, Korth and Sudarshan 8.70 Database System Concepts - 7th Edition
+n In our example:
+ID  child_name
+ID  phone_number
+n The above formal definition is supposed to formalize the notion that given
+a particular value of Y (ID) it has associated with it a set of values of Z
+(child_name) and a set of values of W (phone_number), and these two
+sets are in some sense independent of each other. n Note:
+l If Y  Z then Y  Z
+l Indeed we have (in above notation) Z1 = Z2
+The claim follows.
+©Silberschatz, Korth and Sudarshan 8.71 Database System Concepts - 7th Edition
+n We use multivalued dependencies in two ways:
+1. To test relations to determine whether they are legal under a
+given set of functional and multivalued dependencies
+2. To specify constraints on the set of legal relations. We shall
+thus concern ourselves only with relations that satisfy a given
+set of functional and multivalued dependencies. n If a relation r fails to satisfy a given multivalued dependency, we can
+construct a relations r that does satisfy the multivalued dependency
+by adding tuples to r.
+©Silberschatz, Korth and Sudarshan 8.72 Database System Concepts - 7th Edition
+n From the definition of multivalued dependency, we can derive the
+following rule:
+l If   , then   
+That is, every functional dependency is also a multivalued dependency
+n The closure D+ of D is the set of all functional and multivalued
+dependencies logically implied by D. l We can compute D+ from D, using the formal definitions of
+functional dependencies and multivalued dependencies. l We can manage with such reasoning for very simple multivalued
+dependencies, which seem to be most common in practice
+l For complex dependencies, it is better to reason about sets of
+dependencies using a system of inference rules (see Appendix C).
+©Silberschatz, Korth and Sudarshan 8.73 Database System Concepts - 7th Edition
+n A relation schema R is in 4NF with respect to a set D of functional and
+multivalued dependencies if for all multivalued dependencies in D+ of
+the form   , where   R and   R, at least one of the following
+hold:
+l    is trivial (i.e.,    or    = R)
+l  is a superkey for schema R
+n If a relation is in 4NF it is in BCNF
+©Silberschatz, Korth and Sudarshan 8.74 Database System Concepts - 7th Edition
+n The restriction of D to Ri is the set Di consisting of
+l All functional dependencies in D+ that include only attributes of Ri
+l All multivalued dependencies of the form
+  (  Ri)
+where   Ri and    is in D+
+©Silberschatz, Korth and Sudarshan 8.75 Database System Concepts - 7th Edition
+result: = {R};
+done := false;
+compute D+;
+Let Di denote the restriction of D+ to Ri
+while (not done)
+if (there is a schema Ri in result that is not in 4NF) then
+begin
+let    be a nontrivial multivalued dependency that holds
+on Ri such that   Ri is not in Di, and ;
+result := (result - Ri)  (Ri - )  (, );
+end
+else done:= true;
+Note: each Ri is in 4NF, and decomposition is lossless-join
+©Silberschatz, Korth and Sudarshan 8.76 Database System Concepts - 7th Edition
+n R =(A, B, C, G, H, I)
+F ={ A  B
+B  HI
+CG  H }
+n R is not in 4NF since A  B and A is not a superkey for R
+n Decomposition
+a) R1 = (A, B) (R1
+is in 4NF)
+b) R2 = (A, C, G, H, I) (R2
+is not in 4NF, decompose into R3 and R4
+)
+c) R3 = (C, G, H) (R3
+is in 4NF)
+d) R4 = (A, C, G, I) (R4
+is not in 4NF, decompose into R5 and R6
+)
+l A  B and B  HI  A  HI, (MVD transitivity), and
+l and hence A  I (MVD restriction to R4
+)
+e) R5 = (A, I) (R5
+is in 4NF)
+f)R6 = (A, C, G) (R6
+is in 4NF)
+©Silberschatz, Korth and Sudarshan 8.77 Database System Concepts - 7th Edition
+n Join dependencies generalize multivalued dependencies
+l lead to project-join normal form (PJNF) (also called fifth normal
+form)
+n A class of even more general constraints, leads to a normal form
+called domain-key normal form. n Problem with these generalized constraints: are hard to reason with, and no set of sound and complete set of inference rules exists. n Hence rarely used
+©Silberschatz, Korth and Sudarshan 8.78 Database System Concepts - 7th Edition
+n We have assumed schema R is given
+l R could have been generated when converting E-R diagram to a set
+of tables. l R could have been a single relation containing all attributes that are
+of interest (called universal relation). l Normalization breaks R into smaller relations. l R could have been the result of some ad hoc design of relations, which we then test/convert to normal form.
+©Silberschatz, Korth and Sudarshan 8.79 Database System Concepts - 7th Edition
+n When an E-R diagram is carefully designed, identifying all entities
+correctly, the tables generated from the E-R diagram should not need
+further normalization. n However, in a real (imperfect) design, there can be functional
+dependencies from non-key attributes of an entity to other attributes of
+the entity
+l Example: an employee entity with attributes
+department_name and building, and a functional dependency
+department_name building
+l Good design would have made department an entity
+n Functional dependencies from non-key attributes of a relationship set
+possible, but rare --- most relationships are binary
+©Silberschatz, Korth and Sudarshan 8.80 Database System Concepts - 7th Edition
+n May want to use non-normalized schema for performance
+n For example, displaying prereqs along with course_id, and title requires
+join of course with prereq
+n Alternative 1: Use denormalized relation containing attributes of course
+as well as prereq with all above attributes
+l faster lookup
+l extra space and extra execution time for updates
+l extra coding work for programmer and possibility of error in extra code
+n Alternative 2: use a materialized view defined as
+course prereq
+l Benefits and drawbacks same as above, except no extra coding work
+for programmer and avoids possible errors
+©Silberschatz, Korth and Sudarshan 8.81 Database System Concepts - 7th Edition
+n Some aspects of database design are not caught by normalization
+n Examples of bad database design, to be avoided:
+Instead of earnings (company_id, year, amount ), use
+l earnings_2004, earnings_2005, earnings_2006, etc., all on the
+schema (company_id, earnings). 4 Above are in BCNF, but make querying across years difficult and
+needs new table each year
+l company_year (company_id, earnings_2004, earnings_2005, earnings_2006)
+4 Also in BCNF, but also makes querying across years difficult and
+requires new attribute each year. 4 Is an example of a crosstab, where values for one attribute
+become column names
+4 Used in spreadsheets, and in data analysis tools
+©Silberschatz, Korth and Sudarshan 8.82 Database System Concepts - 7th Edition
+n Temporal data have an association time interval during which the data are valid. n A snapshot is the value of the data at a particular point in time
+n Several proposals to extend ER model by adding valid time to
+l attributes, e.g., address of an instructor at different points in time
+l entities, e.g., time duration when a student entity exists
+l relationships, e.g., time during which an instructor was associated with a student as an
+advisor. n But no accepted standard
+n Adding a temporal component results in functional dependencies like
+ID  street, city
+not to hold, because the address varies over time
+n A temporal functional dependency X  Y holds on schema R if the functional dependency X
+ Y holds on all snapshots for all legal instances r (R).
+t
+©Silberschatz, Korth and Sudarshan 8.83 Database System Concepts - 7th Edition
+n In practice, database designers may add start and end time attributes to relations
+l E.g., course(course_id, course_title) is replaced by
+course(course_id, course_title, start, end)
+4 Constraint: no two tuples can have overlapping valid times
+– Hard to enforce efficiently
+n Foreign key references may be to current version of data, or to data at a point in time
+l E.g., student transcript should refer to course information at the time the course was taken
+©Silberschatz, Korth and Sudarshan 8.84 Database System Concepts - 7th Edition
+n Consider the following relation schema and functional dependencies:
+n relation schema R=(A, B, C, D, E), F= {A B→C, B→D, AD→E}
+n Assume the above functional dependencies are the only ones that hold over R. n 1) Find all candidate keys of R. n 2) Identify whether R is in BCNF or 3NF or neither. n 3) If R is not in BCNF, decompose R into a collection of BCNF relations. Please tell whether the
+decomposition is dependency preserving, and why?
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 8.87 Database System Concepts - 7th Edition
+n 3NF decomposition algorithm is dependency preserving (since there
+is a relation for every FD in Fc)
+n Decomposition is lossless
+l A candidate key (C ) is in one of the relations Ri in decomposition
+l Closure of candidate key under Fc must contain all attributes in
+R. l Follow the steps of attribute closure algorithm to show there is
+only one tuple in the join result for each tuple in Ri
+©Silberschatz, Korth and Sudarshan 8.88 Database System Concepts - 7th Edition
+Claim: if a relation Ri is in the decomposition generated by the
+above algorithm, then Ri satisfies 3NF. n Let Ri be generated from the dependency   
+n Let   B be any non-trivial functional dependency on Ri. (We need only
+consider FDs whose right-hand side is a single attribute.)
+n Now, B can be in either  or  but not in both. Consider each case
+separately.
+©Silberschatz, Korth and Sudarshan 8.89 Database System Concepts - 7th Edition
+n Case 1: If B in :
+l If  is a superkey, the 2nd condition of 3NF is satisfied
+l Otherwise  must contain some attribute not in 
+l Since   B is in F+ it must be derivable from Fc
+, by using attribute
+closure on . l Attribute closure not have used  . If it had been used,  must
+be contained in the attribute closure of , which is not possible, since
+we assumed  is not a superkey. l Now, using  (- {B}) and   B, we can derive  B
+(since    , and B   since   B is non-trivial)
+l Then, B is extraneous in the right-hand side of  ; which is not
+possible since   is in Fc
+. l Thus, if B is in  then  must be a superkey, and the second
+condition of 3NF must be satisfied.
+©Silberschatz, Korth and Sudarshan 8.90 Database System Concepts - 7th Edition
+n Case 2: B is in . l Since  is a candidate key, the third alternative in the definition of
+3NF is trivially satisfied. l In fact, we cannot show that  is a superkey. l This shows exactly why the third alternative is present in the
+definition of 3NF. Q.E.D.

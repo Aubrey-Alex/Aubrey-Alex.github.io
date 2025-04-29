@@ -1,0 +1,730 @@
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 3.2 Database System Concepts - 7th Edition
+n History of the SQL Query Language
+n Data Definition
+n Basic Query Structure
+n Set Operations
+n Null Values
+n Aggregate Functions
+n Nested Subqueries
+n Modification of the Database
+©Silberschatz, Korth and Sudarshan 3.3 Database System Concepts - 7th Edition
+n IBM Sequel language developed as part of System R project at the IBM
+San Jose Research Laboratory
+n Renamed Structured Query Language (SQL)
+n ANSI and ISO standard SQL:
+l SQL-86, SQL-89, SQL-92
+l SQL:1999, SQL:2003, SQL:2008, SQL:2011, SQL:2016,SQL:2023
+n Commercial systems offer most, if not all, SQL-92 features, plus varying
+feature sets from later standards and special proprietary features. l Not all examples here may work on your particular system.
+©Silberschatz, Korth and Sudarshan 3.4 Database System Concepts - 7th Edition
+n The schema for each relation. n The type of values associated with each attribute. n Integrity constraints
+n And as we will see later, also other information such as
+l The set of indices to be maintained for each relations. l Security and authorization information for each relation. l The physical storage structure of each relation on disk.
+The SQL data-definition language (DDL) allows the
+specification of information about relations, including:
+©Silberschatz, Korth and Sudarshan 3.5 Database System Concepts - 7th Edition
+n char(n). Fixed length character string, with user-specified length n. n varchar(n). Variable length character strings, with user-specified
+maximum length n. n int. Integer (a finite subset of the integers that is machine- dependent). n smallint. Small integer (a machine-dependent subset of the integer
+domain type). n numeric(p,d). Fixed point number, with user-specified precision of
+p digits, with n digits to the right of decimal point. n real, double precision. Floating point and double-precision floating
+point numbers, with machine-dependent precision. n float(n). Floating point number, with user-specified precision of at
+least n digits. n More are covered in Chapter 4.
+©Silberschatz, Korth and Sudarshan 3.6 Database System Concepts - 7th Edition
+n An SQL relation is defined using the create table command:
+create table r (A1 D1
+, A2 D2
+, ..., An Dn
+,
+integrity-constraint1
+,
+.
+in
+..
+t
+,
+egrity-constraintk)
+l r is the name of the relation
+l each Ai is an attribute name in the schema of relation r
+l Di is the data type of values in the domain of attribute Ai
+n Example:
+create table instructor (
+ID char(5),
+name varchar(20) not null,
+dept_name varchar(20),
+salary numeric(8,2))
+n insert into instructor values (‘10211’
+,
+’Smith’
+,
+’Biology’
+, 66000);
+n insert into instructor values (‘10211’
+, null,
+’Biology’
+, 66000);
+©Silberschatz, Korth and Sudarshan 3.7 Database System Concepts - 7th Edition
+n not null
+n primary key (A1
+, ..., An
+)
+n foreign key (Am, ..., An
+) references r
+Example: Declare ID as the primary key for instructor . create table instructor (
+ID char(5), name varchar(20) not null,
+dept_name varchar(20), salary numeric(8,2), primary key (ID),
+foreign key (dept_name) references department)
+primary key declaration on an attribute automatically ensures not null
+©Silberschatz, Korth and Sudarshan 3.8 Database System Concepts - 7th Edition
+n create table student (
+ID varchar(5), name varchar(20) not null, dept_name varchar(20),
+tot_cred numeric(3,0), primary key (ID), foreign key (dept_name) references department) );
+n create table takes (
+ID varchar(5), course_id varchar(8), sec_id varchar(8), semester varchar(6), year numeric(4,0), grade varchar(2), primary key (ID, course_id, sec_id, semester, year), foreign key (ID) references student, foreign key (course_id, sec_id, semester, year) references section );
+l Note: sec_id can not be dropped from primary key above, to ensure a
+student cannot be registered for two sections of the same course in the
+same semester
+©Silberschatz, Korth and Sudarshan 3.9 Database System Concepts - 7th Edition
+n create table course (
+course_id varchar(8) primary key,
+title varchar(50),
+dept_name varchar(20),
+credits numeric(2,0),
+foreign key (dept_name) references department) ;
+l Primary key declaration can be combined with attribute
+declaration as shown above
+©Silberschatz, Korth and Sudarshan 3.10 Database System Concepts - 7th Edition
+n drop table student
+l Deletes the table and its contents
+n delete from student
+l It’s not a DDL, just to see the difference with drop table
+l Deletes all contents of table, but retains table
+n alter table
+l alter table r add A D
+4 where A is the name of the attribute to be added to relation r
+and D is the domain of A. 4 All tuples in the relation are assigned null as the value for the
+new attribute. l alter table r drop A
+4 where A is the name of an attribute of relation r
+4 Dropping of attributes not supported by many databases
+©Silberschatz, Korth and Sudarshan 3.11 Database System Concepts - 7th Edition
+n The SQL data-manipulation language (DML) provides the
+ability to query information, and insert, delete and update
+tuples
+n A typical SQL query has the form:
+select A1
+, A2
+, ..., An
+from r1
+, r2
+, ..., rm
+where P
+l Ai represents an attribute
+l Ri represents a relation
+l P is a predicate. n The result of an SQL query is a relation.
+©Silberschatz, Korth and Sudarshan 3.12 Database System Concepts - 7th Edition
+n select A1, A2, .. An
+from r1, r2, …, rm
+where P
+is equivalent to the following expression in multiset relational algebra
+ A1, .., An
+( P (r1 x r2 x .. x rm))
+n Different from normal relational algebra, SQL does not eliminate duplicates. Because in real
+application environment, there are sometimes duplicate information. n SQL names are case insensitive. E.g. Name ≡ NAME ≡ name
+©Silberschatz, Korth and Sudarshan 3.13 Database System Concepts - 7th Edition
+n To force the elimination of duplicates, insert the keyword
+distinct after select. n Find the names of all departments with instructor, and remove
+duplicates
+select distinct dept_name
+from instructor
+n The keyword all specifies that duplicates not be removed. select all dept_name
+from instructor
+©Silberschatz, Korth and Sudarshan 3.14 Database System Concepts - 7th Edition
+n An asterisk in the select clause denotes “all attributes”
+select *
+from instructor
+n The select clause can contain arithmetic expressions involving
+the operation,
++
+, –,
+
+, and /, and operating on constants or
+attributes of tuples. n The query:
+select ID, name, salary/12
+from instructor
+would return a relation that is the same as the instructor relation,
+except that the value of the attribute salary is divided by 12. n An attribute can be a literal with no from clause
+select '437'
+©Silberschatz, Korth and Sudarshan 3.15 Database System Concepts - 7th Edition
+n The where clause specifies conditions that the result must
+satisfy
+l Corresponds to the selection predicate of the relational
+algebra. n To find all instructors in Comp. Sci. dept with salary > 80000
+select name
+from instructor
+where dept_name = ‘Comp. Sci.' and salary > 80000
+n Comparison results can be combined using the logical
+connectives and, or, and not. n Comparisons can be applied to results of arithmetic expressions.
+©Silberschatz, Korth and Sudarshan 3.16 Database System Concepts - 7th Edition
+n The from clause lists the relations involved in the query
+l Corresponds to the Cartesian product operation of the
+relational algebra. n Find the Cartesian product instructor X teaches
+select 
+from instructor, teaches
+l generates every possible instructor – teaches pair, with all
+attributes from both relations
+n Cartesian product not very useful directly, but useful combined
+with where-clause condition (selection operation in relational
+algebra)
+©Silberschatz, Korth and Sudarshan 3.17 Database System Concepts - 7th Edition
+instructor teaches
+©Silberschatz, Korth and Sudarshan 3.18 Database System Concepts - 7th Edition
+n Find instructors names and the course ID of the courses they
+taught.select name, course_id
+from instructor, teaches
+where instructor.ID = teaches.ID
+n Find the course ID, semester, year and title of each course offered
+by the Comp. Sci. department
+select section.course_id, semester, year, title
+from section, course
+where section.course_id = course.course_id and
+dept_name = ‘Comp. Sci.'
+©Silberschatz, Korth and Sudarshan 3.19 Database System Concepts - 7th Edition
+n Natural join matches tuples with the same values for all common attributes,
+and retains only one copy of each common column
+n select name, course_id
+from instructor natural join teaches;
+n name,course_id
+( instructor teaches)
+©Silberschatz, Korth and Sudarshan 3.20 Database System Concepts - 7th Edition
+n Danger in natural join: beware of unrelated attributes with same name which
+get equated incorrectly
+n List the names of instructors along with the the titles of courses that they
+teach
+l Incorrect version (makes course.dept_name = instructor.dept_name)
+4 select name, title
+from instructor natural join teaches natural join course;
+l Correct version
+4 select name, title
+from instructor natural join teaches, course
+where teaches.course_id = course.course_id;
+©Silberschatz, Korth and Sudarshan 3.21 Database System Concepts - 7th Edition
+n The SQL allows renaming relations and attributes using the as clause:
+old-name as new-name
+n E.g. l select ID, name, salary/12 as monthly_salary
+from instructor
+n Find the names of all instructors who have a higher salary than
+some instructor in ‘Comp. Sci’. l select distinct T. name
+from instructor as T, instructor as S
+where T.salary > S.salary and S.dept_name = ‘Comp. Sci.’
+n Keyword as is optional and may be omitted
+instructor as T ≡ instructor T
+l Keyword as must be omitted in Oracle
+©Silberschatz, Korth and Sudarshan 3.22 Database System Concepts - 7th Edition
+n SQL includes a string-matching operator for comparisons on
+character strings. The operator “like” uses patterns that are
+described using two special characters:
+l percent (%). The % character matches any substring. l underscore (_). The _ character matches any character. n Find the names of all instructors whose name includes the substring
+“dar”. select name
+from instructor
+where name like '%dar%' n Match the string “100 %”
+like ‘100 \%' escape '\'
+©Silberschatz, Korth and Sudarshan 3.23 Database System Concepts - 7th Edition
+n Patterns are case sensitive. n Pattern matching examples:
+l ‘Intro%’ matches any string beginning with “Intro”. l ‘%Comp%’ matches any string containing “Comp” as a substring. l ‘_ _ _’ matches any string of exactly three characters. l ‘_ _ _ %’ matches any string of at least three characters. n SQL supports a variety of string operations such as
+l concatenation (using “||”)
+l converting from upper to lower case (and vice versa)
+l finding string length, extracting substrings, etc.
+©Silberschatz, Korth and Sudarshan 3.24 Database System Concepts - 7th Edition
+n List in alphabetic order the names of all instructors
+select distinct name
+from instructor
+order by name
+n We may specify desc for descending order or asc for
+ascending order, for each attribute; ascending order is the
+default. l Example: order by name desc
+n Can sort on multiple attributes
+l Example: order by dept_name, name
+©Silberschatz, Korth and Sudarshan 3.25 Database System Concepts - 7th Edition
+n SQL includes a between comparison operator
+n Example: Find the names of all instructors with salary between
+$90,000 and $100,000 (that is,  $90,000 and  $100,000)
+l select name
+from instructor
+where salary between 90000 and 100000
+n Tuple comparison
+l select name, course_id
+from instructor, teaches
+where (instructor.ID, dept_name) = (teaches.ID,
+’Biology’);
+©Silberschatz, Korth and Sudarshan 3.26 Database System Concepts - 7th Edition
+n In relations with duplicates, SQL can define how many copies
+of tuples appear in the result. n Multiset versions of some of the relational algebra operators –
+given multiset relations r1 and r2
+:
+1. 
+(r1
+): If there are c1 copies of tuple t1
+in r1
+, and t1
+satisfies selections ,, then there are c1 copies of t1
+in 
+(r1
+). 2. A (r ): For each copy of tuple t1
+in r1
+, there is a copy of
+tuple A (t1
+) in A (r1
+) where A (t1
+) denotes the projection
+of the single tuple t1
+. 3. r1 x r2
+: If there are c1 copies of tuple t1
+in r1 and c2 copies
+of tuple t2
+in r2
+, there are c1 x c2 copies of the tuple t1
+. t2
+in r1
+x r2
+©Silberschatz, Korth and Sudarshan 3.27 Database System Concepts - 7th Edition
+n Example: Suppose multiset relations r1
+(A, B) and r2
+(C)
+are as follows:
+r1 = {(1, a) (2,a)} r2 = {(2), (3), (3)}
+n Then B(r1
+) would be {(a), (a)}, while B(r1
+) x r2 would be
+{(a,2), (a,2), (a,3), (a,3), (a,3), (a,3)}
+n SQL duplicate semantics:
+select A1
+,, A2
+, ..., An
+from r1
+, r2
+, ..., rm
+where P
+is equivalent to the multiset version of the expression:
+( ( 1 2 ))
+1
+, 2
+, , P m A A A
+r r r
+n
+      
+©Silberschatz, Korth and Sudarshan 3.28 Database System Concepts - 7th Edition
+n Find courses that ran in Fall 2009 or in Spring 2010
+n Find courses that ran in Fall 2009 but not in Spring 2010
+(select course_id from section where sem = ‘Fall’ and year = 2009)
+union
+(select course_id from section where sem = ‘Spring’ and year = 2010)
+n Find courses that ran in Fall 2009 and in Spring 2010
+(select course_id from section where sem = ‘Fall’ and year = 2009)
+intersect
+(select course_id from section where sem = ‘Spring’ and year = 2010)
+(select course_id from section where sem = ‘Fall’ and year = 2009)
+except
+(select course_id from section where sem = ‘Spring’ and year = 2010)
+©Silberschatz, Korth and Sudarshan 3.29 Database System Concepts - 7th Edition
+n Set operations union, intersect, and except
+l Each of the above operations automatically eliminates
+duplicates
+n To retain all duplicates use the corresponding multiset versions
+union all, intersect all and except all. Suppose a tuple occurs m times in r and n times in s, then, it
+occurs:
+l m + n times in r union all s
+l min(m,n) times in r intersect all s
+l max(0, m – n) times in r except all s
+©Silberschatz, Korth and Sudarshan 3.30 Database System Concepts - 7th Edition
+n It is possible for tuples to have a null value, denoted by null, for
+some of their attributes
+n null signifies an unknown value or that a value does not exist. n The result of any arithmetic expression involving null is null
+l Example: 5 + null returns null
+n The predicate is null can be used to check for null values. l Example: Find all instructors whose salary is null. select name
+from instructor
+where salary is null
+©Silberschatz, Korth and Sudarshan 3.31 Database System Concepts - 7th Edition
+n Any comparison with null returns unknown
+l Example: 5 < null or null <> null or null = null
+n Three-valued logic using the truth value unknown:
+l OR: (unknown or true) = true,
+(unknown or false) = unknown
+(unknown or unknown) = unknown
+l AND: (true and unknown) = unknown,
+(false and unknown) = false,
+(unknown and unknown) = unknown
+l NOT: (not unknown) = unknown
+l “P is unknown” evaluates to true if predicate P evaluates
+to unknown
+n Result of where clause predicate is treated as false if it
+evaluates to unknown
+©Silberschatz, Korth and Sudarshan 3.32 Database System Concepts - 7th Edition
+n These functions operate on the multiset of values of a
+column of a relation, and return a value
+avg: average value
+min: minimum value
+max: maximum value
+sum: sum of values
+count: number of values
+©Silberschatz, Korth and Sudarshan 3.33 Database System Concepts - 7th Edition
+n Find the average salary of instructors in the Computer Science
+department
+l select avg (salary)
+from instructor
+where dept_name= ’Comp. Sci.’;
+n Find the total number of instructors who teach a course in the
+Spring 2010 semester
+l select count (distinct ID)
+from teaches
+where semester = ’Spring’ and year = 2010
+n Find the number of tuples in the course relation
+l select count (*)
+from course;
+©Silberschatz, Korth and Sudarshan 3.34 Database System Concepts - 7th Edition
+n Find the average salary of instructors in each department
+l select dept_name, avg (salary)
+from instructor
+group by dept_name;
+l Note: departments with no instructor will not appear in result
+©Silberschatz, Korth and Sudarshan 3.35 Database System Concepts - 7th Edition
+n More generally, the non-aggregated attributes in the select clause may be a
+subset of the group by attributes, in which case the equivalence is as follows:
+select A1, sum(A3)
+from r1, r2, …, rm
+where P
+group by A1, A2
+is equivalent to the following expression in multiset relational algebra
+ A1,sumA3
+( A1,A2 sum(A3) as sumA3
+( P (r1 x r2 x .. x rm)))
+n /* erroneous queries*/
+l select dept_name, ID, avg (salary)
+from instructor
+group by dept_name;
+l select ID, max(salary) from instructor
+©Silberschatz, Korth and Sudarshan 3.36 Database System Concepts - 7th Edition
+n For each department, find the average salaries of those
+instructors with salary greater than 30000, and then, output the
+department name and the average value which is greater than
+42000
+Note: predicates in the having clause are applied after the
+formation of groups whereas predicates in the where
+clause are applied before forming groups
+select dept_name, avg (salary)
+from instructor
+where salary > 30000
+group by dept_name
+having avg (salary) > 42000;
+Equivalent to :
+ dept_name, avg_salary( avg_salary > 42000
+(dept_name avg(salary) as avg_salary ( salary > 30000
+(instructor)))
+©Silberschatz, Korth and Sudarshan 3.37 Database System Concepts - 7th Edition
+n Total all salaries
+select sum (salary )
+from instructor
+l Above statement ignores null amounts
+l Result is null if there is no non-null amount
+n All aggregate operations except count(*) ignore tuples with null
+values on the aggregated attributes
+n What if collection has only null values?
+l count returns 0
+l all other aggregates return null
+©Silberschatz, Korth and Sudarshan 3.38 Database System Concepts - 7th Edition
+n SQL provides a mechanism for the nesting of subqueries. n A subquery is a select-from-where expression that is nested
+within another query. n If subquery is in where clause, it’s a kind of predicate term
+involving sets. E.g. 1) whether the value of an attribute is in a
+subset; 2) whether the value of an attribute is greater than some
+of or all the values in a subset; 3) whether the subset is empty or
+not; 4) whether the subset cardinality <= 1 or not. n If subquery is in from clause, it’s just a temporary relation. n We can also use subquery to divide a complex query into several
+different steps, as the assignment operation in relational algebra.
+©Silberschatz, Korth and Sudarshan 3.39 Database System Concepts - 7th Edition
+n Find instructor names who are advisors of students
+n Find instructor names who are not advisors of students
+select name from instructor where ID in (select i_id from advisor)
+select distinct course_id
+from section
+where semester = ’Fall’ and year= 2009 and
+course_id in (select course_id
+from section
+where semester = ’Spring’ and year= 2010);
+select name from instructor, advisor where ID = i_id
+n Find courses offered in Fall 2009 and in Spring 2010
+n Find number of courses offered in Fall 2009 and in Spring 2010
+©Silberschatz, Korth and Sudarshan 3.40 Database System Concepts - 7th Edition
+n Find names of instructors with salary greater than that of some
+(at least one) instructor in the Biology department. n Same query using > some clause
+select name
+from instructor
+where salary > some (select salary
+from instructor
+where dept_name = ’Biology’);
+select T.name
+from instructor as T, instructor as S
+where T.salary > S.salary and S.dept_name = ’Biology’;
+©Silberschatz, Korth and Sudarshan 3.41 Database System Concepts - 7th Edition
+n F <comp> some r   t  r such that (F <comp> t )
+Where <comp> can be:     
+0
+5
+6
+(5 < some ) = true
+0
+5
+0
+) = false
+5
+0
+5 (5  some ) = true (since 0  5)
+(read: 5 < some tuple in the relation)
+(5 < some
+) = true (5 = some
+(= some)  in
+However, ( some)  not in
+©Silberschatz, Korth and Sudarshan 3.42 Database System Concepts - 7th Edition
+n Find the names of all instructors whose salary is greater than
+the salary of all instructors in the Biology department. select name
+from instructor
+where salary > all (select salary
+from instructor
+where dept_name = ’Biology’);
+©Silberschatz, Korth and Sudarshan 3.43 Database System Concepts - 7th Edition
+n F <comp> all r   t  r (F <comp> t)
+0
+5
+6
+(5 < all
+6
+10
+4
+) = true
+5
+4
+6 (5  all ) = true (since 5  4 and 5  6)
+(5 < all
+) = false (5 = all
+( all)  not in
+However, (= all)  in
+0
+5
+6
+(5  all ) = false ) = false
+0
+5
+6
+(5 > all ) = false
+0
+5
+6
+(5 = all ) = false
+©Silberschatz, Korth and Sudarshan 3.44 Database System Concepts - 7th Edition
+n The exists construct returns the value true if the argument
+subquery is nonempty. n exists r  r  Ø
+n not exists r  r = Ø
+©Silberschatz, Korth and Sudarshan 3.45 Database System Concepts - 7th Edition
+n Find instructor names who are advisors of students
+n Find instructor names who are not advisors of students
+select name from instructor where exists (select * from
+advisor where i_id = instructor.ID)
+select distinct course_id
+from section as S
+where semester = ’Fall’ and year= 2009 and
+exists (select *
+from section as T
+where semester = ’Spring’ and year= 2010
+and T.course_id = S.course_id );
+n Find courses offered in Fall 2009 and in Spring 2010
+n instructor.ID and S.course_id are attributes that are not in the relation of the
+subquery, they are called correlation variables
+©Silberschatz, Korth and Sudarshan 3.46 Database System Concepts - 7th Edition
+n Find all students who have taken all courses offered in the
+Biology department. select S.ID, S.name
+from student as S
+where not exists ( (select course_id
+from course
+where dept_name = ’Biology’)
+except
+(select T.course_id
+from takes as T
+where T.ID = S.ID));
+n Note that X – Y = Ø  X  Y
+©Silberschatz, Korth and Sudarshan 3.47 Database System Concepts - 7th Edition
+n The unique construct tests whether a subquery has any duplicate tuples
+in its result. l (Evaluates to “true” on an empty set)
+n Find all courses that were offered at most once in 2009
+select T.course_id
+from course as T
+where unique (select R.course_id
+from section as R
+where R.course_id= T.course_id
+and R.year = 2009);
+©Silberschatz, Korth and Sudarshan 3.48 Database System Concepts - 7th Edition
+n SQL allows a subquery expression to be used in the from clause
+n Find the average instructors’ salaries of those departments where
+the average salary is greater than $42,000. select dept_name, avg_salary
+from (select dept_name, avg (salary) as avg_salary
+from instructor
+group by dept_name)
+where avg_salary > 42000;
+n Note that we do not need to use the having clause
+n Another way to write above query
+select dept_name, avg_salary
+from (select dept_name, avg (salary)
+from instructor
+group by dept_name)
+as dept_avg (dept_name, avg_salary)
+where avg_salary > 42000;
+©Silberschatz, Korth and Sudarshan 3.49 Database System Concepts - 7th Edition
+n And yet another way to write it: lateral clause
+select name, salary, avg_salary
+from instructor I1,
+lateral (select avg(salary) as avg_salary
+from instructor I2
+where I2.dept_name= I1.dept_name);
+n Lateral clause permits later part of the from clause (after the lateral keyword) to access
+correlation variables from the earlier part. n Note: lateral is part of the SQL standard, but is not supported on many database systems;
+some databases such as SQL Server offer alternative syntax
+©Silberschatz, Korth and Sudarshan 3.50 Database System Concepts - 7th Edition
+n The with clause provides a way of defining a temporary view
+whose definition is available only to the query in which the with
+clause occurs. n Find all departments with the maximum budget
+with max_budget (value) as
+(select max(budget)
+from department)
+select dept_name
+from department, max_budget
+where department.budget = max_budget.value;
+n Similar to assign operation of relational algebra
+©Silberschatz, Korth and Sudarshan 3.51 Database System Concepts - 7th Edition
+n With clause is very useful for writing complex queries
+n Supported by most database systems, with minor syntax
+variations
+n Find all departments where the total salary is greater than the
+average of the total salary at all departments
+with dept _total (dept_name, value) as
+(select dept_name, sum(salary)
+from instructor
+group by dept_name),
+dept_total_avg(value) as
+(select avg(value)
+from dept_total)
+select dept_name
+from dept_total, dept_total_avg
+where dept_total.value >= dept_total_avg.value;
+©Silberschatz, Korth and Sudarshan 3.52 Database System Concepts - 7th Edition
+n Scalar subquery is one which is used where a single value is expected
+n E.g. select name
+from instructor
+where salary * 10 >
+(select budget from department
+where department.dept_name = instructor.dept_name)
+n Runtime error if subquery returns more than one result tuple
+n Scalar subquery does not conform to concepts of relational algebra. In
+relational algebra, all the result of a query is a relation. For the above
+question, you can also write a query based on traditional relational algebra. But it is more complicated. n For convenience, scalar subqueries are frequently used in practice. n E.g. Find all departments with the maximum budget (not using ‘with clause’)
+select dept_name
+from department
+where budget = (select max(budget) from department)
+©Silberschatz, Korth and Sudarshan 3.53 Database System Concepts - 7th Edition
+n Deletion of tuples from a given relation
+n Insertion of new tuples into a given relation
+n Updating values in some tuples in a given relation
+©Silberschatz, Korth and Sudarshan 3.54 Database System Concepts - 7th Edition
+n Delete all instructors
+delete from instructor
+n Delete all instructors from the Finance department
+delete from instructor
+where dept_name= ’Finance’;
+n Delete all tuples in the instructor relation for those instructors
+associated with a department located in the Watson building. delete from instructor
+where dept_name in (select dept_name
+from department
+where building = ’Watson’);
+©Silberschatz, Korth and Sudarshan 3.55 Database System Concepts - 7th Edition
+n Delete all instructors whose salary is less than the average
+salary of instructors
+delete from instructor
+where salary< (select avg (salary) from instructor);
+©Silberschatz, Korth and Sudarshan 3.56 Database System Concepts - 7th Edition
+n Add a new tuple to course
+insert into course
+values (’CS-437’
+,
+’Database Systems’
+,
+’Comp. Sci.’
+, 4);
+n or equivalently
+insert into course (course_id, title, dept_name, credits)
+values (’CS-437’
+,
+’Database Systems’
+,
+’Comp. Sci.’
+, 4);
+n Add a new tuple to student with tot_creds set to null
+insert into student
+values (’3003’
+,
+’Green’
+,
+’Finance’
+, null);
+©Silberschatz, Korth and Sudarshan 3.57 Database System Concepts - 7th Edition
+n Add all instructors to the student relation with tot_creds set to 0
+insert into student
+select ID, name, dept_name, 0
+from instructor
+n The select from where statement is evaluated fully before any of
+its results are inserted into the relation
+©Silberschatz, Korth and Sudarshan 3.58 Database System Concepts - 7th Edition
+n Increase salaries of instructors by 5%
+l update instructor
+set salary = salary * 1.05
+n Increase salaries of instructors whose salary is over $100,000 by
+3%, and all others receive a 5% raise
+l Write two update statements:
+update instructor
+set salary = salary * 1.03
+where salary > 100000;
+update instructor
+set salary = salary * 1.05
+where salary <= 100000;
+l The order is important
+l Can be done better using the case statement (next slide)
+©Silberschatz, Korth and Sudarshan 3.59 Database System Concepts - 7th Edition
+n Same query as before but with case statement
+update instructor
+set salary = case
+when salary <= 100000 then salary *
+1.05
+else salary * 1.03
+end
+©Silberschatz, Korth and Sudarshan 3.60 Database System Concepts - 7th Edition
+n Recompute and update tot_creds value for all students
+update student S
+set tot_cred = ( select sum(credits)
+from takes natural join course
+where S.ID= takes.ID and
+takes.grade <> ’F’ and
+takes.grade is not null);
+n Sets tot_creds to null for students who have not taken any course
+Database System Concepts, 7th Ed. ©Silberschatz, Korth and Sudarshan
+See www.db-book.com for conditions on re-use
+©Silberschatz, Korth and Sudarshan 3.62 Database System Concepts - 7th Edition
+n Create a table with the same schema as an existing table:
+create table temp_account like account
+©Silberschatz, Korth and Sudarshan 3.63 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.64 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.65 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.66 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.67 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.68 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.69 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.70 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.71 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.72 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.73 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.74 Database System Concepts - 7th Edition
+©Silberschatz, Korth and Sudarshan 3.75 Database System Concepts - 7th Edition

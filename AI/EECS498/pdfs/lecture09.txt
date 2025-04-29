@@ -1,0 +1,1512 @@
+Justin Johnson February 6, 2022
+Lecture 10:
+Training Neural Networks
+(Part 1)
+Lecture 1 - 1
+Justin Johnson February 6, 2022
+Reminder: A3
+• Due Friday, February 11
+Lecture 10 - 2
+Justin Johnson February 6, 2022
+ULCS / Depth
+Lecture 10 - 3
+If you are a CSE student:
+- For undergrads: This course now counts as ULCS (this term only)
+- For grad students: This course now counts as technical depth
+For non-CSE students: Check with your program
+Justin Johnson February 6, 2022
+Last Time: CNN Architectures
+Lecture 10 - 4
+3x3 conv, 128
+Pool
+3x3 conv, 64
+3x3 conv, 64
+Input
+3x3 conv, 128
+Pool
+3x3 conv, 256
+3x3 conv, 256
+Pool
+3x3 conv, 512
+3x3 conv, 512
+Pool
+3x3 conv, 512
+3x3 conv, 512
+Pool
+FC 4096
+FC 1000
+Softmax
+FC 4096
+3x3 conv, 512
+3x3 conv, 512
+VGG AlexNet GoogLeNet
+Input
+Softmax
+3x3 conv, 64
+7x7 conv, 64, / 2
+FC 1000
+Pool
+3x3 conv, 64
+3x3 conv, 64
+3x3 conv, 64
+3x3 conv, 64
+3x3 conv, 64
+3x3 conv, 128
+3x3 conv, 128, / 2
+3x3 conv, 128
+3x3 conv, 128
+3x3 conv, 128
+3x3 conv, 128
+..
+.
+3x3 conv, 512
+3x3 conv, 512, /2
+3x3 conv, 512
+3x3 conv, 512
+3x3 conv, 512
+3x3 conv, 512
+Pool
+ResNet
+Justin Johnson February 6, 2022
+Overview
+Lecture 10 - 5
+1.One time setup
+Activation functions, data preprocessing, 
+weight initialization, regularization
+2.Training dynamics
+Learning rate schedules; large-batch training; 
+hyperparameter optimization
+3.After training
+Model ensembles, transfer learning
+Justin Johnson February 6, 2022
+Overview
+Lecture 10 - 6
+1.One time setup
+Activation functions, data preprocessing, 
+weight initialization, regularization
+2.Training dynamics
+Learning rate schedules; large-batch training; 
+hyperparameter optimization
+3.After training
+Model ensembles, transfer learning
+Today 
+Next time
+Justin Johnson February 6, 2022
+Activation Functions
+Lecture 10 - 7
+Justin Johnson February 6, 2022
+Activation Functions
+Lecture 10 - 8
+Justin Johnson February 6, 2022
+Activation Functions
+Lecture 10 - 9
+Sigmoid
+tanh
+ReLU
+Leaky ReLU
+ELU
+GELU
+≈ ?? 1.702?
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 10
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+? ? =
+1
+1 + ?!"
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 11
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+3 problems:
+1. Saturated neurons “kill” the gradients
+? ? =
+1
+1 + ?!"
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 12
+sigmoid 
+gate
+x
+What happens when x = -10?
+What happens when x = 0?
+What happens when x = 10?
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 13
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+3 problems:
+1. Saturated neurons “kill” the gradients
+? ? =
+1
+1 + ?!"
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 14
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+3 problems:
+1. Saturated neurons “kill” the gradients
+2. Sigmoid outputs are not zero-centered
+? ? =
+1
+1 + ?!"
+Justin Johnson February 6, 2022 Lecture 10 - 15
+Consider what happens when 
+nonlinearity is always positive
+What can we say about the gradients on ? ℓ ?
+ℎ!
+(ℓ) = #
+%
+?!,%
+(ℓ)
+? ℎ%
+(ℓ'() + ?!
+ℓ
+ℎ!
+(ℓ) is the ?th element of the hidden layer at 
+layer ℓ (before activation)
+? ℓ
+, b ℓ are the weights and bias of layer ℓ
+Justin Johnson February 6, 2022 Lecture 10 - 16
+Consider what happens when 
+nonlinearity is always positive
+What can we say about the gradients on ? ℓ ?
+ℎ!
+(ℓ) = #
+%
+?!,%
+(ℓ)
+? ℎ%
+(ℓ'() + ?!
+ℓ
+ℎ!
+(ℓ) is the ?th element of the hidden layer at 
+layer ℓ (before activation)
+? ℓ
+, b ℓ are the weights and bias of layer ℓ
+??
+??",
+ℓ
+$
+=
+?ℎ"
+ℓ
+??",$
+⋅ ??
+?ℎ"
+(ℓ)
+Local
+Gradient
+Upstream 
+Gradient
+Justin Johnson February 6, 2022 Lecture 10 - 17
+Consider what happens when 
+nonlinearity is always positive
+What can we say about the gradients on ? ℓ ?
+Gradients on all ?!,
+(%&&
+#
+) have the same 
+sign as upstream gradient ??/?ℎ!
+(ℓ)
+ℎ!
+(ℓ) = #
+%
+?!,%
+(ℓ)
+? ℎ%
+(ℓ'() + ?!
+ℓ
+ℎ!
+(ℓ) is the ?th element of the hidden layer at 
+layer ℓ (before activation)
+? ℓ
+, b ℓ are the weights and bias of layer ℓ
+??
+??",
+ℓ
+$
+=
+?ℎ"
+ℓ
+??",$
+⋅ ??
+?ℎ"
+(ℓ)
+= ? ℎ$
+(ℓ'() ⋅ ??
+?ℎ"
+ℓ
+Local
+Gradient
+Upstream 
+Gradient
+Justin Johnson February 6, 2022 Lecture 10 - 18
+What can we say about the gradients on ? ℓ ?
+Gradients on all ?!,
+(%&&
+#
+) have the same 
+sign as upstream gradient ??/?ℎ!
+(ℓ)
+ℎ!
+(ℓ) = #
+%
+?!,%
+(ℓ)
+? ℎ%
+(ℓ'() + ?!
+ℓ
+ℎ!
+(ℓ) is the ?th element of the hidden layer at 
+layer ℓ (before activation)
+? ℓ
+, b ℓ are the weights and bias of layer ℓ
+Consider what happens when 
+nonlinearity is always positive
+hypothetical 
+optimal w 
+vector
+allowed 
+gradient 
+update 
+directions
+allowed 
+gradient 
+update 
+directions
+Gradients on rows of w can 
+only point in some directions; 
+needs to “zigzag” to move in 
+other directions
+Justin Johnson February 6, 2022 Lecture 10 - 19
+What can we say about the gradients on ? ℓ ?
+Gradients on all ?!,
+(%&&
+#
+) have the same 
+sign as upstream gradient ??/?ℎ!
+(ℓ)
+hypothetical 
+optimal w 
+vector
+allowed 
+gradient 
+update 
+directions
+allowed 
+gradient 
+update 
+directions
+ℎ!
+(ℓ) = #
+%
+?!,%
+(ℓ)
+? ℎ%
+(ℓ'() + ?!
+ℓ
+ℎ!
+(ℓ) is the ?th element of the hidden layer at 
+layer ℓ (before activation)
+? ℓ
+, b ℓ are the weights and bias of layer ℓ
+Consider what happens when 
+nonlinearity is always positive
+Not that bad in practice:
+- Only true for a single example, 
+minibatches help
+- BatchNorm can also avoid this
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 20
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+3 problems:
+1. Saturated neurons “kill” the gradients
+2. Sigmoid outputs are not zero-centered
+? ? =
+1
+1 + ?!"
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 21
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+3 problems:
+1. Saturated neurons “kill” the gradients
+2. Sigmoid outputs are not zero-centered
+3. exp() is a bit compute expensive
+? ? =
+1
+1 + ?!"
+Justin Johnson February 6, 2022
+Activation Functions: Sigmoid
+Lecture 10 - 22
+Sigmoid
+- Squashes numbers to range [0,1]
+- Historically popular since they have 
+nice interpretation as a saturating 
+“firing rate” of a neuron
+3 problems:
+1. Saturated neurons “kill” the gradients
+2. Sigmoid outputs are not zero-centered
+3. exp() is a bit compute expensive
+? ? =
+1
+1 + ?!"
+Worst problem in practice
+Justin Johnson February 6, 2022
+Activation Functions: Tanh
+Lecture 10 - 23
+tanh(x)
+- Squashes numbers to range [-1,1]
+- zero centered (nice)
+- still kills gradients when saturated :(
+Justin Johnson February 6, 2022
+Activation Functions: ReLU
+Lecture 10 - 24
+ReLU
+(Rectified Linear Unit)
+f(x) = max(0,x)
+- Does not saturate (in +region)
+- Very computationally efficient
+- Converges much faster than 
+sigmoid/tanh in practice (e.g. 6x)
+Justin Johnson February 6, 2022
+Activation Functions: ReLU
+Lecture 10 - 25
+ReLU
+(Rectified Linear Unit)
+f(x) = max(0,x)
+- Does not saturate (in +region)
+- Very computationally efficient
+- Converges much faster than 
+sigmoid/tanh in practice (e.g. 6x)
+- Not zero-centered output
+Justin Johnson February 6, 2022
+Activation Functions: ReLU
+Lecture 10 - 26
+ReLU
+(Rectified Linear Unit)
+f(x) = max(0,x)
+- Does not saturate (in +region)
+- Very computationally efficient
+- Converges much faster than 
+sigmoid/tanh in practice (e.g. 6x)
+- Not zero-centered output
+- An annoyance:
+hint: what is the gradient when x < 0?
+Justin Johnson February 6, 2022
+Activation Functions: ReLU
+Lecture 10 - 27
+ReLU 
+gate
+x
+What happens when x = -10?
+What happens when x = 0?
+What happens when x = 10?
+Justin Johnson February 6, 2022 Lecture 10 - 28
+DATA CLOUD
+active ReLU
+dead ReLU
+will never activate 
+=> never update
+Justin Johnson February 6, 2022 Lecture 10 - 29
+DATA CLOUD
+active ReLU
+dead ReLU
+will never activate 
+=> never update
+=> Sometimes initialize ReLU
+neurons with slightly positive 
+biases (e.g. 0.01)
+Justin Johnson February 6, 2022
+Activation Functions: Leaky ReLU
+Lecture 10 - 30
+- Does not saturate
+- Computationally efficient
+- Converges much faster than 
+sigmoid/tanh in practice! (e.g. 6x)
+- will not “die”.
+Maas et al, “Rectifier Nonlinearities Improve Neural Network Acoustic Models”, ICML 2013
+Leaky ReLU
+? ? = max ??, ?
+? is a hyperparameter, 
+often ? = 0.1
+Justin Johnson February 6, 2022
+Activation Functions: Leaky ReLU
+Lecture 10 - 31
+- Does not saturate
+- Computationally efficient
+- Converges much faster than 
+sigmoid/tanh in practice! (e.g. 6x)
+- will not “die”.
+Maas et al, “Rectifier Nonlinearities Improve Neural Network Acoustic Models”, ICML 2013
+He et al, “Delving Deep into Rectifiers: Surpassing Human￾Level Performance on ImageNet Classification”, ICCV 2015
+Leaky ReLU
+? ? = max ??, ?
+? is a hyperparameter, 
+often ? = 0.1
+Parametric ReLU (PReLU)
+? ? = max ??, ?
+? is learned via backprop 
+Justin Johnson February 6, 2022
+Activation Functions: Exponential Linear Unit (ELU)
+Lecture 10 - 32
+(Default alpha=1)
+- All benefits of ReLU
+- Closer to zero mean outputs
+- Negative saturation regime 
+compared with Leaky ReLU
+adds some robustness to noise 
+- Computation requires exp() ? ? = 5 ? ?? ? > 0
+? ?) − 1 ?? ? ≤ 0
+Justin Johnson February 6, 2022
+Activation Functions: Scaled Exponential Linear Unit (SELU)
+Lecture 10 - 33
+? = 1.6732632423543772848170429916717
+? = 1.0507009873554804934193349852946
+- Scaled version of ELU that 
+works better for deep networks
+- “Self-Normalizing” property; 
+can train deep SELU networks 
+without BatchNorm
+Klambauer et al, Self-Normalizing Neural Networks, ICLR 2017
+???? ? = 5
+?? ?
+?
+)
+?
+− 1
+??
+??
+?
+?
+>
+≤
+0
+0
+Justin Johnson February 6, 2022
+Activation Functions: Scaled Exponential Linear Unit (SELU)
+Lecture 10 - 34
+- Scaled version of ELU that 
+works better for deep networks
+- “Self-Normalizing” property; 
+can train deep SELU networks 
+without BatchNorm
+Klambauer et al, Self-Normalizing Neural Networks, ICLR 2017
+Derivation takes 
+91 pages of math 
+in appendix…
+? = 1.6732632423543772848170429916717
+? = 1.0507009873554804934193349852946
+Justin Johnson February 6, 2022
+Activation Functions: Gaussian Error Linear Unit (GELU)
+Lecture 10 - 35
+?~? 0, 1
+???? ? = ?? ? ≤ ? =
+?
+2 1 + erf ?/√2
+≈ ?? 1.702? Hendrycks and Gimpel, Gaussian Error Linear Units (GELUs), 2016
+- Idea: Multiply input by 0 or 1 
+at random; large values more 
+likely to be multiplied by 1, 
+small values more likely to be 
+multiplied by 0
+(data-dependent dropout)
+- Take expectation over 
+randomness
+- Very common in Transformers 
+(BERT, GPT, ViT)
+Justin Johnson February 6, 2022 Lecture 10 - 36
+93.8
+95.3
+94.8
+94.2
+95.6
+94.7
+94.1
+95.1
+94.5 94.6
+94.9
+94.7
+94.1 94.1
+94.4
+93
+93.2
+93.9
+94.3
+95.5
+94.8 94.7
+95.5
+94.8
+90
+91
+92
+93
+94
+95
+96
+ResNet Wide ResNet DenseNet
+Accuracy on CIFAR10
+ReLU Leaky ReLU Parametric ReLU Softplus ELU SELU GELU Swish
+Ramachandran et al, “Searching for 
+activation functions”, ICLR Workshop 2018
+Justin Johnson February 6, 2022
+Activation Functions: Summary
+Lecture 10 - 37
+- Don’t think too hard. Just use ReLU
+- Try out Leaky ReLU / ELU / SELU / GELU 
+if you need to squeeze that last 0.1%
+- Don’t use sigmoid or tanh
+Some (very) recent architectures use GeLU
+instead of ReLU, but the gains are minimal
+Dosovitskiy et al, “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale”, ICLR 2021
+Liu et al, “A ConvNet for the 2020s”, arXiv 2022
+Justin Johnson February 6, 2022
+Data Preprocessing
+Lecture 10 - 38
+Justin Johnson February 6, 2022
+Data Preprocessing
+Lecture 10 - 39
+(Assume X [NxD] is data matrix, 
+each example in a row)
+Justin Johnson February 6, 2022
+Remember: Consider what happens when the 
+input to a neuron is always positive...
+Lecture 10 - 40
+What can we say about the gradients on w?
+Always all positive or all negative :(
+(this is also why you want zero-mean data!)
+hypothetical 
+optimal w 
+vector
+allowed 
+gradient 
+update 
+directions
+allowed 
+gradient 
+update 
+directions
+ℎ!
+(ℓ) = #
+%
+?!,%
+(ℓ)
+? ℎ%
+(ℓ'() + ?!
+ℓ
+Justin Johnson February 6, 2022
+Data Preprocessing
+Lecture 10 - 41
+(Assume X [NxD] is data matrix, 
+each example in a row)
+Justin Johnson February 6, 2022
+Data Preprocessing
+Lecture 10 - 42
+In practice, you may also see PCA and Whitening of the data
+(data has diagonal 
+covariance matrix)
+(covariance matrix is 
+the identity matrix)
+Justin Johnson February 6, 2022
+Data Preprocessing
+Lecture 10 - 43
+Before normalization: classification 
+loss very sensitive to changes in 
+weight matrix; hard to optimize
+After normalization: less sensitive to 
+small changes in weights; easier to 
+optimize
+Justin Johnson February 6, 2022
+Data Preprocessing for Images
+Lecture 10 - 44
+- Subtract the mean image (e.g. AlexNet)
+(mean image = [32,32,3] array)
+- Subtract per-channel mean (e.g. VGGNet)
+(mean along each channel = 3 numbers)
+- Subtract per-channel mean and
+Divide by per-channel std (e.g. ResNet)
+(mean along each channel = 3 numbers)
+e.g. consider CIFAR-10 example with [32,32,3] images
+Not common to 
+do PCA or 
+whitening
+Justin Johnson February 6, 2022
+Weight Initialization
+Lecture 10 - 45
+Justin Johnson February 6, 2022
+Weight Initialization
+Lecture 10 - 46
+Q: What happens if we 
+initialize all W=0, b=0?
+Justin Johnson February 6, 2022
+Weight Initialization
+Lecture 10 - 47
+Q: What happens if we 
+initialize all W=0, b=0?
+A: All outputs are 0, all 
+gradients are the same!
+No “symmetry breaking”
+Justin Johnson February 6, 2022
+Weight Initialization
+Lecture 10 - 48
+Next idea: small random numbers
+(Gaussian with zero mean, std=0.01)
+Justin Johnson February 6, 2022
+Weight Initialization
+Lecture 10 - 49
+Next idea: small random numbers
+(Gaussian with zero mean, std=0.01)
+Works ~okay for small networks, but 
+problems with deeper networks.
+Justin Johnson February 6, 2022
+Weight Initialization: Activation Statistics
+Lecture 10 - 50
+Forward pass for a 6-layer 
+net with hidden size 4096
+Justin Johnson February 6, 2022
+Weight Initialization: Activation Statistics
+Lecture 10 - 51
+Forward pass for a 6-layer 
+net with hidden size 4096
+All activations tend to zero for 
+deeper network layers
+Q: What do the gradients 
+dL/dW look like?
+Justin Johnson February 6, 2022
+Weight Initialization: Activation Statistics
+Lecture 10 - 52
+Forward pass for a 6-layer 
+net with hidden size 4096
+All activations tend to zero for 
+deeper network layers
+Q: What do the gradients 
+dL/dW look like?
+A: All zero, no learning =(
+Justin Johnson February 6, 2022
+Weight Initialization: Activation Statistics
+Lecture 10 - 53
+Increase std of initial weights 
+from 0.01 to 0.05
+Justin Johnson February 6, 2022
+Weight Initialization: Activation Statistics
+Lecture 10 - 54
+Increase std of initial weights 
+from 0.01 to 0.05
+All activations saturate
+Q: What do the gradients look 
+like?
+Justin Johnson February 6, 2022
+Weight Initialization: Activation Statistics
+Lecture 10 - 55
+Increase std of initial weights 
+from 0.01 to 0.05
+All activations saturate
+Q: What do the gradients look 
+like?
+A: Local gradients all zero, no 
+learning =(
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 56
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+Glorot and Bengio, “Understanding the difficulty of training deep feedforward neural networks”, AISTAT 2010
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 57
+“Just right”: Activations are 
+nicely scaled for all layers!
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+Glorot and Bengio, “Understanding the difficulty of training deep feedforward neural networks”, AISTAT 2010
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 58
+“Just right”: Activations are 
+nicely scaled for all layers!
+For conv layers, Din is 
+kernel_size2 * input_channels
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+Glorot and Bengio, “Understanding the difficulty of training deep feedforward neural networks”, AISTAT 2010
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 59
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+y = Wx
+Var(yi
+) = Din * Var(xi
+wi
+) [Assume x, w are iid]
+= Din * (E[xi
+2]E[wi
+2] - E[xi
+]2 E[wi
+]2) [Assume x, w independent]
+= Din * Var(xi
+) * Var(wi
+) [Assume x, w are zero-mean]
+If Var(wi
+) = 1/Din then Var(yi
+) = Var(xi
+)
+Derivation: Variance of output = Variance of input
+?" = @
+$*(
++",
+?$?$
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 60
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+y = Wx
+Var(yi
+) = Din * Var(xi
+wi
+) [Assume x, w are iid]
+= Din * (E[xi
+2]E[wi
+2] - E[xi
+]2 E[wi
+]2) [Assume x, w independent]
+= Din * Var(xi
+) * Var(wi
+) [Assume x, w are zero-mean]
+If Var(wi
+) = 1/Din then Var(yi
+) = Var(xi
+)
+Derivation: Variance of output = Variance of input
+?" = @
+$*(
++",
+?$?$
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 61
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+y = Wx
+Var(yi
+) = Din * Var(xi
+wi
+) [Assume x, w are iid]
+= Din * (E[xi
+2]E[wi
+2] - E[xi
+]2 E[wi
+]2) [Assume x, w independent]
+= Din * Var(xi
+) * Var(wi
+) [Assume x, w are zero-mean]
+If Var(wi
+) = 1/Din then Var(yi
+) = Var(xi
+)
+Derivation: Variance of output = Variance of input
+?" = @
+$*(
++",
+?$?$
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 62
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+y = Wx
+Var(yi
+) = Din * Var(xi
+wi
+) [Assume x, w are iid]
+= Din * (E[xi
+2]E[wi
+2] - E[xi
+]2 E[wi
+]2) [Assume x, w independent]
+= Din * Var(xi
+) * Var(wi
+) [Assume x, w are zero-mean]
+If Var(wi
+) = 1/Din then Var(yi
+) = Var(xi
+)
+Derivation: Variance of output = Variance of input
+?" = @
+$*(
++",
+?$?$
+Justin Johnson February 6, 2022
+Weight Initialization: Xavier Initialization
+Lecture 10 - 63
+“Xavier” initialization: 
+std = 1/sqrt(Din)
+y = Wx
+Var(yi
+) = Din * Var(xi
+wi
+) [Assume x, w are iid]
+= Din * (E[xi
+2]E[wi
+2] - E[xi
+]2 E[wi
+]2) [Assume x, w independent]
+= Din * Var(xi
+) * Var(wi
+) [Assume x, w are zero-mean]
+If Var(wi
+) = 1/Din then Var(yi
+) = Var(xi
+)
+Derivation: Variance of output = Variance of input
+?" = @
+$*(
++",
+?$?$
+Justin Johnson February 6, 2022
+Weight Initialization: What about ReLU?
+Lecture 10 - 64
+Change from tanh to ReLU
+Justin Johnson February 6, 2022
+Weight Initialization: What about ReLU?
+Lecture 10 - 65
+Xavier assumes zero centered 
+activation function
+Activations collapse to zero 
+again, no learning =(
+Change from tanh to ReLU
+Justin Johnson February 6, 2022
+Weight Initialization: Kaiming / MSRA Initialization
+Lecture 10 - 66
+”Just right” – activations nicely 
+scaled for all layers
+ReLU correction: std = sqrt(2 / Din)
+He et al, “Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification”, ICCV 2015
+Justin Johnson February 6, 2022
+Weight Initialization: Residual Networks
+Lecture 10 - 67
+relu
+Residual Block
+conv
+conv
+F(x) + x
+F(x)
+relu
+X
+If we initialize with MSRA: 
+then Var(F(x)) = Var(x)
+But then Var(F(x) + x) > Var(x) 
+variance grows with each block! 
+Solution: Initialize first conv with 
+MSRA, initialize second conv to 
+zero. Then Var(x + F(x)) = Var(x)
+Justin Johnson February 6, 2022
+Weight Initialization: Residual Networks
+Lecture 10 - 68
+relu
+Residual Block
+conv
+conv
+F(x) + x
+F(x)
+relu
+X
+If we initialize with MSRA: 
+then Var(F(x)) = Var(x)
+But then Var(F(x) + x) > Var(x) 
+variance grows with each block! 
+Solution: Initialize first conv with 
+MSRA, initialize second conv to 
+zero. Then Var(x + F(x)) = Var(x)
+Zhang et al, “Fixup Initialization: Residual Learning Without Normalization”, ICLR 2019
+Justin Johnson February 6, 2022
+Proper initialization is an active area of research
+Lecture 10 - 69
+Understanding the difficulty of training deep feedforward neural networks by Glorot and Bengio, 2010
+Exact solutions to the nonlinear dynamics of learning in deep linear neural networks by Saxe et al, 2013
+Random walk initialization for training very deep feedforward networks by Sussillo and Abbott, 2014
+Delving deep into rectifiers: Surpassing human-level performance on ImageNet classification by He et al., 2015
+Data-dependent Initializations of Convolutional Neural Networks by Krähenbühl et al., 2015
+All you need is a good init, Mishkin and Matas, 2015
+Fixup Initialization: Residual Learning Without Normalization, Zhang et al, 2019
+The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks, Frankle and Carbin, 2019
+Justin Johnson February 6, 2022
+Now your model is training … but it overfits!
+Lecture 10 - 70
+Regularization
+Justin Johnson February 6, 2022
+Regularization: Add term to the loss
+Lecture 10 - 71
+In common use:
+L2 regularization
+L1 regularization
+Elastic net (L1 + L2)
+(Weight decay)
+Justin Johnson February 6, 2022
+Regularization: Dropout
+Lecture 10 - 72
+Srivastava et al, “Dropout: A simple way to prevent neural networks from overfitting”, JMLR 2014
+In each forward pass, randomly set some neurons to zero
+Probability of dropping is a hyperparameter; 0.5 is common
+Justin Johnson February 6, 2022
+Regularization: Dropout
+Lecture 10 - 73
+Example forward 
+pass with a 3-layer 
+network using 
+dropout
+Justin Johnson February 6, 2022
+Regularization: Dropout
+Lecture 10 - 74
+Forces the network to have a redundant 
+representation; Prevents co-adaptation of features
+has an ear
+has a tail
+is furry
+has claws
+mischievous 
+look
+X
+X
+X
+cat 
+score
+cat 
+score
+Justin Johnson February 6, 2022
+Regularization: Dropout
+Lecture 10 - 75
+Another interpretation:
+Dropout is training a large ensemble of 
+models (that share parameters).
+Each binary mask is one model
+An FC layer with 4096 units has
+24096 ~ 101233 possible masks!
+Only ~ 1082 atoms in the universe...
+Justin Johnson February 6, 2022
+Dropout: Test Time
+Lecture 10 - 76
+Dropout makes our output random!
+Output
+(label)
+Input
+(image)
+Random 
+mask
+Want to “average out” the randomness at test-time
+But this integral seems hard … 
+? = ?# ?, ?
+? = ? ? = ?) ? ?, ? = . ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Dropout: Test Time
+Lecture 10 - 77
+Want to approximate 
+the integral
+Consider a single neuron:
+At test time we have: ? ? = ?%? + ?&?
+a
+x y
+w1 w2
+? = ? ? = ?- ? ?, ? = C ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Dropout: Test Time
+Lecture 10 - 78
+Want to approximate 
+the integral
+Consider a single neuron:
+At test time we have: ? ? = ?%? + ?&?
+During training we have: ? ? =
+)
+*
+?)? + ?+? + )
+*
+?)? + 0?
++ )
+*
+0? + 0? + )
+*
+0? + ?+?
+=
+)
++
+?)? + ?+?
+a
+x y
+w1 w2
+? = ? ? = ?- ? ?, ? = C ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Dropout: Test Time
+Lecture 10 - 79
+Want to approximate 
+the integral
+Consider a single neuron:
+At test time we have: ? ? = ?%? + ?&?
+During training we have: ? ? =
+)
+*
+?)? + ?+? + )
+*
+?)? + 0?
++ )
+*
+0? + 0? + )
+*
+0? + ?+?
+=
+)
++
+?)? + ?+?
+a
+x y
+w1 w2
+At test time, drop 
+nothing and multiply
+by dropout probability
+? = ? ? = ?- ? ?, ? = C ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Dropout: Test Time
+Lecture 10 - 80
+At test time all neurons are active always
+=> We must scale the activations so that for each neuron:
+output at test time = expected output at training time
+Justin Johnson February 6, 2022
+Dropout Summary
+Lecture 10 - 81
+drop in forward pass
+scale at test time
+Justin Johnson February 6, 2022
+More common: “Inverted dropout”
+Lecture 10 - 82
+test time is unchanged!
+Drop and scale 
+during training
+Justin Johnson February 6, 2022
+Dropout architectures
+Lecture 10 - 83
+0
+20000
+40000
+60000
+80000
+100000
+120000
+conv1 conv2 conv3 conv4 conv5 fc6 fc7 fc8
+AlexNet vs VGG-16 
+(Params, M)
+AlexNet VGG-16
+Recall AlexNet, VGG have most of their 
+parameters in fully-connected layers; 
+usually Dropout is applied there
+Dropout here!
+Justin Johnson February 6, 2022
+Dropout architectures
+Lecture 10 - 84
+0
+20000
+40000
+60000
+80000
+100000
+120000
+conv1 conv2 conv3 conv4 conv5 fc6 fc7 fc8
+AlexNet vs VGG-16 
+(Params, M)
+AlexNet VGG-16
+Recall AlexNet, VGG have most of their 
+parameters in fully-connected layers; 
+usually Dropout is applied there
+Dropout here! Later architectures (GoogLeNet, 
+ResNet, etc) use global average 
+pooling instead of fully-connected 
+layers: they don’t use dropout at all!
+Justin Johnson February 6, 2022
+Regularization: A common pattern
+Lecture 10 - 85
+Training: Add some kind of 
+randomness
+Testing: Average out randomness 
+(sometimes approximate)
+? = ?F ?, ?
+? = ? ? = ?- ? ?, ? = C ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Regularization: A common pattern
+Lecture 10 - 86
+Training: Add some kind of 
+randomness
+Testing: Average out randomness 
+(sometimes approximate)
+Example: Batch 
+Normalization
+Training: Normalize 
+using stats from 
+random minibatches
+Testing
+stats to normalize
+: Use fixed 
+? = ?F ?, ?
+? = ? ? = ?- ? ?, ? = C ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Regularization: A common pattern
+Lecture 10 - 87
+Training: Add some kind of 
+randomness
+Testing: Average out randomness 
+(sometimes approximate)
+Example: Batch 
+Normalization
+Training: Normalize 
+using stats from 
+random minibatches
+Testing
+stats to normalize
+: Use fixed 
+For ResNet and later, 
+often L2 and Batch 
+Normalization are 
+the only regularizers! ? = ?F ?, ?
+? = ? ? = ?- ? ?, ? = C ? ? ? ?, ? ??
+Justin Johnson February 6, 2022
+Data Augmentation
+Lecture 10 - 88
+Load image 
+and label “cat”
+CNN
+Compute
+loss
+This image by Nikita is 
+licensed under CC-BY 2.0
+Justin Johnson February 6, 2022
+Data Augmentation
+Lecture 10 - 89
+Transform image
+Load image 
+and label “cat”
+CNN
+Compute
+loss
+Justin Johnson February 6, 2022
+Data Augmentation: Horizontal Flips
+Lecture 10 - 90
+Justin Johnson February 6, 2022
+Data Augmentation: Random Crops and Scales
+Lecture 10 - 91
+Training: sample random crops / scales
+ResNet:
+1. Pick random L in range [256, 480]
+2. Resize training image, short side = L
+3. Sample random 224 x 224 patch
+Justin Johnson February 6, 2022
+Data Augmentation: Random Crops and Scales
+Lecture 10 - 92
+Training: sample random crops / scales
+ResNet:
+1. Pick random L in range [256, 480]
+2. Resize training image, short side = L
+3. Sample random 224 x 224 patch
+Testing: average a fixed set of crops
+ResNet:
+1. Resize image at 5 scales: {224, 256, 384, 480, 640}
+2. For each size, use 10 224 x 224 crops: 4 corners + center, + flips
+Justin Johnson February 6, 2022
+Data Augmentation: Color Jitter
+Lecture 10 - 93
+Simple: Randomize 
+contrast and brightness
+More Complex:
+1. Apply PCA to all [R, G, B] 
+pixels in training set
+2. Sample a “color offset” 
+along principal 
+component directions
+3. Add offset to all pixels 
+of a training image
+(Used in AlexNet, ResNet, etc)
+Justin Johnson February 6, 2022
+Data Augmentation: RandAugment
+Lecture 10 - 94
+Apply random combinations 
+of transforms:
+- Geometric: Rotate, 
+translate, shear
+- Color: Sharpen, contrast,
+brightness, solarize,
+posterize, color
+Cubuk et al, “RandAugment: Practical augmented data augmentation with a reduced search space”, NeurIPS 2020
+Justin Johnson February 6, 2022
+Data Augmentation: RandAugment
+Lecture 10 - 95
+Apply random combinations 
+of transforms:
+- Geometric: Rotate, 
+translate, shear
+- Color: Sharpen, contrast,
+brightness, solarize,
+posterize, color
+Cubuk et al, “RandAugment: Practical augmented data augmentation with a reduced search space”, NeurIPS 2020
+Justin Johnson February 6, 2022
+Data Augmentation: Get creative for your problem!
+Lecture 10 - 96
+Data augmentation encodes invariances in your model
+Think for your problem: what changes to the image 
+should not change the network output?
+May be different for different tasks!
+Justin Johnson February 6, 2022
+Regularization: A common pattern
+Lecture 10 - 97
+Wan et al, “Regularization of Neural Networks using DropConnect”, ICML 2013
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+Training: Add some randomness
+Testing: Marginalize over randomness
+Justin Johnson February 6, 2022
+Regularization: DropConnect
+Lecture 10 - 98
+Wan et al, “Regularization of Neural Networks using DropConnect”, ICML 2013
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Training: Drop random connections between neurons (set weight=0)
+Testing: Use all the connections
+Justin Johnson February 6, 2022
+Regularization: Fractional Pooling
+Lecture 10 - 99
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Training: Use randomized pooling regions
+Testing: Average predictions over different samples
+Graham, “Fractional Max Pooling”, arXiv 2014
+Justin Johnson February 6, 2022
+Regularization: Stochastic Depth
+Lecture 10 - 100
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Training: Skip some residual blocks in ResNet
+Testing: Use the whole network
+Huang et al, “Deep Networks with Stochastic Depth”, ECCV 2016
+Justin Johnson February 6, 2022
+Regularization: Stochastic Depth
+Lecture 10 - 101
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Training: Skip some residual blocks in ResNet
+Testing: Use the whole network
+Huang et al, “Deep Networks with Stochastic Depth”, ECCV 2016
+Starting to become common in 
+recent architectures!
+• Pham et al, “Very Deep Self-Attention Networks for
+End-to-End Speech Recognition”, INTERSPEECH 2019
+• Tan and Le, “EfficientNetV2: Smaller Models and Faster 
+Training”, ICML 2021
+• Fan et al, “Multiscale Vision Transformers”, ICCV 2021
+• Bello et al, “Revisiting ResNets: Improved Training and 
+Scaling Strategies”, NeurIPS 2021
+• Steiner et al, “How to train your ViT? Data,
+Augmentation, and Regularization in Vision 
+Transformers”, arXiv 2021
+Justin Johnson February 6, 2022
+Regularization: CutOut
+Lecture 10 - 102
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Cutout / Random Erasing
+Training: Set random images regions to 0
+Testing: Use the whole image
+DeVries and Taylor, “Improved Regularization of Convolutional Neural Networks with Cutout”, arXiv 2017
+Zhong et al, “Random Erasing Data Augmentation”, AAAI 2020
+Replace random regions with 
+mean value or random values
+Justin Johnson February 6, 2022
+Regularization: Mixup
+Lecture 10 - 103
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Cutout / Random Erasing
+Mixup
+Training: Train on random blends of images
+Testing: Use original images
+Zhang et al, “mixup: Beyond Empirical Risk Minimization”, ICLR 2018
+Randomly blend the pixels of 
+pairs of training images, e.g. 
+40% cat, 60% dog
+CNN
+Target label:
+cat: 0.4
+dog: 0.6
+Justin Johnson February 6, 2022
+Regularization: Mixup
+Lecture 10 - 104
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Cutout / Random Erasing
+Mixup
+Training: Train on random blends of images
+Testing: Use original images
+Zhang et al, “mixup: Beyond Empirical Risk Minimization”, ICLR 2018
+Randomly blend the pixels of 
+pairs of training images, e.g. 
+40% cat, 60% dog
+CNN
+Target label:
+cat: 0.4
+dog: 0.6
+Sample blend 
+probability from a beta 
+distribution Beta(a, b) 
+with a=b≈0 so blend 
+weights are close to 0/1
+Justin Johnson February 6, 2022
+Regularization: CutMix
+Lecture 10 - 105
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Cutout / Random Erasing
+Mixup / CutMix
+Training: Train on random blends of images
+Testing: Use original images
+Replace random crops of 
+one image with another: 
+e.g. 60% of pixels from 
+cat, 40% from dog
+CNN
+Target label:
+cat: 0.6
+dog: 0.4
+Yun et al, “CutMix: Regularization Strategies to Train 
+Strong Classifiers with Localizable Features”, ICCV 2019
+Justin Johnson February 6, 2022
+Regularization: Label Smoothing
+Lecture 10 - 106
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Cutout / Random Erasing
+Mixup / CutMix
+Label Smoothing
+Training: Train on random blends of images
+Testing: Use original images
+Szegedy et al, “Rethinking the Inception 
+Architecture for Computer Vision”, CVPR 2015
+Standard Training
+Cat: 100%
+Dog: 0%
+Fish: 0%
+Target Distribution
+Label Smoothing
+Cat: 90%
+Dog: 5%
+Fish: 5%
+Set target distribution to be 1 − ,-
+,
+)
+? on the correct category 
+and ?/? on all other categories, with K categories and ? ∈ 0,1 . 
+Loss is cross-entropy between predicted and target distribution.
+Justin Johnson February 6, 2022
+Regularization: Summary
+Lecture 10 - 107
+Training: Train on random blends of images
+Testing: Use original images
+- Use DropOut for large fully-connected layers
+- Data augmentation always a good idea
+- Use BatchNorm for CNNs (but not ViTs)
+- Try Cutout, MixUp, CutMix, Stochastic Depth, 
+Label Smoothing to squeeze out a bit of extra 
+performance 
+Examples:
+Dropout
+Batch Normalization
+Data Augmentation
+DropConnect
+Fractional Max Pooling
+Stochastic Depth
+Cutout / Random Erasing
+Mixup / CutMix
+Label Smoothing
+Justin Johnson February 6, 2022
+Summary
+Lecture 10 - 108
+1.One time setup
+Activation functions, data preprocessing, weight 
+initialization, regularization
+2.Training dynamics
+Learning rate schedules; large-batch training; 
+hyperparameter optimization
+3.After training
+Model ensembles, transfer learning
+Today 
+Next time
+Justin Johnson February 6, 2022
+Next time:
+Training Neural Networks 
+(part 2)
+Lecture 10 - 109
