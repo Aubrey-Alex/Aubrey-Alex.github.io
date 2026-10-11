@@ -1,0 +1,78 @@
+:root {
+  color-scheme: light;
+  --ink: #4a3223;
+  --link: #994426;
+  --terracotta: #c2613f;
+  --olive: #6b6f4e;
+  --muted: #71604f;
+  --paper: #fdf6e3;
+  --tan: #a48f7a;
+  --serif: Georgia, "Times New Roman", "Songti SC", serif;
+  --sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 500 16px/1.7 var(--sans); -webkit-font-smoothing: antialiased; }
+main { width: min(100%, 900px); margin: 0 auto; padding: 48px 28px 30px; }
+a { color: var(--link); text-decoration: none; }
+a:hover { color: #4a3223; text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 4px; }
+p { margin: 0 0 13px; }
+.intro { padding: 0 20px 25px; border-bottom: 3px solid var(--tan); }
+h1 { margin: 0 0 25px; text-align: center; font: 700 46px/1.25 var(--serif); letter-spacing: -1.5px; }
+.separator { color: var(--terracotta); font-family: var(--sans); font-size: 29px; margin: 0 12px; font-weight: 400; }
+.chinese-name { font-family: "Songti SC", "STSong", serif; font-size: 32px; font-weight: 700; letter-spacing: 1px; }
+.personal-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 17px; margin-top: 22px; font-weight: 700; }
+.personal-links span { color: var(--tan); font-weight: 400; }
+section { margin-top: 32px; scroll-margin-top: 24px; }
+h2 { margin: 0 0 16px; color: var(--olive); font: 700 29px/1.25 var(--serif); letter-spacing: -.6px; }
+h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.45; font-weight: 700; letter-spacing: -.15px; }
+.news-section, .education-section { padding: 0 20px; }
+.news { list-style: none; margin: 0; padding: 0; font-size: 16px; }
+.news li { display: grid; grid-template-columns: 78px 1fr; gap: 12px; margin: 7px 0; }
+time { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.section-heading { padding: 0 20px; margin-bottom: 8px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.section-heading h2 { margin-bottom: 0; }
+.section-heading > p { font-size: 13px; color: var(--muted); margin: 0; }
+.paper { display: grid; grid-template-columns: 215px minmax(0, 1fr); align-items: center; gap: 27px; padding: 25px 20px; scroll-margin-top: 20px; }
+figure { margin: 0; }
+figure a { display: block; }
+figure img { width: 100%; height: auto; display: block; }
+.authors { line-height: 1.65; margin: 0 0 3px; font-size: 15px; }
+.authors strong { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+sup { font-size: 12px; line-height: 0; }
+.venue { margin: 10px 0 12px; font-size: 14px; color: var(--muted); }
+.venue-label { display: inline-block; color: #fff; background: var(--olive); padding: 2px 6px; margin-right: 8px; font-weight: 700; font-size: 14px; letter-spacing: .01em; }
+.paper-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.paper-links a { border: 1px solid var(--link); color: var(--link); padding: 4px 10px; font-size: 13px; line-height: 1.6; font-weight: 700; white-space: nowrap; }
+.paper-links a:first-child { background: var(--terracotta); border-color: var(--terracotta); color: #21160e; }
+.paper-links a:hover { background: #600015; border-color: #4a3223; color: #fff; text-decoration: none; }
+.paper + .paper { border-top: 1px solid var(--tan); }
+.summary { margin: 12px 0 0; line-height: 1.65; font-size: 15px; }
+.education-section { margin-top: 25px; padding-top: 25px; border-top: 2px solid var(--tan); }
+.education { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; font-size: 16px; }
+.education h3 { font-size: 17px; margin-bottom: 3px; }
+.education p { margin: 0; }
+.date { color: var(--muted); flex-shrink: 0; font-size: 15px; }
+footer { margin-top: 42px; padding: 0 20px; text-align: right; color: var(--muted); font-size: 13px; }
+footer p { margin: 2px 0; }
+.skip-link { position: absolute; top: -60px; left: 15px; background: var(--paper); padding: 8px 12px; }
+.skip-link:focus { top: 10px; }
+@media (max-width: 620px) {
+ main { padding: 30px 18px 24px; }
+ .intro, .news-section, .education-section, .section-heading, footer { padding-left: 2px; padding-right: 2px; }
+ h1 { font-size: 34px; letter-spacing: -1px; margin-bottom: 24px; }
+ .chinese-name { font-size: 26px; letter-spacing: 0; }
+ .separator { margin: 0 4px; font-size: 23px; }
+ .intro { padding-bottom: 25px; }
+ .section-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
+ .paper { grid-template-columns: minmax(0,1fr); gap: 20px; padding: 22px 2px; }
+ figure { width: min(100%, 310px); margin: 0 auto; }
+ .paper-links { gap: 7px; }
+ .paper-links a { padding: 5px 10px; }
+ .education { flex-direction: column; gap: 5px; }
+ .news li { grid-template-columns: 65px 1fr; gap: 8px; }
+ section { margin-top: 28px; }
+ h2 { font-size: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
